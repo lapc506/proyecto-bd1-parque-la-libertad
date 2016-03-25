@@ -59,13 +59,13 @@ public class MainController {
   }
 
   public void showDemoTerritories() {
-    territorySelector = new TerritoryRegistrationForm("Background color #002957",
-        "#002957", 600, 600, true, false);
+    territorySelector = new TerritoryRegistrationForm("Registro de Territorios",
+        600, 600, true, false);
   }
 
   public void selectFont(String desiredType) {
     if (Filepath.listAvailableFonts().size() != 0) {
-      fontSelector = new FontSelectorForm("Background color #002957", "#002957", 400, 100,
+      fontSelector = new FontSelectorForm("Choose " + desiredType + " font", 400, 100,
           true, false, desiredType);
     } else {
       JOptionPane.showMessageDialog(null,

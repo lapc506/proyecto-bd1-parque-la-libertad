@@ -34,18 +34,9 @@ public class FontSelectorForm extends WindowTemplate {
   private JComboBox<String> comboBox;
   private JSpinner spinner;
 
-  /**
-   * @param windowName
-   * @param hexColor
-   * @param width
-   * @param height
-   * @param isVisible
-   * @param isResizable
-   * @throws HeadlessException
-   */
-  public FontSelectorForm(String windowName, String hexColor, int width, int height,
+  public FontSelectorForm(String windowName, int width, int height,
       boolean isVisible, boolean isResizable, String fontToSelect) {
-    super(windowName, hexColor, width, height, isVisible, isResizable);
+    super(windowName, width, height, isVisible, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
     this.lblChooseAFont = new JLabel("Choose " + fontToSelect + " font: ");
@@ -72,7 +63,7 @@ public class FontSelectorForm extends WindowTemplate {
     getContentPane().add(this.comboBox, BorderLayout.CENTER);
     
     this.spinner = new JSpinner();
-    this.spinner.setBackground(DesignStyles.getHexColor(hexColor));
+    this.spinner.setBackground(DesignStyles.getWindowBGColor());
     this.spinner.setModel(new SpinnerNumberModel(12, 9, 64, 1));
     getContentPane().add(this.spinner, BorderLayout.EAST);
 

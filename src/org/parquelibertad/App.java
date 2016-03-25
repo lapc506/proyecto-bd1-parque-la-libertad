@@ -7,7 +7,6 @@ import java.awt.EventQueue;
 
 import org.parquelibertad.controller.DebugController;
 import org.parquelibertad.controller.DesignStyles;
-import org.parquelibertad.controller.FontController;
 import org.parquelibertad.controller.MainController;
 import org.parquelibertad.metadata.Filepath;
 
@@ -26,6 +25,7 @@ public class App {
     
     EventQueue.invokeLater(new Runnable() {
       public void run() { 
+        DesignStyles.setWindowBGColor(DesignStyles.getHexColor("#ff8f00"));
         Instance = MainController.getInstance();
         DebugController.loadAvailableFonts(); // Assuming fonts folder is not empty
         MainController.bootstrap();

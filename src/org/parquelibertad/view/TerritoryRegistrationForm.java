@@ -14,6 +14,7 @@ import org.parquelibertad.controller.DesignStyles;
 import org.parquelibertad.controller.FontController;
 
 import java.awt.Font;
+import javax.swing.JPanel;
 
 /**
  * proyecto-bd1-parque-la-libertad
@@ -25,10 +26,11 @@ import java.awt.Font;
 @SuppressWarnings("serial")
 public class TerritoryRegistrationForm extends WindowTemplate {
   private JLabel lblRegistroDeTerritorios;
+  private JPanel panel;
 
-  public TerritoryRegistrationForm(String windowName, String hexColor, int width,
+  public TerritoryRegistrationForm(String windowName, int width,
       int height, boolean isVisible, boolean isResizable) throws HeadlessException {
-    super(windowName, hexColor, width, height, isVisible, isResizable);
+    super(windowName, width, height, isVisible, isResizable);
     getContentPane().setLayout(new BorderLayout(10, 10));
     
     this.lblRegistroDeTerritorios = new JLabel("Registro de Territorios");
@@ -38,6 +40,10 @@ public class TerritoryRegistrationForm extends WindowTemplate {
     this.lblRegistroDeTerritorios.setHorizontalAlignment(SwingConstants.CENTER);
     this.lblRegistroDeTerritorios.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     getContentPane().add(this.lblRegistroDeTerritorios, BorderLayout.NORTH);
+    
+    this.panel = new JPanel();
+    this.panel.setBackground(DesignStyles.getWindowBGColor());
+    getContentPane().add(this.panel, BorderLayout.CENTER);
     
   }
 

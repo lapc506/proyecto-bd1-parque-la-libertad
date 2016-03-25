@@ -3,6 +3,7 @@
  */
 package org.parquelibertad.view;
 
+import java.awt.Color;
 import java.awt.HeadlessException;
 
 import javax.swing.JFrame;
@@ -19,16 +20,11 @@ import org.parquelibertad.controller.DesignStyles;
  */
 @SuppressWarnings("serial")
 public class WindowTemplate extends JFrame {
-  /**
-   * @param windowName
-   * @throws HeadlessException
-   */
-  public WindowTemplate(String windowName, String hexColor, int width, int height,
-      boolean isVisible, boolean isResizable) throws HeadlessException {
+  public WindowTemplate(String windowName, int width, int height, boolean isVisible,
+      boolean isResizable) throws HeadlessException {
     super();
     setTitle(windowName);
-    setBackground(DesignStyles.getHexColor(hexColor));
-    getContentPane().setBackground(DesignStyles.windowBGColor);
+    getContentPane().setBackground(DesignStyles.getWindowBGColor());
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     setSize(width, height);
     setVisible(isVisible);

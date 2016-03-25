@@ -29,10 +29,10 @@ import org.parquelibertad.metadata.Filepath;
  *
  */
 public class DesignStyles {
-  public static Color                      windowBGColor  = new Color(150, 192, 150);
-  public static Color                      fontColor      = new Color(25, 25, 112);
-  private static Hashtable<String, Font>   loadedFonts    = new Hashtable<String, Font>();
-  private static String                    HEX_CHARACTERS = "0123456789ABCDEF";
+  private static Color                   windowBGColor  = new Color(255, 143, 0);
+  private static Color                   fontColor      = new Color(25, 25, 112);
+  private static Hashtable<String, Font> loadedFonts    = new Hashtable<String, Font>();
+  private static String                  HEX_CHARACTERS = "0123456789ABCDEF";
 
   public static void loadFont(String fontName, Integer size) {
     try {
@@ -43,12 +43,11 @@ public class DesignStyles {
       GraphicsEnvironment.getLocalGraphicsEnvironment()
           .registerFont(loadedFonts.get(fontName));
     } catch (FontFormatException | IOException ex) {
-      JOptionPane.showMessageDialog(null, ex.getMessage(),
-          "Problema al cargar fuente.", JOptionPane.WARNING_MESSAGE,
-          ImageController.getIconoSistema());
+      JOptionPane.showMessageDialog(null, ex.getMessage(), "Problema al cargar fuente.",
+          JOptionPane.WARNING_MESSAGE, ImageController.getIconoSistema());
     }
   }
-  
+
   public static Font getFont(String desiredFont) throws IllegalArgumentException {
     try {
       return loadedFonts.get(desiredFont);
@@ -56,30 +55,22 @@ public class DesignStyles {
       throw new IllegalArgumentException(e.getMessage());
     }
   }
-  
+
   public static ArrayList<String> listLoadedFonts() {
     return Collections.list(loadedFonts.keys());
   }
 
-  public static void startLookAndFeel() {
-    // Establece un look and feel metálico, si no lo encuentra, establece el
-    // look and feel del sistema operativo.
-    try {
-      UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
-    } catch (ClassNotFoundException |
-             InstantiationException |
-             IllegalAccessException |
-             UnsupportedLookAndFeelException e) {
-      try {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-      } catch (ClassNotFoundException |
-               InstantiationException |
-               IllegalAccessException |
-               UnsupportedLookAndFeelException e2) {
-        JOptionPane.showMessageDialog(null, e2.getMessage(), "System Unexpected Failure",
-            JOptionPane.WARNING_MESSAGE);
-      }
-    }
+  public static Color getWindowBGColor() {
+    return windowBGColor;
+  }
+  public static void setWindowBGColor(Color value){
+    windowBGColor = value;
+  }
+  public static Color getFontColor() {
+    return fontColor;
+  }
+  public static void setFontColor(Color value){
+    fontColor = value;
   }
 
   public static Color getHexColor(String colorValue) {
@@ -105,6 +96,27 @@ public class DesignStyles {
       decimalResult = decimalResult * 16 + digitValue;
     }
     return decimalResult;
+  }
+
+  public static void startLookAndFeel() {
+    // Establece un look and feel metálico, si no lo encuentra, establece el
+    // look and feel del sistema operativo.
+    try {
+      UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
+    } catch (ClassNotFoundException |
+             InstantiationException |
+             IllegalAccessException |
+             UnsupportedLookAndFeelException e) {
+      try {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+      } catch (ClassNotFoundException |
+               InstantiationException |
+               IllegalAccessException |
+               UnsupportedLookAndFeelException e2) {
+        JOptionPane.showMessageDialog(null, e2.getMessage(), "System Unexpected Failure",
+            JOptionPane.WARNING_MESSAGE);
+      }
+    }
   }
 
 }
