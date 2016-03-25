@@ -5,10 +5,13 @@ package org.parquelibertad.view;
 
 import java.awt.HeadlessException;
 import java.awt.BorderLayout;
+
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import org.parquelibertad.controller.DesignStyles;
+import org.parquelibertad.controller.FontController;
 
 import java.awt.Font;
 
@@ -19,26 +22,22 @@ import java.awt.Font;
  * Derechos reservados bajo licencia MIT.
  *
  */
+@SuppressWarnings("serial")
 public class TerritoryRegistrationForm extends WindowTemplate {
+  private JLabel lblRegistroDeTerritorios;
 
-  /**
-   * @param windowName
-   * @param hexColor
-   * @param width
-   * @param height
-   * @param isVisible
-   * @param isResizable
-   * @throws HeadlessException
-   */
   public TerritoryRegistrationForm(String windowName, String hexColor, int width,
       int height, boolean isVisible, boolean isResizable) throws HeadlessException {
     super(windowName, hexColor, width, height, isVisible, isResizable);
-    getContentPane().setLayout(new BorderLayout(0, 0));
+    getContentPane().setLayout(new BorderLayout(10, 10));
     
-    JLabel lblRegistroDeTerritorios = new JLabel("Registro de Territorios");
-    lblRegistroDeTerritorios.setFont(DesignStyles.Fonts.get(""));
-    lblRegistroDeTerritorios.setHorizontalAlignment(SwingConstants.CENTER);
-    getContentPane().add(lblRegistroDeTerritorios, BorderLayout.NORTH);
+    this.lblRegistroDeTerritorios = new JLabel("Registro de Territorios");
+    if (FontController.getTitleFont() != null){
+      this.lblRegistroDeTerritorios.setFont(FontController.getTitleFont());
+    }
+    this.lblRegistroDeTerritorios.setHorizontalAlignment(SwingConstants.CENTER);
+    this.lblRegistroDeTerritorios.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    getContentPane().add(this.lblRegistroDeTerritorios, BorderLayout.NORTH);
     
   }
 

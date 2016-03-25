@@ -44,7 +44,12 @@ public class Filepath {
     pictures = metadata + slash + "pictures" + slash;
     fonts = metadata + slash + "fonts" + slash;
   }
-
+  public static boolean isFontsFolderEmpty(){
+    File fontsFolder = new File(fonts);
+    File[] fontsList = fontsFolder.listFiles();
+    return (fontsList.length == 0);
+  }
+  
   public static ArrayList<String> listAvailableFonts() {
     File fontsFolder = new File(fonts);
     File[] fontsList = fontsFolder.listFiles();

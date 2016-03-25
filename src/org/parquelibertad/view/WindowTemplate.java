@@ -19,8 +19,6 @@ import org.parquelibertad.controller.DesignStyles;
  */
 @SuppressWarnings("serial")
 public class WindowTemplate extends JFrame {
-  private final String windowName;
-
   /**
    * @param windowName
    * @throws HeadlessException
@@ -28,8 +26,7 @@ public class WindowTemplate extends JFrame {
   public WindowTemplate(String windowName, String hexColor, int width, int height,
       boolean isVisible, boolean isResizable) throws HeadlessException {
     super();
-    this.windowName = windowName;
-    setTitle(this.windowName);
+    setTitle(windowName);
     setBackground(DesignStyles.getHexColor(hexColor));
     getContentPane().setBackground(DesignStyles.windowBGColor);
     setDefaultCloseOperation(DISPOSE_ON_CLOSE);

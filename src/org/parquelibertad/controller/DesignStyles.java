@@ -29,27 +29,36 @@ import org.parquelibertad.metadata.Filepath;
  *
  */
 public class DesignStyles {
-  public static Color                   windowBGColor  = new Color(150, 192, 150);
-  public static Color                   fontColor      = new Color(25, 25, 112);
-  public static Hashtable<String, Font> Fonts          = new Hashtable<String, Font>();
-  private static String                 HEX_CHARACTERS = "0123456789ABCDEF";
+  public static Color                      windowBGColor  = new Color(150, 192, 150);
+  public static Color                      fontColor      = new Color(25, 25, 112);
+  private static Hashtable<String, Font>   loadedFonts    = new Hashtable<String, Font>();
+  private static String                    HEX_CHARACTERS = "0123456789ABCDEF";
 
   public static void loadFont(String fontName, Integer size) {
     try {
 
-      Fonts.put(fontName,
+      loadedFonts.put(fontName,
           Font.createFont(Font.TRUETYPE_FONT, new File(Filepath.fonts + fontName))
               .deriveFont(new Float(size)));
-      GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(Fonts.get(fontName));
+      GraphicsEnvironment.getLocalGraphicsEnvironment()
+          .registerFont(loadedFonts.get(fontName));
     } catch (FontFormatException | IOException ex) {
       JOptionPane.showMessageDialog(null, ex.getMessage(),
-          "Problema al cargar fuente Paws", JOptionPane.WARNING_MESSAGE,
+          "Problema al cargar fuente.", JOptionPane.WARNING_MESSAGE,
           ImageController.getIconoSistema());
     }
   }
   
-  public static ArrayList<String> listLoadedFonts(){
-    return Collections.list(Fonts.keys());
+  public static Font getFont(String desiredFont) throws IllegalArgumentException {
+    try {
+      return loadedFonts.get(desiredFont);
+    } catch (Exception e) {
+      throw new IllegalArgumentException(e.getMessage());
+    }
+  }
+  
+  public static ArrayList<String> listLoadedFonts() {
+    return Collections.list(loadedFonts.keys());
   }
 
   public static void startLookAndFeel() {
@@ -81,7 +90,7 @@ public class DesignStyles {
     Matcher matcher = pattern.matcher(colorValue);
     int red = hex2dec(colorValue.substring(1, 3));
     int green = hex2dec(colorValue.substring(3, 5));
-    int blue = hex2dec(colorValue.substring(5, 7)) ;
+    int blue = hex2dec(colorValue.substring(5, 7));
     System.out.println("Generating hex color " + red + " " + green + " " + blue);
     if (matcher.matches()) { return new Color(red, green, blue); }
     return new Color(0, 0, 0);
