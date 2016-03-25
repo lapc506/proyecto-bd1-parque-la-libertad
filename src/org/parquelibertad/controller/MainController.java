@@ -36,10 +36,10 @@ public class MainController {
     return singleton;
   }
 
-  private static int bootstrap = 0;
-  public static void nextBootStep() { bootstrap++; }
+  private static int bootstrapStage = 0;
+  public static void nextBootStage() { bootstrapStage++; }
   public static void bootstrap() {
-    switch (bootstrap) {
+    switch (bootstrapStage) {
       case 0:
         singleton.selectFont("titles");
         break;
@@ -71,6 +71,8 @@ public class MainController {
       JOptionPane.showMessageDialog(null,
           "No extra fonts on project, using Java defaults.", "Noncritical error",
           JOptionPane.ERROR_MESSAGE);
+      nextBootStage();
+      bootstrap();
     }
   }
 

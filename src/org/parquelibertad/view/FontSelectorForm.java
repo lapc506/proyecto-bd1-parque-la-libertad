@@ -50,7 +50,7 @@ public class FontSelectorForm extends WindowTemplate {
           (int) this.spinner.getValue());
       // Rather than making this a modal window, and wait from App.main() this window
       // gets closed, we simply use the same controller singleton:
-      MainController.nextBootStep();
+      MainController.nextBootStage();
       this.dispose();
       MainController.bootstrap();
     });

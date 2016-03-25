@@ -29,8 +29,8 @@ import org.parquelibertad.metadata.Filepath;
  *
  */
 public class DesignStyles {
-  private static Color                   windowBGColor  = new Color(255, 143, 0);
-  private static Color                   fontColor      = new Color(25, 25, 112);
+  private static Color                   windowBGColor  = new Color(255, 143, 0); //#FF8F00
+  private static Color                   fontColor      = new Color(0, 0, 0);
   private static Hashtable<String, Font> loadedFonts    = new Hashtable<String, Font>();
   private static String                  HEX_CHARACTERS = "0123456789ABCDEF";
 
