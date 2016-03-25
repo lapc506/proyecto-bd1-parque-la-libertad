@@ -9,6 +9,8 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +46,10 @@ public class DesignStyles {
           "Problema al cargar fuente Paws", JOptionPane.WARNING_MESSAGE,
           ImageController.getIconoSistema());
     }
+  }
+  
+  public static ArrayList<String> listLoadedFonts(){
+    return Collections.list(Fonts.keys());
   }
 
   public static void startLookAndFeel() {

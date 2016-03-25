@@ -26,7 +26,7 @@ public class MainController {
   
   @SuppressWarnings("unused")
   public void showDemoEmptyWindow() {
-   JFrame demo = new WindowTemplate("Background color #002957", "#002957");
+   JFrame demo = new WindowTemplate("Background color #002957", "#002957", 600, 600, true, false);
   }
   
 }

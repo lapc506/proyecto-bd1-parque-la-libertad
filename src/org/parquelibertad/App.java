@@ -5,6 +5,7 @@ package org.parquelibertad;
 
 import java.awt.EventQueue;
 
+import org.parquelibertad.controller.DebugController;
 import org.parquelibertad.controller.DesignStyles;
 import org.parquelibertad.controller.MainController;
 import org.parquelibertad.metadata.Filepath;
@@ -24,6 +25,7 @@ public class App {
     EventQueue.invokeLater(new Runnable() {
       public void run() { 
         Instance = MainController.getInstance();
+        DebugController.loadAvailableFonts(); // Assuming fonts folder is not empty
         Instance.showDemoEmptyWindow();
       }
     });
