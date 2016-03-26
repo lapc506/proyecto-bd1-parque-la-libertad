@@ -28,15 +28,15 @@ import javax.swing.SpinnerNumberModel;
  *
  */
 @SuppressWarnings("serial")
-public class FontSelectorForm extends WindowTemplate {
-  private JLabel    lblChooseAFont;
-  private JButton   btnSelect;
+public class FontSelectorForm extends DialogTemplate {
+  private JLabel            lblChooseAFont;
+  private JButton           btnSelect;
   private JComboBox<String> comboBox;
-  private JSpinner spinner;
+  private JSpinner          spinner;
 
-  public FontSelectorForm(String windowName, int width, int height,
-      boolean isVisible, boolean isResizable, String fontToSelect) {
-    super(windowName, width, height, isVisible, isResizable);
+  public FontSelectorForm(String windowName, int width, int height, boolean isResizable,
+      String fontToSelect) {
+    super(null, windowName, width, height, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
     this.lblChooseAFont = new JLabel("Choose " + fontToSelect + " font: ");
@@ -48,11 +48,7 @@ public class FontSelectorForm extends WindowTemplate {
     this.btnSelect.addActionListener(event -> {
       FontController.setFont(fontToSelect, (String) this.comboBox.getSelectedItem(),
           (int) this.spinner.getValue());
-      // Rather than making this a modal window, and wait from App.main() this window
-      // gets closed, we simply use the same controller singleton:
-      MainController.nextBootStage();
-      this.dispose();
-      MainController.bootstrap();
+      this.dispose(); // This is now a modal window, this window simply gets closed.
     });
     getContentPane().add(this.btnSelect, BorderLayout.SOUTH);
 
@@ -61,7 +57,7 @@ public class FontSelectorForm extends WindowTemplate {
     this.comboBox = new JComboBox<String>(new DefaultComboBoxModel<String>(
         new Vector<String>(Filepath.listAvailableFonts())));
     getContentPane().add(this.comboBox, BorderLayout.CENTER);
-    
+
     this.spinner = new JSpinner();
     this.spinner.setBackground(DesignController.getWindowBGColor());
     this.spinner.setModel(new SpinnerNumberModel(12, 9, 64, 1));

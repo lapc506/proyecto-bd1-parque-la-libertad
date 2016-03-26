@@ -28,6 +28,7 @@ import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 import java.awt.GridLayout;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.JSeparator;
@@ -56,15 +57,13 @@ public class EditPaisDialog extends DialogTemplate {
   private JTextField        selectedTextEdit;
   private JLabel            lblNuevoValor;
 
-  public EditPaisDialog(String windowName, int width, int height, boolean isVisible,
+  public EditPaisDialog(JFrame parent, String windowName, int width, int height, 
       boolean isResizable) throws HeadlessException {
-    super(windowName, width, height, isVisible, isResizable);
+    super(parent, windowName, width, height, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
     this.lblSeleccion = new JLabel("Seleccione pa\u00EDs por editar:");
-    if (FontController.getTitleFont() != null) {
-      this.lblSeleccion.setFont(FontController.getTitleFont());
-    }
+    this.lblSeleccion.setFont(FontController.getSubtitleFont());
     this.lblSeleccion.setHorizontalAlignment(SwingConstants.CENTER);
     this.lblSeleccion.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     getContentPane().add(this.lblSeleccion, BorderLayout.NORTH);

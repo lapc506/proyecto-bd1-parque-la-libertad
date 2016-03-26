@@ -9,7 +9,10 @@ import javax.swing.JOptionPane;
 
 import org.parquelibertad.metadata.Filepath;
 import org.parquelibertad.view.FontSelectorForm;
-import org.parquelibertad.view.TerritoryRegistrationForm;
+import org.parquelibertad.view.MainWindow;
+import org.parquelibertad.view.TerritoryEditDialog;
+import org.parquelibertad.view.adminEdit.AddPaisDialog;
+import org.parquelibertad.view.adminEdit.EditPaisDialog;
 
 /**
  * proyecto-bd1-parque-la-libertad
@@ -22,9 +25,10 @@ import org.parquelibertad.view.TerritoryRegistrationForm;
 @SuppressWarnings("unused")
 public class MainController {
 
-  private static MainController singleton          = null;
+  private static MainController singleton         = null;
   private JDialog               territorySelector = null;
-  private JFrame                fontSelector      = null;
+  private JDialog               debugFontSelector = null;
+  private JFrame                mainScreen        = null;
 
   protected MainController() {
     // Exists only to defeat instantiation.
@@ -37,46 +41,53 @@ public class MainController {
     return singleton;
   }
 
-  private static int bootstrapStage = 0;
-  public static void nextBootStage() { bootstrapStage++; }
   public static void bootstrap() {
-    switch (bootstrapStage) {
-      case 0:
-        getInstance(); // Start singleton as app instance.
-        break;
-      case 1:
-        singleton.selectFont("titles");
-        break;
-      case 2:
-        singleton.selectFont("subtitles");
-        break;
-      case 3:
-        singleton.selectFont("regularLabels");
-        break;
-      case 4:
-        singleton.selectFont("boldLabels");
-        break;
-      case 5:
-        singleton.showDemoTerritories();
-        break;
+    singleton.showSelectFont("titles");
+    singleton.showSelectFont("subtitles");
+    singleton.showSelectFont("regularLabels");
+    singleton.showSelectFont("boldLabels");
+    singleton.loadMainScreen();
+    singleton.showMainScreen();
+  }
+
+  public void showEditTerritories() {
+    territorySelector = new TerritoryEditDialog(mainScreen, "Registro de Territorios",
+        600, 350, false);
+    territorySelector.setVisible(true);
+  }
+
+  public void loadMainScreen() {
+    if (mainScreen != null) {
+      mainScreen.dispose();
     }
+    mainScreen = new MainWindow("Parque La Libertad", 800, 400, false, true);
   }
 
-  public void showDemoTerritories() {
-    territorySelector = new TerritoryRegistrationForm("Registro de Territorios",
-        600, 350, true, false);
+  public void showMainScreen() {
+    mainScreen.setVisible(true);
   }
 
-  public void selectFont(String desiredType) {
+  public void showAddPais() {
+    JDialog now = new AddPaisDialog(mainScreen, "Agregar país", 600, 600, false);
+    now.setVisible(true);
+  }
+
+  public void showEditPais() {
+    JDialog now = new EditPaisDialog(mainScreen, "Editar país", 600, 600, false);
+    now.setVisible(true);
+  }
+
+  public void showSelectFont(String desiredType) {
     if (Filepath.listAvailableFonts().size() != 0) {
-      fontSelector = new FontSelectorForm("Choose " + desiredType + " font", 400, 100,
-          true, false, desiredType);
+      debugFontSelector = new FontSelectorForm("Choose " + desiredType + " font", 400,
+          100, false, desiredType);
+      debugFontSelector.setVisible(true);
     } else {
       JOptionPane.showMessageDialog(null,
           "No extra fonts on project, using Java defaults.", "Noncritical error",
           JOptionPane.ERROR_MESSAGE);
-      nextBootStage();
-      bootstrap();
+      // nextBootStage();
+      // bootstrap();
     }
   }
 

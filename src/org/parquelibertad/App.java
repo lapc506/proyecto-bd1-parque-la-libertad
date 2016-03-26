@@ -28,6 +28,7 @@ public class App {
         // Fonts folder can be empty
         FontController.loadFallbackFonts();
         FontController.loadAvailableFonts();
+        MainController.getInstance();
         MainController.bootstrap();
       }
     });

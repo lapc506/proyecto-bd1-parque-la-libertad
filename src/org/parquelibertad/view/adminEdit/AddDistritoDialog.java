@@ -24,6 +24,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
 
@@ -54,15 +55,13 @@ public class AddDistritoDialog extends DialogTemplate {
   private JButton btnEditar;
   private JTextField selectedTextEdit;
 
-  public AddDistritoDialog(String windowName, int width, int height, boolean isVisible,
+  public AddDistritoDialog(JFrame parent, String windowName, int width, int height, 
       boolean isResizable) throws HeadlessException {
-    super(windowName, width, height, isVisible, isResizable);
+    super(parent, windowName, width, height, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
     this.lblSeleccion = new JLabel("Seleccione distrito por editar:");
-    if (FontController.getTitleFont() != null) {
-      this.lblSeleccion.setFont(FontController.getTitleFont());
-    }
+    this.lblSeleccion.setFont(FontController.getSubtitleFont());
     this.lblSeleccion.setHorizontalAlignment(SwingConstants.CENTER);
     this.lblSeleccion.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     getContentPane().add(this.lblSeleccion, BorderLayout.NORTH);
