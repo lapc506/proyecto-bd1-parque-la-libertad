@@ -22,7 +22,7 @@ public class Filepath {
 
   public static String slash;
 
-  public static void loadAll() {
+  public static void loadAllProjectFolders() {
     slash = "";
     project = System.getProperty("user.dir");
     if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {

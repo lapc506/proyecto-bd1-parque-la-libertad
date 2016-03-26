@@ -3,6 +3,7 @@
  */
 package org.parquelibertad.controller;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -22,7 +23,7 @@ import org.parquelibertad.view.TerritoryRegistrationForm;
 public class MainController {
 
   private static MainController singleton          = null;
-  private JFrame                territorySelector = null;
+  private JDialog               territorySelector = null;
   private JFrame                fontSelector      = null;
 
   protected MainController() {
@@ -41,18 +42,21 @@ public class MainController {
   public static void bootstrap() {
     switch (bootstrapStage) {
       case 0:
-        singleton.selectFont("titles");
+        getInstance(); // Start singleton as app instance.
         break;
       case 1:
-        singleton.selectFont("subtitles");
+        singleton.selectFont("titles");
         break;
       case 2:
-        singleton.selectFont("regularLabels");
+        singleton.selectFont("subtitles");
         break;
       case 3:
-        singleton.selectFont("boldLabels");
+        singleton.selectFont("regularLabels");
         break;
       case 4:
+        singleton.selectFont("boldLabels");
+        break;
+      case 5:
         singleton.showDemoTerritories();
         break;
     }
@@ -60,7 +64,7 @@ public class MainController {
 
   public void showDemoTerritories() {
     territorySelector = new TerritoryRegistrationForm("Registro de Territorios",
-        600, 600, true, false);
+        600, 350, true, false);
   }
 
   public void selectFont(String desiredType) {

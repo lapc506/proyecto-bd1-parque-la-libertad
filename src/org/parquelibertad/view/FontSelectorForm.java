@@ -9,9 +9,9 @@ import java.awt.BorderLayout;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import org.parquelibertad.controller.DesignStyles;
-import org.parquelibertad.controller.FontController;
 import org.parquelibertad.controller.MainController;
+import org.parquelibertad.controller.design.DesignController;
+import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.metadata.Filepath;
 import javax.swing.JSpinner;
 import javax.swing.DefaultComboBoxModel;
@@ -63,7 +63,7 @@ public class FontSelectorForm extends WindowTemplate {
     getContentPane().add(this.comboBox, BorderLayout.CENTER);
     
     this.spinner = new JSpinner();
-    this.spinner.setBackground(DesignStyles.getWindowBGColor());
+    this.spinner.setBackground(DesignController.getWindowBGColor());
     this.spinner.setModel(new SpinnerNumberModel(12, 9, 64, 1));
     getContentPane().add(this.spinner, BorderLayout.EAST);
 

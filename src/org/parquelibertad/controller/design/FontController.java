@@ -1,9 +1,11 @@
 /**
  * 
  */
-package org.parquelibertad.controller;
+package org.parquelibertad.controller.design;
 
 import java.awt.Font;
+
+import org.parquelibertad.metadata.Filepath;
 
 /**
  * proyecto-bd1-parque-la-libertad
@@ -22,7 +24,24 @@ public class FontController {
   private static int  regularLabelsSize;
   private static Font boldLabels;
   private static int  boldLabelsSize;
-    
+
+  public static void loadAvailableFonts() {
+    for (String font : Filepath.listAvailableFonts()) {
+      DesignController.loadFont(font, 12);
+    }
+  }
+  
+  public static void loadFallbackFonts() {
+    titles = Font.getFont("Tahoma");
+    titlesSize = 48;
+    subtitles = Font.getFont("Tahoma");
+    subtitlesSize = 16;
+    regularLabels = Font.getFont("Tahoma");
+    regularLabelsSize = 12;
+    boldLabels = Font.getFont("Tahoma");
+    boldLabelsSize = 12;
+  }
+
   public static void setFont(String type, String titleFont, int size) {
     switch (type) {
       case "titles":
@@ -67,22 +86,22 @@ public class FontController {
   }
 
   public static void setTitleFont(String titleFont, int size) {
-    titles = DesignStyles.getFont(titleFont);
+    titles = DesignController.getFont(titleFont);
     titlesSize = size;
   }
 
   public static void setSubtitleFont(String titleFont, int size) {
-    subtitles = DesignStyles.getFont(titleFont);
+    subtitles = DesignController.getFont(titleFont);
     subtitlesSize = size;
   }
 
   public static void setRegularLabelFont(String titleFont, int size) {
-    regularLabels = DesignStyles.getFont(titleFont);
+    regularLabels = DesignController.getFont(titleFont);
     regularLabelsSize = size;
   }
 
   public static void setBoldLabelFont(String titleFont, int size) {
-    boldLabels = DesignStyles.getFont(titleFont);
+    boldLabels = DesignController.getFont(titleFont);
     boldLabelsSize = size;
   }
 }

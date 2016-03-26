@@ -16,18 +16,5 @@ import org.parquelibertad.metadata.Filepath;
  *
  */
 public class DebugController {
-  public static String mainFont;
-
-  public static void loadAvailableFonts() {
-    for (String font : Filepath.listAvailableFonts()){
-      DesignStyles.loadFont(font, 12);
-    }
-    for (String font : DesignStyles.listLoadedFonts()){
-      System.out.println(font); // if fails fonts array is empty, check App.java 
-    }
-    
-    /* JOptionPane.showInputDialog(null, "Choose the main system font:",
-     * "Main system font selection", JOptionPane.QUESTION_MESSAGE, null,
-     * fontsList, fontsList[0]); */
-  }
+  
 }

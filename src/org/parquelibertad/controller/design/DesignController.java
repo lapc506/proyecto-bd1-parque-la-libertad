@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.parquelibertad.controller;
+package org.parquelibertad.controller.design;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -28,8 +28,9 @@ import org.parquelibertad.metadata.Filepath;
  *         licencia MIT.
  *
  */
-public class DesignStyles {
-  private static Color                   windowBGColor  = new Color(255, 143, 0); //#FF8F00
+public class DesignController {
+  private static Color                   windowBGColor  = new Color(255, 143, 0);
+                                          //#FF8F00, based on www.parquelalibertad.org
   private static Color                   fontColor      = new Color(0, 0, 0);
   private static Hashtable<String, Font> loadedFonts    = new Hashtable<String, Font>();
   private static String                  HEX_CHARACTERS = "0123456789ABCDEF";
@@ -48,12 +49,8 @@ public class DesignStyles {
     }
   }
 
-  public static Font getFont(String desiredFont) throws IllegalArgumentException {
-    try {
-      return loadedFonts.get(desiredFont);
-    } catch (Exception e) {
-      throw new IllegalArgumentException(e.getMessage());
-    }
+  public static Font getFont(String desiredFont) {
+    return loadedFonts.get(desiredFont);
   }
 
   public static ArrayList<String> listLoadedFonts() {
@@ -82,7 +79,7 @@ public class DesignStyles {
     int red = hex2dec(colorValue.substring(1, 3));
     int green = hex2dec(colorValue.substring(3, 5));
     int blue = hex2dec(colorValue.substring(5, 7));
-    System.out.println("Generating hex color " + red + " " + green + " " + blue);
+    // System.out.println("Generating hex color " + red + " " + green + " " + blue);
     if (matcher.matches()) { return new Color(red, green, blue); }
     return new Color(0, 0, 0);
   }

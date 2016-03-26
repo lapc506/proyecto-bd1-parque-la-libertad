@@ -5,9 +5,9 @@ package org.parquelibertad;
 
 import java.awt.EventQueue;
 
-import org.parquelibertad.controller.DebugController;
-import org.parquelibertad.controller.DesignStyles;
 import org.parquelibertad.controller.MainController;
+import org.parquelibertad.controller.design.DesignController;
+import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.metadata.Filepath;
 
 /**
@@ -18,16 +18,16 @@ import org.parquelibertad.metadata.Filepath;
  *
  */
 public class App {
-  public static MainController Instance;
 	public static void main(String[] args) {
-	  Filepath.loadAll();
-    DesignStyles.startLookAndFeel();
-    
     EventQueue.invokeLater(new Runnable() {
-      public void run() { 
-        DesignStyles.setWindowBGColor(DesignStyles.getHexColor("#ff8f00"));
-        Instance = MainController.getInstance();
-        DebugController.loadAvailableFonts(); // Assuming fonts folder is not empty
+      public void run() {
+        Filepath.loadAllProjectFolders();
+        DesignController.startLookAndFeel();
+        // Background color based on www.parquelalibertad.org
+        DesignController.setWindowBGColor(DesignController.getHexColor("#FF8F00"));
+        // Fonts folder can be empty
+        FontController.loadFallbackFonts();
+        FontController.loadAvailableFonts();
         MainController.bootstrap();
       }
     });
