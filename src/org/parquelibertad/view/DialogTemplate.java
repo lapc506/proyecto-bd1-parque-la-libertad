@@ -25,7 +25,7 @@ public class DialogTemplate extends JDialog {
       boolean isResizable) throws HeadlessException {
     super(parent, windowName, Dialog.ModalityType.DOCUMENT_MODAL);
     getContentPane().setBackground(DesignController.getWindowBGColor());
-    setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     setSize(width, height);
     setResizable(isResizable);
   }

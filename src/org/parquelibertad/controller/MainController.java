@@ -7,6 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.metadata.Filepath;
 import org.parquelibertad.view.FontSelectorForm;
 import org.parquelibertad.view.MainWindow;
@@ -42,10 +43,14 @@ public class MainController {
   }
 
   public static void bootstrap() {
-    singleton.showSelectFont("titles");
-    singleton.showSelectFont("subtitles");
-    singleton.showSelectFont("regularLabels");
-    singleton.showSelectFont("boldLabels");
+    // singleton.showSelectFont("titles");
+    FontController.setFont("titles", "PalanquinDark-Bold.ttf", 32);
+    // singleton.showSelectFont("subtitles");
+    FontController.setFont("subtitles", "Palanquin-Regular.ttf", 16);
+    // singleton.showSelectFont("regularLabels");
+    FontController.setFont("regularLabels", "Quicksand_Book.otf", 16);
+    // singleton.showSelectFont("boldLabels");
+    FontController.setFont("boldLabels", "Quicksand_Bold.otf", 16);
     singleton.loadMainScreen();
     singleton.showMainScreen();
   }

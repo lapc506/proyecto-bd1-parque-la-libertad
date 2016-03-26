@@ -17,6 +17,7 @@ import javax.swing.JSpinner;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -37,6 +38,7 @@ public class FontSelectorForm extends DialogTemplate {
   public FontSelectorForm(String windowName, int width, int height, boolean isResizable,
       String fontToSelect) {
     super(null, windowName, width, height, isResizable);
+    setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
     this.lblChooseAFont = new JLabel("Choose " + fontToSelect + " font: ");
