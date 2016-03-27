@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.metadata.Filepath;
+import org.parquelibertad.view.AddPersonas;
 import org.parquelibertad.view.FontSelectorForm;
 import org.parquelibertad.view.MainWindow;
 import org.parquelibertad.view.TerritoryEditDialog;
@@ -95,5 +96,10 @@ public class MainController {
       // bootstrap();
     }
   }
+
+public void showAddPersona() {
+	JDialog now = new AddPersonas(mainScreen, "Editar país", 600, 600, false);
+    now.setVisible(true);
+}
 
 }

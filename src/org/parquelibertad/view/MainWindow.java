@@ -17,41 +17,52 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 
 /**
- * proyecto-bd1-parque-la-libertad
- * org.parquelibertad.view
- * @author Luis Andrés Peña Castillo 2014057250
- * Derechos reservados bajo licencia MIT.
+ * proyecto-bd1-parque-la-libertad org.parquelibertad.view
+ * 
+ * @author Luis Andrés Peña Castillo 2014057250 Derechos reservados bajo
+ *         licencia MIT.
  *
  */
 public class MainWindow extends WindowTemplate {
-  private JMenuBar menuBar;
-  private JMenu menuEdit;
-  private JMenuItem mntmTerritorios;
+	private JMenuBar menuBar;
+	private JMenu menuAdministrador;
+	private JMenuItem mntmTerritorios;
+	private JMenu menuAnadir;
+	private JMenuItem menuRegistrarPersona;
 
-  /**
-   * @param windowName
-   * @param width
-   * @param height
-   * @param isVisible
-   * @param isResizable
-   * @throws HeadlessException
-   */
-  public MainWindow(String windowName, int width, int height, boolean isVisible,
-      boolean isResizable) throws HeadlessException {
-    super(windowName, width, height, isVisible, isResizable);
-    
-    this.menuBar = new JMenuBar();
-    setJMenuBar(this.menuBar);
-    
-    this.menuEdit = new JMenu("Editar...");
-    this.menuEdit.setFont(FontController.getBoldLabelFont());
-    this.menuBar.add(this.menuEdit);
-    
-    this.mntmTerritorios = new JMenuItem("Territorios");
-    this.mntmTerritorios.addActionListener(event->MainController.getInstance().showEditTerritories());
-    this.mntmTerritorios.setFont(FontController.getBoldLabelFont());
-    this.menuEdit.add(this.mntmTerritorios);
-    
-  }
-  
+	/**
+	 * @param windowName
+	 * @param width
+	 * @param height
+	 * @param isVisible
+	 * @param isResizable
+	 * @throws HeadlessException
+	 */
+	public MainWindow(String windowName, int width, int height, boolean isVisible, boolean isResizable)
+			throws HeadlessException {
+		super(windowName, width, height, isVisible, isResizable);
+
+		this.menuBar = new JMenuBar();
+		setJMenuBar(this.menuBar);
+		// ----------------------------------
+		menuAnadir = new JMenu("A\u00F1adir");
+		menuAnadir.setFont(null);
+		menuBar.add(menuAnadir);
+		// ----------------------------------
+		menuRegistrarPersona = new JMenuItem("Registrar nueva Persona...");
+		this.mntmTerritorios.addActionListener(event -> MainController.getInstance().showAddPersona());
+		menuRegistrarPersona.setFont(FontController.getBoldLabelFont());
+		menuAnadir.add(menuRegistrarPersona);
+
+		this.menuAdministrador = new JMenu("Administrador");
+		this.menuAdministrador.setFont(FontController.getBoldLabelFont());
+		this.menuBar.add(this.menuAdministrador);
+
+		this.mntmTerritorios = new JMenuItem("A\u00F1adir y Editar Territorios");
+		this.mntmTerritorios.addActionListener(event -> MainController.getInstance().showEditTerritories());
+		this.mntmTerritorios.setFont(FontController.getBoldLabelFont());
+		this.menuAdministrador.add(this.mntmTerritorios);
+
+	}
+
 }
