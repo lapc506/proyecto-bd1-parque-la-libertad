@@ -8,8 +8,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import org.parquelibertad.controller.design.DesignController;
 
-import org.parquelibertad.controller.DesignStyles;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
@@ -52,7 +52,7 @@ public class AgregarNombreCurso extends JFrame{
 	 */
 	private void initialize() {
 		setSize(350, 250);
-		getContentPane().setBackground(DesignStyles.windowBGColor);
+		getContentPane().setBackground(DesignController.getWindowBGColor());
 		getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();

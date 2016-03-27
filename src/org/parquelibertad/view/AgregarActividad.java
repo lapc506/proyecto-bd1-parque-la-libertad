@@ -9,7 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import org.parquelibertad.controller.DesignStyles;
+
+import org.parquelibertad.controller.design.DesignController;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
@@ -52,7 +54,7 @@ public class AgregarActividad extends JFrame{
 	 */
 	private void initialize() {
 		setSize(350, 750);
-		getContentPane().setBackground(DesignStyles.windowBGColor);
+		getContentPane().setBackground(DesignController.getWindowBGColor());
 		getContentPane().setLayout(null);
 		
 		JPanel panel = new JPanel();
