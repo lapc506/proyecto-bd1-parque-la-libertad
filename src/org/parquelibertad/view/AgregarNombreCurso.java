@@ -18,7 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.JButton;
 
-public class AgregarTipoActividad extends JFrame{
+public class AgregarNombreCurso extends JFrame{
 
 	private JFrame frame;
 	private JTextField textField;
@@ -30,7 +30,7 @@ public class AgregarTipoActividad extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AgregarTipoActividad window = new AgregarTipoActividad();
+					AgregarNombreCurso window = new AgregarNombreCurso();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -42,8 +42,8 @@ public class AgregarTipoActividad extends JFrame{
 	/**
 	 * Create the application.
 	 */
-	public AgregarTipoActividad() {
-		setTitle("Agregar Tipo de Actividad");
+	public AgregarNombreCurso() {
+		setTitle("Agregar Nombre de Curso");
 		initialize();
 	}
 
@@ -62,7 +62,7 @@ public class AgregarTipoActividad extends JFrame{
 		panel.setFocusable(false);
 		panel.setOpaque(false);
 		LineBorder colorTitledBorder=(new LineBorder(new Color(255, 255, 0)));
-		panel.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Tipo de Actividad", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 16), null));
+		panel.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Nombre del Curso", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 16), null));
 		panel.setBounds(10, 11, 330, 199);
 		getContentPane().add(panel);
 		panel.setLayout(null);
