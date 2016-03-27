@@ -19,11 +19,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
 
 public class AgregarActividad extends JFrame{
 
 	private JFrame frame;
 	private JTextField textField;
+	private JTextField textField_1;
 
 	/**
 	 * Launch the application.
@@ -53,7 +55,7 @@ public class AgregarActividad extends JFrame{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		setSize(350, 750);
+		setSize(650, 750);
 		getContentPane().setBackground(DesignController.getWindowBGColor());
 		getContentPane().setLayout(null);
 		
@@ -65,7 +67,7 @@ public class AgregarActividad extends JFrame{
 		panel.setOpaque(false);
 		LineBorder colorTitledBorder=(new LineBorder(new Color(255, 255, 0)));
 		panel.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Actividad", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 16), null));
-		panel.setBounds(10, 11, 330, 699);
+		panel.setBounds(10, 11, 630, 699);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
@@ -74,84 +76,8 @@ public class AgregarActividad extends JFrame{
 		lblNombreDeLa.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		panel.add(lblNombreDeLa);
 		
-		JLabel lblDas = new JLabel("D\u00EDas");
-		lblDas.setBounds(26, 369, 190, 27);
-		lblDas.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		panel.add(lblDas);
-		
-		JCheckBox chckbxLunes = new JCheckBox("Lunes");
-		chckbxLunes.setBounds(26, 418, 97, 23);
-		chckbxLunes.setOpaque(false);
-		panel.add(chckbxLunes);
-		
-		JCheckBox chckbxMartes = new JCheckBox("Martes");
-		chckbxMartes.setBounds(123, 418, 97, 23);
-		chckbxMartes.setOpaque(false);
-		panel.add(chckbxMartes);
-		
-		JCheckBox chckbxMircoles = new JCheckBox("Mi\u00E9rcoles");
-		chckbxMircoles.setBounds(234, 418, 90, 23);
-		chckbxMircoles.setOpaque(false);
-		panel.add(chckbxMircoles);
-		
-		JCheckBox chckbxJueves = new JCheckBox("Jueves");
-		chckbxJueves.setBounds(26, 453, 97, 23);
-		chckbxJueves.setOpaque(false);
-		panel.add(chckbxJueves);
-		
-		JCheckBox chckbxViernes = new JCheckBox("Viernes");
-		chckbxViernes.setBounds(123, 453, 97, 23);
-		chckbxViernes.setOpaque(false);
-		panel.add(chckbxViernes);
-		
-		JCheckBox chckbxSbado = new JCheckBox("S\u00E1bado");
-		chckbxSbado.setBounds(234, 453, 74, 23);
-		chckbxSbado.setOpaque(false);
-		panel.add(chckbxSbado);
-		
-		JCheckBox chckbxDomingo = new JCheckBox("Domingo");
-		chckbxDomingo.setBounds(123, 489, 97, 23);
-		chckbxDomingo.setOpaque(false);
-		panel.add(chckbxDomingo);
-		
-		JLabel lblHorario = new JLabel("Horario");
-		lblHorario.setBounds(127, 519, 62, 27);
-		lblHorario.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		panel.add(lblHorario);
-		
-		JSpinner spinner = new JSpinner();
-		spinner.setBounds(98, 563, 53, 20);
-		panel.add(spinner);
-		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setBounds(171, 563, 53, 20);
-		panel.add(spinner_1);
-		
-		JLabel label = new JLabel(":");
-		label.setBounds(157, 557, 14, 27);
-		label.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		panel.add(label);
-		
-		JLabel label_1 = new JLabel(":");
-		label_1.setBounds(157, 615, 14, 27);
-		label_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		panel.add(label_1);
-		
-		JLabel lblA = new JLabel("a");
-		lblA.setBounds(157, 583, 14, 27);
-		lblA.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		panel.add(lblA);
-		
-		JSpinner spinner_2 = new JSpinner();
-		spinner_2.setBounds(98, 621, 53, 20);
-		panel.add(spinner_2);
-		
-		JSpinner spinner_3 = new JSpinner();
-		spinner_3.setBounds(171, 621, 53, 20);
-		panel.add(spinner_3);
-		
 		JButton btnNewButton = new JButton("Registrar");
-		btnNewButton.setBounds(98, 665, 125, 23);
+		btnNewButton.setBounds(261, 665, 125, 23);
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		panel.add(btnNewButton);
 		
@@ -170,13 +96,157 @@ public class AgregarActividad extends JFrame{
 		
 		JLabel lblDescripcin = new JLabel("Descripci\u00F3n");
 		lblDescripcin.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		lblDescripcin.setBounds(26, 219, 190, 27);
+		lblDescripcin.setBounds(318, 45, 190, 27);
 		panel.add(lblDescripcin);
 		
 		textField = new JTextField();
-		textField.setBounds(26, 257, 282, 112);
+		textField.setBounds(318, 83, 282, 112);
 		panel.add(textField);
 		textField.setColumns(10);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setLayout(null);
+		panel_1.setOpaque(false);
+		panel_1.setName("");
+		panel_1.setForeground(Color.YELLOW);
+		panel_1.setFocusable(false);
+		panel_1.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Filtros", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 16), null));
+		panel_1.setBackground(Color.BLACK);
+		panel_1.setBounds(26, 219, 594, 253);
+		panel.add(panel_1);
+		
+		JLabel label_2 = new JLabel("Nombre");
+		label_2.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		label_2.setBounds(10, 24, 75, 27);
+		panel_1.add(label_2);
+		
+		JLabel label_3 = new JLabel("Primer Apellido");
+		label_3.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		label_3.setBounds(199, 24, 167, 27);
+		panel_1.add(label_3);
+		
+		JLabel label_4 = new JLabel("Segundo Apellido");
+		label_4.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		label_4.setBounds(392, 24, 144, 27);
+		panel_1.add(label_4);
+		
+		JComboBox comboBox_2 = new JComboBox();
+		comboBox_2.setBounds(392, 62, 184, 44);
+		panel_1.add(comboBox_2);
+		
+		JComboBox comboBox_3 = new JComboBox();
+		comboBox_3.setBounds(10, 62, 184, 44);
+		panel_1.add(comboBox_3);
+		
+		JComboBox comboBox_4 = new JComboBox();
+		comboBox_4.setBounds(199, 62, 184, 44);
+		panel_1.add(comboBox_4);
+		
+		JLabel lblTipoDeIdentificacin = new JLabel("Tipo de Identificaci\u00F3n");
+		lblTipoDeIdentificacin.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblTipoDeIdentificacin.setBounds(10, 117, 184, 27);
+		panel_1.add(lblTipoDeIdentificacin);
+		
+		JLabel lblIdentificacin = new JLabel("Identificaci\u00F3n");
+		lblIdentificacin.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		lblIdentificacin.setBounds(251, 117, 184, 27);
+		panel_1.add(lblIdentificacin);
+		
+		JComboBox comboBox_5 = new JComboBox();
+		comboBox_5.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		comboBox_5.setBounds(10, 155, 237, 42);
+		panel_1.add(comboBox_5);
+		
+		textField_1 = new JTextField();
+		textField_1.setBounds(251, 155, 325, 42);
+		panel_1.add(textField_1);
+		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		textField_1.setColumns(10);
+		
+		JButton btnFiltrar = new JButton("Filtrar");
+		btnFiltrar.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		btnFiltrar.setBounds(238, 208, 106, 34);
+		panel_1.add(btnFiltrar);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setOpaque(false);
+		panel_2.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Días", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 16), null));
+		panel_2.setBounds(26, 483, 295, 171);
+		panel.add(panel_2);
+		
+		JCheckBox checkBox = new JCheckBox("Lunes");
+		checkBox.setOpaque(false);
+		checkBox.setBounds(6, 46, 97, 23);
+		panel_2.add(checkBox);
+		
+		JCheckBox checkBox_1 = new JCheckBox("Jueves");
+		checkBox_1.setOpaque(false);
+		checkBox_1.setBounds(6, 81, 97, 23);
+		panel_2.add(checkBox_1);
+		
+		JCheckBox checkBox_2 = new JCheckBox("Domingo");
+		checkBox_2.setOpaque(false);
+		checkBox_2.setBounds(103, 117, 97, 23);
+		panel_2.add(checkBox_2);
+		
+		JCheckBox checkBox_3 = new JCheckBox("Viernes");
+		checkBox_3.setOpaque(false);
+		checkBox_3.setBounds(103, 81, 97, 23);
+		panel_2.add(checkBox_3);
+		
+		JCheckBox checkBox_4 = new JCheckBox("Martes");
+		checkBox_4.setOpaque(false);
+		checkBox_4.setBounds(103, 46, 97, 23);
+		panel_2.add(checkBox_4);
+		
+		JCheckBox checkBox_5 = new JCheckBox("Mi\u00E9rcoles");
+		checkBox_5.setOpaque(false);
+		checkBox_5.setBounds(214, 46, 90, 23);
+		panel_2.add(checkBox_5);
+		
+		JCheckBox checkBox_6 = new JCheckBox("S\u00E1bado");
+		checkBox_6.setOpaque(false);
+		checkBox_6.setBounds(214, 81, 74, 23);
+		panel_2.add(checkBox_6);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setLayout(null);
+		panel_3.setOpaque(false);
+		panel_3.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Horario", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 16), null));
+		panel_3.setBounds(331, 483, 222, 171);
+		panel.add(panel_3);
+		
+		JSpinner spinner = new JSpinner();
+		spinner.setBounds(47, 56, 53, 20);
+		panel_3.add(spinner);
+		
+		JSpinner spinner_1 = new JSpinner();
+		spinner_1.setBounds(47, 114, 53, 20);
+		panel_3.add(spinner_1);
+		
+		JLabel label = new JLabel(":");
+		label.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		label.setBounds(106, 108, 14, 27);
+		panel_3.add(label);
+		
+		JLabel label_1 = new JLabel("a");
+		label_1.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		label_1.setBounds(106, 76, 14, 27);
+		panel_3.add(label_1);
+		
+		JLabel label_6 = new JLabel(":");
+		label_6.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		label_6.setBounds(106, 50, 14, 27);
+		panel_3.add(label_6);
+		
+		JSpinner spinner_2 = new JSpinner();
+		spinner_2.setBounds(120, 56, 53, 20);
+		panel_3.add(spinner_2);
+		
+		JSpinner spinner_3 = new JSpinner();
+		spinner_3.setBounds(120, 114, 53, 20);
+		panel_3.add(spinner_3);
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setResizable(false);

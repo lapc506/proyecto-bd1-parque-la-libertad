@@ -21,7 +21,7 @@ import javax.swing.JSpinner;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 
-public class AgregarAlumno extends JFrame{
+public class RegistrarVisita extends JFrame{
 
 	private JFrame frame;
 	private JTextField textField;
@@ -33,7 +33,7 @@ public class AgregarAlumno extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AgregarAlumno window = new AgregarAlumno();
+					RegistrarVisita window = new RegistrarVisita();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,8 +45,8 @@ public class AgregarAlumno extends JFrame{
 	/**
 	 * Create the application.
 	 */
-	public AgregarAlumno() {
-		setTitle("Agregar Alumno");
+	public RegistrarVisita() {
+		setTitle("Registrar Visita");
 		initialize();
 	}
 
@@ -54,7 +54,7 @@ public class AgregarAlumno extends JFrame{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		setSize(650, 500);
+		setSize(650, 550);
 		getContentPane().setBackground(DesignController.getWindowBGColor());
 		getContentPane().setLayout(null);
 		
@@ -66,23 +66,38 @@ public class AgregarAlumno extends JFrame{
 		panel.setOpaque(false);
 		LineBorder colorTitledBorder=(new LineBorder(new Color(255, 255, 0)));
 		panel.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), null, TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 16), null));
-		panel.setBounds(10, 11, 630, 449);
+		panel.setBounds(10, 11, 630, 499);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 		
 		JLabel lblNombreDeLa = new JLabel("Nombre de la Persona");
-		lblNombreDeLa.setBounds(26, 45, 190, 27);
+		lblNombreDeLa.setBounds(26, 11, 190, 27);
 		lblNombreDeLa.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		panel.add(lblNombreDeLa);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(26, 83, 515, 44);
+		comboBox.setBounds(26, 49, 515, 44);
 		panel.add(comboBox);
 		
 		JButton btnRegistrar = new JButton("Registrar");
 		btnRegistrar.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		btnRegistrar.setBounds(246, 398, 126, 40);
+		btnRegistrar.setBounds(247, 448, 126, 40);
 		panel.add(btnRegistrar);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setLayout(null);
+		panel_2.setOpaque(false);
+		panel_2.setName("");
+		panel_2.setForeground(Color.YELLOW);
+		panel_2.setFocusable(false);
+		panel_2.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Motivo de la Visita", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 16), null));
+		panel_2.setBackground(Color.BLACK);
+		panel_2.setBounds(26, 357, 594, 80);
+		panel.add(panel_2);
+		
+		JComboBox comboBox_4 = new JComboBox();
+		comboBox_4.setBounds(122, 26, 315, 42);
+		panel_2.add(comboBox_4);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setLayout(null);
@@ -92,7 +107,7 @@ public class AgregarAlumno extends JFrame{
 		panel_1.setFocusable(false);
 		panel_1.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Filtros", TitledBorder.LEADING, TitledBorder.TOP, new Font("Tahoma", Font.PLAIN, 16), null));
 		panel_1.setBackground(Color.BLACK);
-		panel_1.setBounds(26, 138, 594, 253);
+		panel_1.setBounds(26, 95, 594, 230);
 		panel.add(panel_1);
 		
 		JLabel label = new JLabel("Nombre");
@@ -111,41 +126,41 @@ public class AgregarAlumno extends JFrame{
 		panel_1.add(label_2);
 		
 		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(392, 62, 184, 44);
+		comboBox_1.setBounds(392, 62, 184, 34);
 		panel_1.add(comboBox_1);
 		
 		JComboBox comboBox_2 = new JComboBox();
-		comboBox_2.setBounds(10, 62, 184, 44);
+		comboBox_2.setBounds(10, 62, 184, 34);
 		panel_1.add(comboBox_2);
 		
 		JComboBox comboBox_3 = new JComboBox();
-		comboBox_3.setBounds(199, 62, 184, 44);
+		comboBox_3.setBounds(199, 62, 184, 34);
 		panel_1.add(comboBox_3);
 		
 		JLabel label_3 = new JLabel("Tipo de Identificaci\u00F3n");
 		label_3.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		label_3.setBounds(10, 117, 184, 27);
+		label_3.setBounds(10, 107, 184, 27);
 		panel_1.add(label_3);
 		
 		JLabel label_4 = new JLabel("Identificaci\u00F3n");
 		label_4.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		label_4.setBounds(251, 117, 184, 27);
+		label_4.setBounds(251, 107, 184, 27);
 		panel_1.add(label_4);
 		
-		JComboBox comboBox_4 = new JComboBox();
-		comboBox_4.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		comboBox_4.setBounds(10, 155, 237, 42);
-		panel_1.add(comboBox_4);
+		JComboBox comboBox_5 = new JComboBox();
+		comboBox_5.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		comboBox_5.setBounds(10, 145, 237, 34);
+		panel_1.add(comboBox_5);
 		
 		textField = new JTextField();
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		textField.setColumns(10);
-		textField.setBounds(251, 155, 325, 42);
+		textField.setBounds(251, 145, 325, 34);
 		panel_1.add(textField);
 		
 		JButton button = new JButton("Filtrar");
 		button.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		button.setBounds(238, 208, 106, 34);
+		button.setBounds(239, 190, 106, 34);
 		panel_1.add(button);
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
