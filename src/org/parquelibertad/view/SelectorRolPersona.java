@@ -20,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 public class SelectorRolPersona extends JFrame{
 
@@ -30,6 +31,11 @@ public class SelectorRolPersona extends JFrame{
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
