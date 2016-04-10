@@ -46,11 +46,17 @@ public class MainWindow extends WindowTemplate {
 		setJMenuBar(this.menuBar);
 		// ----------------------------------
 		menuAnadir = new JMenu("A\u00F1adir");
-		menuAnadir.setFont(null);
+		menuAnadir.setFont(FontController.getBoldLabelFont());
 		menuBar.add(menuAnadir);
 		// ----------------------------------
 		menuRegistrarPersona = new JMenuItem("Registrar nueva Persona...");
-		this.mntmTerritorios.addActionListener(event -> MainController.getInstance().showAddPersona());
+		menuRegistrarPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainController.getInstance().showAddPersona();
+			}
+		});
+		// Al parecer esta manera de usar métodos lambda es incorrecta:
+		// mntmTerritorios.addActionListener(event -> MainController.getInstance().showAddPersona());
 		menuRegistrarPersona.setFont(FontController.getBoldLabelFont());
 		menuAnadir.add(menuRegistrarPersona);
 

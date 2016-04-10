@@ -24,7 +24,18 @@ public class FontController {
   private static int  regularLabelsSize;
   private static Font boldLabels;
   private static int  boldLabelsSize;
-
+  
+  public static void loadDefaultFonts() {
+	// singleton.showSelectFont("titles");
+    setFont("titles", "PalanquinDark-Bold.ttf", 32);
+    // singleton.showSelectFont("subtitles");
+    setFont("subtitles", "Palanquin-Regular.ttf", 16);
+    // singleton.showSelectFont("regularLabels");
+    setFont("regularLabels", "Quicksand_Book.otf", 16);
+    // singleton.showSelectFont("boldLabels");
+    setFont("boldLabels", "Quicksand_Bold.otf", 16);
+  }
+  
   public static void loadAvailableFonts() {
     for (String font : Filepath.listAvailableFonts()) {
       DesignController.loadFont(font, 12);

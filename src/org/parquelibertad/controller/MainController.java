@@ -7,6 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.parquelibertad.App;
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.metadata.Filepath;
 import org.parquelibertad.view.AddPersonas;
@@ -26,35 +27,22 @@ import org.parquelibertad.view.adminEdit.EditPaisDialog;
  */
 @SuppressWarnings("unused")
 public class MainController {
-
-  private static MainController singleton         = null;
-  private JDialog               territorySelector = null;
-  private JDialog               debugFontSelector = null;
-  private JFrame                mainScreen        = null;
-
-  protected MainController() {
-    // Exists only to defeat instantiation.
+  private static MainController instance = null;
+  private MainController(){
+	  territorySelector = null;
+	  debugFontSelector = null;
+	  mainScreen        = null;
   }
-
   public static MainController getInstance() {
-    if (singleton == null) {
-      singleton = new MainController();
+    if (instance == null) {
+    	instance = new MainController();
     }
-    return singleton;
+    return instance;
   }
-
-  public static void bootstrap() {
-    // singleton.showSelectFont("titles");
-    FontController.setFont("titles", "PalanquinDark-Bold.ttf", 32);
-    // singleton.showSelectFont("subtitles");
-    FontController.setFont("subtitles", "Palanquin-Regular.ttf", 16);
-    // singleton.showSelectFont("regularLabels");
-    FontController.setFont("regularLabels", "Quicksand_Book.otf", 16);
-    // singleton.showSelectFont("boldLabels");
-    FontController.setFont("boldLabels", "Quicksand_Bold.otf", 16);
-    singleton.loadMainScreen();
-    singleton.showMainScreen();
-  }
+	
+  private JDialog territorySelector;
+  private JDialog debugFontSelector;
+  private JFrame  mainScreen;
 
   public void showEditTerritories() {
     territorySelector = new TerritoryEditDialog(mainScreen, "Registro de Territorios",
@@ -62,14 +50,8 @@ public class MainController {
     territorySelector.setVisible(true);
   }
 
-  public void loadMainScreen() {
-    if (mainScreen != null) {
-      mainScreen.dispose();
-    }
-    mainScreen = new MainWindow("Parque La Libertad", 800, 400, false, true);
-  }
-
-  public void showMainScreen() {
+  public void getMainScreen() {
+	mainScreen = new MainWindow("Parque La Libertad", 800, 400, false, true);
     mainScreen.setVisible(true);
   }
 
@@ -92,8 +74,6 @@ public class MainController {
       JOptionPane.showMessageDialog(null,
           "No extra fonts on project, using Java defaults.", "Noncritical error",
           JOptionPane.ERROR_MESSAGE);
-      // nextBootStage();
-      // bootstrap();
     }
   }
 
