@@ -3,10 +3,6 @@
  */
 package org.parquelibertad.controller;
 
-import javax.swing.JOptionPane;
-
-import org.parquelibertad.metadata.Filepath;
-
 /**
  * proyecto-bd1-parque-la-libertad
  * org.parquelibertad.controller

@@ -4,6 +4,9 @@
 package org.parquelibertad;
 
 import java.awt.EventQueue;
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
 
 import org.parquelibertad.controller.MainController;
 import org.parquelibertad.controller.design.DesignController;
@@ -18,22 +21,28 @@ import org.parquelibertad.metadata.Filepath;
  *
  */
 public class App {
-  
   public static void main(String[] args) {
-	Filepath.loadAllProjectFolders();
-	DesignController.startLookAndFeel();
-	// Background color based on www.parquelalibertad.org
-	DesignController.setWindowBGColor(DesignController.getHexColor("#FF8F00"));
-	// Fonts folder can be empty
-	FontController.loadFallbackFonts();
-	FontController.loadAvailableFonts();
-	FontController.loadDefaultFonts();
-	
-	// Will only run Swing JFrames and JDialogs
-	EventQueue.invokeLater(new Runnable() {
-		public void run() {
-			MainController.getInstance().getMainScreen();
-		}
-	});
+    Filepath.loadAllProjectFolders();
+    DesignController.startLookAndFeel();
+    // Background color based on www.parquelalibertad.org
+    DesignController.setWindowBGColor(DesignController.getHexColor("#FF8F00"));
+    // Fonts folder can be empty
+    FontController.loadFallbackFonts();
+    FontController.loadAvailableFonts();
+    FontController.loadDefaultFonts();
+    try {
+      MainController.getInstance().initializeDBConnection();
+    } catch (SQLException e) {
+      JOptionPane.showMessageDialog(null,
+          "No es posible conectarse a la base de datos Oracle: \n" + e.getMessage(),
+          "Oracle SQLException", JOptionPane.ERROR_MESSAGE);
+      System.exit(-1);
+    }
+    // Will only run Swing JFrames and JDialogs
+    EventQueue.invokeLater(new Runnable() {
+      public void run() {
+        MainController.getInstance().getMainScreen();
+      }
+    });
   }
 }

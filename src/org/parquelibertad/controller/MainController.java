@@ -3,6 +3,10 @@
  */
 package org.parquelibertad.controller;
 
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -25,24 +29,26 @@ import org.parquelibertad.view.adminEdit.EditPaisDialog;
  *         Derechos reservados bajo licencia MIT.
  *
  */
-@SuppressWarnings("unused")
 public class MainController {
   private static MainController instance = null;
-  private MainController(){
-	  territorySelector = null;
-	  debugFontSelector = null;
-	  mainScreen        = null;
+  private JDialog               territorySelector;
+  private JDialog               debugFontSelector;
+  private JFrame                mainScreen;
+  private Connection            myConnection;
+
+  private MainController() {
+    territorySelector = null;
+    debugFontSelector = null;
+    mainScreen = null;
+    myConnection = null;
   }
+
   public static MainController getInstance() {
     if (instance == null) {
-    	instance = new MainController();
+      instance = new MainController();
     }
     return instance;
   }
-	
-  private JDialog territorySelector;
-  private JDialog debugFontSelector;
-  private JFrame  mainScreen;
 
   public void showEditTerritories() {
     territorySelector = new TerritoryEditDialog(mainScreen, "Registro de Territorios",
@@ -50,8 +56,12 @@ public class MainController {
     territorySelector.setVisible(true);
   }
 
+  public void initializeDBConnection() throws SQLException {
+    myConnection = ConnectionFactory.getConnection();
+  }
+
   public void getMainScreen() {
-	mainScreen = new MainWindow("Parque La Libertad", 800, 400, false, true);
+    mainScreen = new MainWindow("Parque La Libertad", 800, 400, false, true);
     mainScreen.setVisible(true);
   }
 
@@ -77,9 +87,9 @@ public class MainController {
     }
   }
 
-public void showAddPersona() {
-	JDialog now = new AddPersonas(mainScreen, "Editar país", 600, 600, false);
+  public void showAddPersona() {
+    JDialog now = new AddPersonas(mainScreen, "Editar país", 600, 600, false);
     now.setVisible(true);
-}
+  }
 
 }
