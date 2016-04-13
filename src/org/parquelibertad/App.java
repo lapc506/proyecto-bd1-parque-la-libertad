@@ -36,7 +36,7 @@ public class App {
       JOptionPane.showMessageDialog(null,
           "No es posible conectarse a la base de datos Oracle: \n" + e.getMessage(),
           "Oracle SQLException", JOptionPane.ERROR_MESSAGE);
-      System.exit(-1);
+      //System.exit(-1);
     }
     // Will only run Swing JFrames and JDialogs
     EventQueue.invokeLater(new Runnable() {

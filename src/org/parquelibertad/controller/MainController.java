@@ -31,6 +31,7 @@ import org.parquelibertad.view.adminEdit.EditPaisDialog;
  */
 public class MainController {
   private static MainController instance = null;
+  
   private JDialog               territorySelector;
   private JDialog               debugFontSelector;
   private JFrame                mainScreen;
