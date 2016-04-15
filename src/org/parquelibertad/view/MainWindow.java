@@ -28,7 +28,8 @@ public class MainWindow extends WindowTemplate {
 	private JMenu menuAdministrador;
 	private JMenuItem mntmTerritorios;
 	private JMenu menuAnadir;
-	private JMenuItem menuRegistrarPersona;
+	private JMenuItem menuAgregarPersona;
+	private JMenuItem menuAgregarCurso;
 
 	/**
 	 * @param windowName
@@ -49,16 +50,25 @@ public class MainWindow extends WindowTemplate {
 		menuAnadir.setFont(FontController.getBoldLabelFont());
 		menuBar.add(menuAnadir);
 		// ----------------------------------
-		menuRegistrarPersona = new JMenuItem("Registrar nueva Persona...");
-		menuRegistrarPersona.addActionListener(new ActionListener() {
+		menuAgregarPersona = new JMenuItem("Agregar nueva Persona...");
+		menuAgregarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainController.getInstance().showAddPersona();
+				MainController.getInstance().showAgregarPersona();
 			}
 		});
 		// Al parecer esta manera de usar métodos lambda es incorrecta:
 		// mntmTerritorios.addActionListener(event -> MainController.getInstance().showAddPersona());
-		menuRegistrarPersona.setFont(FontController.getBoldLabelFont());
-		menuAnadir.add(menuRegistrarPersona);
+		menuAgregarPersona.setFont(FontController.getBoldLabelFont());
+		menuAnadir.add(menuAgregarPersona);
+		
+		this.menuAgregarCurso = new JMenuItem("Agregar nuevo Curso...");
+		this.menuAgregarCurso.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainController.getInstance().showAgregarCurso();
+			}
+		});
+		this.menuAgregarCurso.setFont(FontController.getBoldLabelFont());
+		this.menuAnadir.add(this.menuAgregarCurso);
 
 		this.menuAdministrador = new JMenu("Administrador");
 		this.menuAdministrador.setFont(FontController.getBoldLabelFont());

@@ -20,7 +20,7 @@ import java.awt.GridLayout;
 import java.awt.BorderLayout;
 
 @SuppressWarnings("serial")
-public class AddPersonas extends DialogTemplate {
+public class AgregarPersonas extends DialogTemplate {
 
 	private JTextField txtNombre;
 	private JTextField txtPrimerApellido;
@@ -39,7 +39,7 @@ public class AddPersonas extends DialogTemplate {
 	private JLabel label_3;
 	private JLabel label_4;
 
-	public AddPersonas(JFrame parent, String windowName, int width, int height, boolean isResizable)
+	public AgregarPersonas(JFrame parent, String windowName, int width, int height, boolean isResizable)
 			throws HeadlessException {
 		super(parent, windowName, width, height, isResizable);
 		/*

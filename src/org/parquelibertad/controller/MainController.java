@@ -14,7 +14,8 @@ import javax.swing.JOptionPane;
 import org.parquelibertad.App;
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.metadata.Filepath;
-import org.parquelibertad.view.AddPersonas;
+import org.parquelibertad.view.AgregarCurso;
+import org.parquelibertad.view.AgregarPersonas;
 import org.parquelibertad.view.FontSelectorForm;
 import org.parquelibertad.view.MainWindow;
 import org.parquelibertad.view.TerritoryEditDialog;
@@ -88,8 +89,13 @@ public class MainController {
     }
   }
 
-  public void showAddPersona() {
-    JDialog now = new AddPersonas(mainScreen, "Editar país", 600, 600, false);
+  public void showAgregarPersona() {
+    JDialog now = new AgregarPersonas(mainScreen, "Agregar Persona", 600, 600, false);
+    now.setVisible(true);
+  }
+
+  public void showAgregarCurso() {
+	JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 700, 350, false);
     now.setVisible(true);
   }
 
