@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.parquelibertad.view;
+package org.parquelibertad.view.debugDialogs;
 
 import java.awt.HeadlessException;
 import java.util.Vector;
@@ -13,6 +13,8 @@ import org.parquelibertad.controller.MainController;
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.metadata.Filepath;
+import org.parquelibertad.view.templates.DialogTemplate;
+
 import javax.swing.JSpinner;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;

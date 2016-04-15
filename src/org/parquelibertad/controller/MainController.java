@@ -14,13 +14,13 @@ import javax.swing.JOptionPane;
 import org.parquelibertad.App;
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.metadata.Filepath;
-import org.parquelibertad.view.AgregarCurso;
-import org.parquelibertad.view.AgregarPersonas;
-import org.parquelibertad.view.FontSelectorForm;
-import org.parquelibertad.view.MainWindow;
-import org.parquelibertad.view.TerritoryEditDialog;
-import org.parquelibertad.view.adminEdit.AddPaisDialog;
-import org.parquelibertad.view.adminEdit.EditPaisDialog;
+import org.parquelibertad.view.Principal;
+import org.parquelibertad.view.adminDialogs.AgregarPais;
+import org.parquelibertad.view.adminDialogs.EditarPais;
+import org.parquelibertad.view.adminDialogs.EditarTerritorio;
+import org.parquelibertad.view.debugDialogs.FontSelectorForm;
+import org.parquelibertad.view.general.AgregarCurso;
+import org.parquelibertad.view.general.AgregarPersonas;
 
 /**
  * proyecto-bd1-parque-la-libertad
@@ -53,7 +53,7 @@ public class MainController {
   }
 
   public void showEditTerritories() {
-    territorySelector = new TerritoryEditDialog(mainScreen, "Registro de Territorios",
+    territorySelector = new EditarTerritorio(mainScreen, "Registro de Territorios",
         600, 350, false);
     territorySelector.setVisible(true);
   }
@@ -63,17 +63,17 @@ public class MainController {
   }
 
   public void getMainScreen() {
-    mainScreen = new MainWindow("Parque La Libertad", 800, 400, false, true);
+    mainScreen = new Principal("Parque La Libertad", 800, 400, false, true);
     mainScreen.setVisible(true);
   }
 
   public void showAddPais() {
-    JDialog now = new AddPaisDialog(mainScreen, "Agregar país", 600, 600, false);
+    JDialog now = new AgregarPais(mainScreen, "Agregar país", 600, 600, false);
     now.setVisible(true);
   }
 
   public void showEditPais() {
-    JDialog now = new EditPaisDialog(mainScreen, "Editar país", 600, 600, false);
+    JDialog now = new EditarPais(mainScreen, "Editar país", 600, 600, false);
     now.setVisible(true);
   }
 
@@ -95,7 +95,7 @@ public class MainController {
   }
 
   public void showAgregarCurso() {
-	JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 700, 350, false);
+	JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 750, 450, false);
     now.setVisible(true);
   }
 

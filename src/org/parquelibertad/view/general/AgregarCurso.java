@@ -1,4 +1,4 @@
-package org.parquelibertad.view;
+package org.parquelibertad.view.general;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -12,6 +12,7 @@ import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.model.LibertadDatabaseConstraints;
 import org.parquelibertad.view.jmodels.JDatabaseText;
+import org.parquelibertad.view.templates.DialogTemplate;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;

@@ -1,4 +1,4 @@
-package org.parquelibertad.view;
+package org.parquelibertad.view.general;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -12,6 +12,8 @@ import javax.swing.border.TitledBorder;
 
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.view.jmodels.JDatabaseText;
+import org.parquelibertad.view.templates.DialogTemplate;
+
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JCheckBox;
@@ -23,15 +25,7 @@ import javax.swing.UIManager;
 
 public class AgregarActividad extends DialogTemplate {
 
-  /**
-   * @param parent
-   * @param windowName
-   * @param width
-   * @param height
-   * @param isResizable
-   * @throws HeadlessException
-   */
-  private JFrame        frame;
+  private static final long serialVersionUID = -6898829432408750711L;
   private JDatabaseText txtDescripcion;
   private JDatabaseText textField_1;
   private JPanel        panelDetalles;

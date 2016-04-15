@@ -11,6 +11,7 @@ import javax.swing.JMenuItem;
 import org.parquelibertad.controller.MainController;
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
+import org.parquelibertad.view.templates.WindowTemplate;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -23,7 +24,7 @@ import java.awt.Font;
  *         licencia MIT.
  *
  */
-public class MainWindow extends WindowTemplate {
+public class Principal extends WindowTemplate {
 	private JMenuBar menuBar;
 	private JMenu menuAdministrador;
 	private JMenuItem mntmTerritorios;
@@ -39,7 +40,7 @@ public class MainWindow extends WindowTemplate {
 	 * @param isResizable
 	 * @throws HeadlessException
 	 */
-	public MainWindow(String windowName, int width, int height, boolean isVisible, boolean isResizable)
+	public Principal(String windowName, int width, int height, boolean isVisible, boolean isResizable)
 			throws HeadlessException {
 		super(windowName, width, height, isVisible, isResizable);
 
@@ -47,7 +48,7 @@ public class MainWindow extends WindowTemplate {
 		setJMenuBar(this.menuBar);
 		// ----------------------------------
 		menuAnadir = new JMenu("A\u00F1adir");
-		menuAnadir.setFont(FontController.getBoldLabelFont());
+		menuAnadir.setFont(FontController.getRegularLabelFont());
 		menuBar.add(menuAnadir);
 		// ----------------------------------
 		menuAgregarPersona = new JMenuItem("Agregar nueva Persona...");
@@ -67,16 +68,16 @@ public class MainWindow extends WindowTemplate {
 				MainController.getInstance().showAgregarCurso();
 			}
 		});
-		this.menuAgregarCurso.setFont(FontController.getBoldLabelFont());
+		this.menuAgregarCurso.setFont(FontController.getRegularLabelFont());
 		this.menuAnadir.add(this.menuAgregarCurso);
 
 		this.menuAdministrador = new JMenu("Administrador");
-		this.menuAdministrador.setFont(FontController.getBoldLabelFont());
+		this.menuAdministrador.setFont(FontController.getRegularLabelFont());
 		this.menuBar.add(this.menuAdministrador);
 
 		this.mntmTerritorios = new JMenuItem("A\u00F1adir y Editar Territorios");
 		this.mntmTerritorios.addActionListener(event -> MainController.getInstance().showEditTerritories());
-		this.mntmTerritorios.setFont(FontController.getBoldLabelFont());
+		this.mntmTerritorios.setFont(FontController.getRegularLabelFont());
 		this.menuAdministrador.add(this.mntmTerritorios);
 
 	}

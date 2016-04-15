@@ -4,7 +4,7 @@
  * edición.
  * 
  */
-package org.parquelibertad.view;
+package org.parquelibertad.view.adminDialogs;
 
 import java.awt.HeadlessException;
 import java.awt.BorderLayout;
@@ -19,6 +19,7 @@ import javax.swing.border.TitledBorder;
 import org.parquelibertad.controller.MainController;
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
+import org.parquelibertad.view.templates.DialogTemplate;
 
 import javax.swing.border.EtchedBorder;
 import javax.swing.JButton;
@@ -45,7 +46,7 @@ import java.awt.event.ActionEvent;
  *
  */
 @SuppressWarnings("serial")
-public class TerritoryEditDialog extends DialogTemplate {
+public class EditarTerritorio extends DialogTemplate {
   private JLabel  lblRegistroDeTerritorios;
   private JPanel  contentPane;
   private JPanel  confirmPanel;
@@ -63,7 +64,7 @@ public class TerritoryEditDialog extends DialogTemplate {
   private JButton btnEditarDistrito;
   private JButton btnEditarCiudad;
 
-  public TerritoryEditDialog(JFrame parent, String windowName, int width, int height,
+  public EditarTerritorio(JFrame parent, String windowName, int width, int height,
       boolean isResizable) throws HeadlessException {
     super(parent, windowName, width, height, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));

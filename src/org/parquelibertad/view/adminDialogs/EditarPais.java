@@ -4,7 +4,7 @@
  * edición.
  * 
  */
-package org.parquelibertad.view.adminEdit;
+package org.parquelibertad.view.adminDialogs;
 
 import java.awt.HeadlessException;
 import java.awt.BorderLayout;
@@ -15,7 +15,7 @@ import javax.swing.SwingConstants;
 
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
-import org.parquelibertad.view.DialogTemplate;
+import org.parquelibertad.view.templates.DialogTemplate;
 
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
@@ -32,6 +32,9 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.JSeparator;
+import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 /**
  * proyecto-bd1-parque-la-libertad
@@ -42,28 +45,24 @@ import javax.swing.JSeparator;
  *
  */
 @SuppressWarnings("serial")
-public class AddCantonDialog extends DialogTemplate {
+public class EditarPais extends DialogTemplate {
   private JLabel            lblSeleccion;
   private JPanel            contentPane;
   private JPanel            paisPanel;
-  private JPanel            provinciaPanel;
-  private JPanel            cantonPanel;
   private JPanel            confirmPanel;
-  private JButton           btnConfirmar;
+  private JButton           btnEditar;
   private JButton           btnCerrar;
   private JComboBox<String> paisComboBox;
-  private JComboBox<String> provinciaComboBox;
-  private JComboBox<String> cantonComboBox;
   private JPanel            panel;
-  private JButton btnEditar;
-  private JTextField selectedTextEdit;
+  private JTextField        selectedTextEdit;
+  private JLabel            lblNuevoValor;
 
-  public AddCantonDialog(JFrame parent, String windowName, int width, int height, 
+  public EditarPais(JFrame parent, String windowName, int width, int height, 
       boolean isResizable) throws HeadlessException {
     super(parent, windowName, width, height, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
-    this.lblSeleccion = new JLabel("Seleccione cant\u00F3n por editar:");
+    this.lblSeleccion = new JLabel("Seleccione pa\u00EDs por editar:");
     this.lblSeleccion.setFont(FontController.getSubtitleFont());
     this.lblSeleccion.setHorizontalAlignment(SwingConstants.CENTER);
     this.lblSeleccion.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -72,7 +71,7 @@ public class AddCantonDialog extends DialogTemplate {
     this.contentPane = new JPanel();
     this.contentPane.setBackground(DesignController.getWindowBGColor());
     getContentPane().add(this.contentPane, BorderLayout.CENTER);
-    this.contentPane.setLayout(new BoxLayout(this.contentPane, BoxLayout.Y_AXIS));
+    this.contentPane.setLayout(new GridLayout(0, 1, 0, 0));
 
     this.paisPanel = new JPanel();
     this.paisPanel
@@ -81,46 +80,23 @@ public class AddCantonDialog extends DialogTemplate {
             FontController.getBoldLabelFont(), DesignController.getFontColor()));
     this.paisPanel.setBackground(DesignController.getWindowBGColor());
     this.contentPane.add(this.paisPanel);
-    this.paisPanel.setLayout(new BorderLayout(0, 0));
+    this.paisPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
     this.paisComboBox = new JComboBox<String>();
     this.paisPanel.add(this.paisComboBox);
 
-    this.provinciaPanel = new JPanel();
-    this.provinciaPanel
-        .setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED, null, null),
-            "Provincia", TitledBorder.LEADING, TitledBorder.TOP,
-            FontController.getBoldLabelFont(), DesignController.getFontColor()));
-    this.provinciaPanel.setBackground(DesignController.getWindowBGColor());
-    this.contentPane.add(this.provinciaPanel);
-    this.provinciaPanel.setLayout(new BorderLayout(0, 0));
+    this.panel = new JPanel();
+    this.paisPanel.add(this.panel);
+    this.panel.setBackground(DesignController.getWindowBGColor());
+    this.panel.setLayout(new BorderLayout(0, 0));
 
-    this.provinciaComboBox = new JComboBox<String>();
-    this.provinciaPanel.add(this.provinciaComboBox);
+    this.lblNuevoValor = new JLabel("Nuevo valor:");
+    this.lblNuevoValor.setFont(FontController.getRegularLabelFont());
+    this.panel.add(this.lblNuevoValor, BorderLayout.WEST);
 
-    this.cantonPanel = new JPanel();
-    this.cantonPanel
-        .setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED, null, null),
-            "Cant\u00F3n", TitledBorder.LEADING, TitledBorder.TOP,
-            FontController.getBoldLabelFont(), DesignController.getFontColor()));
-    this.cantonPanel.setBackground(DesignController.getWindowBGColor());
-    this.contentPane.add(this.cantonPanel);
-    this.cantonPanel.setLayout(new GridLayout(0, 1, 0, 0));
-
-    this.cantonComboBox = new JComboBox<String>();
-    this.cantonPanel.add(this.cantonComboBox);
-    
-        this.panel = new JPanel();
-        this.cantonPanel.add(this.panel);
-        this.panel.setBackground(DesignController.getWindowBGColor());
-        
-        this.btnEditar = new JButton("Editar");
-        this.panel.add(this.btnEditar);
-        
-        this.selectedTextEdit = new JTextField();
-        this.selectedTextEdit.setEnabled(false);
-        this.panel.add(this.selectedTextEdit);
-        this.selectedTextEdit.setColumns(20);
+    this.selectedTextEdit = new JTextField();
+    this.panel.add(this.selectedTextEdit);
+    this.selectedTextEdit.setColumns(20);
 
     this.confirmPanel = new JPanel();
     FlowLayout flowLayout = (FlowLayout) this.confirmPanel.getLayout();
@@ -128,9 +104,13 @@ public class AddCantonDialog extends DialogTemplate {
     getContentPane().add(this.confirmPanel, BorderLayout.SOUTH);
     this.confirmPanel.setBackground(DesignController.getWindowBGColor());
 
-    this.btnConfirmar = new JButton("Confirmar Acci\u00F3n");
-    this.btnConfirmar.setFont(FontController.getRegularLabelFont());
-    this.confirmPanel.add(this.btnConfirmar);
+    this.btnEditar = new JButton("Confirmar Edici\u00F3n");
+    this.btnEditar.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+      }
+    });
+    this.btnEditar.setFont(FontController.getRegularLabelFont());
+    this.confirmPanel.add(this.btnEditar);
 
     this.btnCerrar = new JButton("Cerrar");
     this.btnCerrar.setFont(FontController.getRegularLabelFont());

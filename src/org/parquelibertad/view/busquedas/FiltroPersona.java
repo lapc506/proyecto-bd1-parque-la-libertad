@@ -1,4 +1,4 @@
-package org.parquelibertad.view;
+package org.parquelibertad.view.busquedas;
 
 import java.awt.HeadlessException;
 
@@ -11,6 +11,7 @@ import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.model.LibertadDatabaseConstraints;
 import org.parquelibertad.view.jmodels.JDatabaseText;
+import org.parquelibertad.view.templates.DialogTemplate;
 
 import java.awt.Color;
 import javax.swing.JFormattedTextField;

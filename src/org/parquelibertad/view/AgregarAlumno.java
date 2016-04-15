@@ -27,39 +27,7 @@ public class AgregarAlumno extends JFrame{
 	private JFrame frame;
 	private JTextField textField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AgregarAlumno window = new AgregarAlumno();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the application.
-	 */
 	public AgregarAlumno() {
-		setTitle("Agregar Alumno");
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
 		setSize(650, 500);
 		getContentPane().setBackground(DesignController.getWindowBGColor());
 		getContentPane().setLayout(null);

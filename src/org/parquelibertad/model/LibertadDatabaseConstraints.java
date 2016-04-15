@@ -95,8 +95,8 @@ public class LibertadDatabaseConstraints {
   public static int Periodo_id_NUMBER                            = 10;
 
   public static int CuentaUsuario_id_NUMBER                      = 10;
-  public static int CuentaUsuario_usuario_VARCHAR                = 20;
-  public static int CuentaUsuario_contrasena_VARCHAR             = 20;
+  public static int CuentaUsuario_usuario_VARCHAR2                = 20;
+  public static int CuentaUsuario_contrasena_VARCHAR2             = 20;
   public static int CuentaUsuario_idEmpleado_NUMBER              = 20;
 
   public static int Empleado_id_NUMBER                           = 10;

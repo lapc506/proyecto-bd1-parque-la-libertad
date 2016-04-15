@@ -4,7 +4,7 @@
  * edición.
  * 
  */
-package org.parquelibertad.view.adminEdit;
+package org.parquelibertad.view.adminDialogs;
 
 import java.awt.HeadlessException;
 import java.awt.BorderLayout;
@@ -15,7 +15,7 @@ import javax.swing.SwingConstants;
 
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
-import org.parquelibertad.view.DialogTemplate;
+import org.parquelibertad.view.templates.DialogTemplate;
 
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
@@ -23,10 +23,15 @@ import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JRadioButton;
+import javax.swing.ButtonGroup;
+import java.awt.GridLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-import java.awt.GridLayout;
+import java.awt.Color;
+import javax.swing.JSeparator;
 
 /**
  * proyecto-bd1-parque-la-libertad
@@ -37,30 +42,26 @@ import java.awt.GridLayout;
  *
  */
 @SuppressWarnings("serial")
-public class AddDistritoDialog extends DialogTemplate {
+public class EditarProvincia extends DialogTemplate {
   private JLabel            lblSeleccion;
   private JPanel            contentPane;
   private JPanel            paisPanel;
   private JPanel            provinciaPanel;
-  private JPanel            cantonPanel;
-  private JPanel            distritoPanel;
   private JPanel            confirmPanel;
-  private JButton           btnConfirmar;
+  private JButton           btnEditar;
   private JButton           btnCerrar;
   private JComboBox<String> paisComboBox;
   private JComboBox<String> provinciaComboBox;
-  private JComboBox<String> cantonComboBox;
-  private JComboBox<String> distritoComboBox;
-  private JPanel            panel;
-  private JButton btnEditar;
-  private JTextField selectedTextEdit;
+  private JPanel panel;
+  private JLabel label;
+  private JTextField textField;
 
-  public AddDistritoDialog(JFrame parent, String windowName, int width, int height, 
+  public EditarProvincia(JFrame parent, String windowName, int width, int height, 
       boolean isResizable) throws HeadlessException {
     super(parent, windowName, width, height, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
-    this.lblSeleccion = new JLabel("Seleccione distrito por editar:");
+    this.lblSeleccion = new JLabel("Seleccione provincia por editar:");
     this.lblSeleccion.setFont(FontController.getSubtitleFont());
     this.lblSeleccion.setHorizontalAlignment(SwingConstants.CENTER);
     this.lblSeleccion.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -94,42 +95,19 @@ public class AddDistritoDialog extends DialogTemplate {
 
     this.provinciaComboBox = new JComboBox<String>();
     this.provinciaPanel.add(this.provinciaComboBox);
-
-    this.cantonPanel = new JPanel();
-    this.cantonPanel
-        .setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED, null, null),
-            "Cant\u00F3n", TitledBorder.LEADING, TitledBorder.TOP,
-            FontController.getBoldLabelFont(), DesignController.getFontColor()));
-    this.cantonPanel.setBackground(DesignController.getWindowBGColor());
-    this.contentPane.add(this.cantonPanel);
-    this.cantonPanel.setLayout(new GridLayout(0, 1, 0, 0));
-
-    this.cantonComboBox = new JComboBox<String>();
-    this.cantonPanel.add(this.cantonComboBox);
-
-    this.distritoPanel = new JPanel();
-    this.distritoPanel
-        .setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED, null, null),
-            "Distrito", TitledBorder.LEADING, TitledBorder.TOP,
-            FontController.getBoldLabelFont(), DesignController.getFontColor()));
-    this.distritoPanel.setBackground(DesignController.getWindowBGColor());
-    this.contentPane.add(this.distritoPanel);
-    this.distritoPanel.setLayout(new GridLayout(0, 1, 0, 0));
-
-    this.distritoComboBox = new JComboBox<String>();
-    this.distritoPanel.add(this.distritoComboBox);
     
-        this.panel = new JPanel();
-        this.distritoPanel.add(this.panel);
-        this.panel.setBackground(DesignController.getWindowBGColor());
-        
-        this.btnEditar = new JButton("Editar");
-        this.panel.add(this.btnEditar);
-        
-        this.selectedTextEdit = new JTextField();
-        this.selectedTextEdit.setEnabled(false);
-        this.panel.add(this.selectedTextEdit);
-        this.selectedTextEdit.setColumns(20);
+    this.panel = new JPanel();
+    this.panel.setBackground(new Color(255, 143, 0));
+    this.provinciaPanel.add(this.panel);
+    this.panel.setLayout(new BorderLayout(0, 0));
+    
+    this.label = new JLabel("Nuevo valor:");
+    this.label.setFont(null);
+    this.panel.add(this.label, BorderLayout.WEST);
+    
+    this.textField = new JTextField();
+    this.textField.setColumns(20);
+    this.panel.add(this.textField, BorderLayout.CENTER);
 
     this.confirmPanel = new JPanel();
     FlowLayout flowLayout = (FlowLayout) this.confirmPanel.getLayout();
@@ -137,9 +115,9 @@ public class AddDistritoDialog extends DialogTemplate {
     getContentPane().add(this.confirmPanel, BorderLayout.SOUTH);
     this.confirmPanel.setBackground(DesignController.getWindowBGColor());
 
-    this.btnConfirmar = new JButton("Confirmar Acci\u00F3n");
-    this.btnConfirmar.setFont(FontController.getRegularLabelFont());
-    this.confirmPanel.add(this.btnConfirmar);
+    this.btnEditar = new JButton("Confirmar Edici\u00F3n");
+    this.btnEditar.setFont(FontController.getRegularLabelFont());
+    this.confirmPanel.add(this.btnEditar);
 
     this.btnCerrar = new JButton("Cerrar");
     this.btnCerrar.setFont(FontController.getRegularLabelFont());

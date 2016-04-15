@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.parquelibertad.view;
+package org.parquelibertad.view.templates;
 
 import java.awt.Color;
 import java.awt.HeadlessException;

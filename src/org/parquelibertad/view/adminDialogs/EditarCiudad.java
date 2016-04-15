@@ -4,7 +4,7 @@
  * edición.
  * 
  */
-package org.parquelibertad.view.adminEdit;
+package org.parquelibertad.view.adminDialogs;
 
 import java.awt.HeadlessException;
 import java.awt.BorderLayout;
@@ -15,7 +15,7 @@ import javax.swing.SwingConstants;
 
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
-import org.parquelibertad.view.DialogTemplate;
+import org.parquelibertad.view.templates.DialogTemplate;
 
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
@@ -32,11 +32,6 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import java.awt.Color;
 import javax.swing.JSeparator;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import java.awt.CardLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
 
 /**
  * proyecto-bd1-parque-la-libertad
@@ -47,28 +42,32 @@ import java.awt.GridBagConstraints;
  *
  */
 @SuppressWarnings("serial")
-public class EditCantonDialog extends DialogTemplate {
+public class EditarCiudad extends DialogTemplate {
   private JLabel            lblSeleccion;
   private JPanel            contentPane;
   private JPanel            paisPanel;
   private JPanel            provinciaPanel;
   private JPanel            cantonPanel;
+  private JPanel            distritoPanel;
+  private JPanel            ciudadPanel;
   private JPanel            confirmPanel;
   private JButton           btnCerrar;
   private JComboBox<String> paisComboBox;
   private JComboBox<String> provinciaComboBox;
   private JComboBox<String> cantonComboBox;
+  private JComboBox<String> distritoComboBox;
+  private JComboBox<String> ciudadComboBox;
   private JPanel            panel;
   private JButton btnEditar;
   private JTextField selectedTextEdit;
   private JLabel label;
 
-  public EditCantonDialog(JFrame parent, String windowName, int width, int height, 
+  public EditarCiudad(JFrame parent, String windowName, int width, int height, 
       boolean isResizable) throws HeadlessException {
     super(parent, windowName, width, height, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
-    this.lblSeleccion = new JLabel("Seleccione cant\u00F3n por editar:");
+    this.lblSeleccion = new JLabel("Seleccione ciudad por editar:");
     this.lblSeleccion.setFont(FontController.getSubtitleFont());
     this.lblSeleccion.setHorizontalAlignment(SwingConstants.CENTER);
     this.lblSeleccion.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -77,7 +76,7 @@ public class EditCantonDialog extends DialogTemplate {
     this.contentPane = new JPanel();
     this.contentPane.setBackground(DesignController.getWindowBGColor());
     getContentPane().add(this.contentPane, BorderLayout.CENTER);
-    this.contentPane.setLayout(new GridLayout(0, 1, 0, 0));
+    this.contentPane.setLayout(new BoxLayout(this.contentPane, BoxLayout.Y_AXIS));
 
     this.paisPanel = new JPanel();
     this.paisPanel
@@ -98,10 +97,10 @@ public class EditCantonDialog extends DialogTemplate {
             FontController.getBoldLabelFont(), DesignController.getFontColor()));
     this.provinciaPanel.setBackground(DesignController.getWindowBGColor());
     this.contentPane.add(this.provinciaPanel);
-        this.provinciaPanel.setLayout(new GridLayout(0, 1, 0, 0));
-    
-        this.provinciaComboBox = new JComboBox<String>();
-        this.provinciaPanel.add(this.provinciaComboBox);
+    this.provinciaPanel.setLayout(new GridLayout(0, 1, 0, 0));
+
+    this.provinciaComboBox = new JComboBox<String>();
+    this.provinciaPanel.add(this.provinciaComboBox);
 
     this.cantonPanel = new JPanel();
     this.cantonPanel
@@ -114,20 +113,44 @@ public class EditCantonDialog extends DialogTemplate {
 
     this.cantonComboBox = new JComboBox<String>();
     this.cantonPanel.add(this.cantonComboBox);
+
+    this.distritoPanel = new JPanel();
+    this.distritoPanel
+        .setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED, null, null),
+            "Distrito", TitledBorder.LEADING, TitledBorder.TOP,
+            FontController.getBoldLabelFont(), DesignController.getFontColor()));
+    this.distritoPanel.setBackground(DesignController.getWindowBGColor());
+    this.contentPane.add(this.distritoPanel);
+    this.distritoPanel.setLayout(new GridLayout(0, 1, 0, 0));
+
+    this.distritoComboBox = new JComboBox<String>();
+    this.distritoPanel.add(this.distritoComboBox);
+
+    this.ciudadPanel = new JPanel();
+    this.ciudadPanel
+        .setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED, null, null),
+            "Ciudad", TitledBorder.LEADING, TitledBorder.TOP,
+            FontController.getBoldLabelFont(), DesignController.getFontColor()));
+    this.ciudadPanel.setBackground(DesignController.getWindowBGColor());
+    this.contentPane.add(this.ciudadPanel);
+    this.ciudadPanel.setLayout(new GridLayout(0, 1, 0, 0));
     
-        this.panel = new JPanel();
-        this.cantonPanel.add(this.panel);
-        this.panel.setBackground(DesignController.getWindowBGColor());
-        this.panel.setLayout(new BorderLayout(0, 0));
-        
-        this.label = new JLabel("Nuevo valor:");
-        this.label.setFont(null);
-        this.panel.add(this.label, BorderLayout.WEST);
-        
-        this.selectedTextEdit = new JTextField();
-        this.selectedTextEdit.setEnabled(false);
-        this.panel.add(this.selectedTextEdit);
-        this.selectedTextEdit.setColumns(20);
+        this.ciudadComboBox = new JComboBox<String>();
+        this.ciudadPanel.add(this.ciudadComboBox);
+
+    this.panel = new JPanel();
+    this.panel.setBackground(DesignController.getWindowBGColor());
+    this.ciudadPanel.add(this.panel);
+    this.panel.setLayout(new BorderLayout(0, 0));
+    
+    this.label = new JLabel("Nuevo valor:");
+    this.label.setFont(null);
+    this.panel.add(this.label, BorderLayout.WEST);
+    
+    this.selectedTextEdit = new JTextField();
+    this.selectedTextEdit.setEnabled(false);
+    this.panel.add(this.selectedTextEdit);
+    this.selectedTextEdit.setColumns(20);
 
     this.confirmPanel = new JPanel();
     FlowLayout flowLayout = (FlowLayout) this.confirmPanel.getLayout();
