@@ -1,13 +1,9 @@
 package org.parquelibertad.view.general;
 
 import java.awt.Color;
-import java.awt.Font;
-
+import java.awt.Container;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.model.LibertadDatabaseConstraints;
@@ -26,194 +22,276 @@ import java.awt.HeadlessException;
 import java.awt.FlowLayout;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SpinnerListModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class AgregarCurso extends DialogTemplate {
-	private static final long serialVersionUID = 3721795951153442361L;
-	private JTextField txtCosto;
-	private JPanel panelContents;
-	private JPanel panelSemana;
-	private JPanel panelHorario;
-	private JPanel panelCosto;
-	private JLabel lblNombreCurso;
-	private JLabel lblColones;
-	private JTextField txtNombre;
-	private JLabel lblProfesor;
-	private JComboBox<String> comboProfesor;
-	private JCheckBox chckbxLunes;
-	private JCheckBox chckbxJueves;
-	private JCheckBox chckbxDomingo;
-	private JCheckBox chckbxViernes;
-	private JCheckBox chckbxMartes;
-	private JCheckBox chckbxMircoles;
-	private JCheckBox chckbxSbado;
-	private JSpinner spinHoraInicio;
-	private JLabel labeltime1;
-	private JSpinner spinMinutoInicio;
-	private JLabel lblHasta;
-	private JSpinner spinHoraFinal;
-	private JLabel labeltime2;
-	private JSpinner spinMinutoFinal;
-	private JPanel panelMercado;
-	private JComboBox<String> comboMercadoMeta;
-	private JPanel panelBottom;
-	private JButton btnRegistrar;
-	private JSpinner spinnerAMPMinicio;
-	private JSpinner spinnerAMPMfinal;
+  private static final long serialVersionUID = 3721795951153442361L;
+  private JTextField        txtCosto;
+  private JPanel            panelContents;
+  private JPanel            panelCosto;
+  private JLabel            lblNombreCurso;
+  private JLabel            lblColones;
+  private JTextField        txtNombre;
+  private JLabel            lblProfesor;
+  private JComboBox<String> comboProfesor;
+  private JSpinner          spinHoraInicio;
+  private JLabel            labeltime1;
+  private JSpinner          spinMinutoInicio;
+  private JLabel            lblHasta;
+  private JSpinner          spinHoraFinal;
+  private JLabel            labeltime2;
+  private JSpinner          spinMinutoFinal;
+  private JPanel            panelMercado;
+  private JComboBox<String> comboMercadoMeta;
+  private JPanel            panelBottom;
+  private JButton           btnConfirmar;
+  private JSpinner          spinnerAMPMinicio;
+  private JSpinner          spinnerAMPMfinal;
+  private JLabel            lblMercadoMeta;
+  private JLabel            lblHorario;
+  private JCheckBox         chckbxDomingo;
+  private Container         panelSemana;
+  private JCheckBox         chckbxLunes;
+  private JCheckBox         chckbxMartes;
+  private JCheckBox         chckbxMircoles;
+  private JCheckBox         chckbxJueves;
+  private JCheckBox         chckbxViernes;
+  private JCheckBox         chckbxSbado;
+  private JLabel            lblRegistrarCurso;
+  private JPanel            panel;
 
-	public AgregarCurso(JFrame parent, String windowName, int width, int height, boolean isResizable)
-			throws HeadlessException {
-		super(parent, windowName, width, height, isResizable);
-		panelContents = new JPanel();
-		panelContents.setForeground(new Color(255, 255, 0));
-		panelContents.setName("");
-		panelContents.setFocusable(false);
-		panelContents.setOpaque(false);
-		getContentPane().setLayout(new BorderLayout(0, 0));
-		panelContents.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Curso", TitledBorder.LEADING,
-				TitledBorder.TOP, FontController.getSubtitleFont(), null));
-		getContentPane().add(panelContents);
-		panelContents.setLayout(new GridLayout(0, 2, 0, 0));
+  public AgregarCurso(JFrame parent, String windowName, int width, int height,
+      boolean isResizable) throws HeadlessException {
+    super(parent, windowName, width, height, isResizable);
+    setResizable(true);
+    panelContents = new JPanel();
+    panelContents.setForeground(new Color(255, 255, 0));
+    panelContents.setName("");
+    panelContents.setFocusable(false);
+    panelContents.setOpaque(false);
+    getContentPane().setLayout(new BorderLayout(0, 0));
+    getContentPane().add(panelContents);
+    this.panelContents.setLayout(new GridLayout(0, 1, 0, -1));
 
-		lblNombreCurso = new JLabel("Nombre");
-		lblNombreCurso.setFont(FontController.getBoldLabelFont());
-		panelContents.add(lblNombreCurso);
+    this.lblRegistrarCurso = new JLabel("Registrar Curso");
+    this.lblRegistrarCurso.setHorizontalAlignment(SwingConstants.CENTER);
+    this.lblRegistrarCurso.setFont(FontController.getTitleFont());
+    this.panelContents.add(this.lblRegistrarCurso);
 
-		txtNombre = new JDatabaseText(LibertadDatabaseConstraints.Curso_nombre_VARCHAR2);
-		panelContents.add(txtNombre);
+    lblNombreCurso = new JLabel("Nombre");
+    this.lblNombreCurso.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelContents.add(this.lblNombreCurso);
+    lblNombreCurso.setFont(FontController.getBoldLabelFont());
 
-		lblProfesor = new JLabel("Profesor");
-		lblProfesor.setFont(FontController.getBoldLabelFont());
-		panelContents.add(lblProfesor);
+    txtNombre = new JDatabaseText(LibertadDatabaseConstraints.Curso_nombre_VARCHAR2);
+    this.txtNombre.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelContents.add(this.txtNombre);
+    this.txtNombre.setColumns(LibertadDatabaseConstraints.Curso_nombre_VARCHAR2);
 
-		comboProfesor = new JComboBox<String>();
-		panelContents.add(comboProfesor);
+    lblProfesor = new JLabel("Profesor");
+    this.lblProfesor.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelContents.add(this.lblProfesor);
+    lblProfesor.setFont(FontController.getBoldLabelFont());
 
-		panelSemana = new JPanel();
-		panelSemana.setOpaque(false);
-		panelSemana.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Días", TitledBorder.LEADING,
-				TitledBorder.TOP, FontController.getBoldLabelFont(), null));
-		panelContents.add(panelSemana);
-		this.panelSemana.setLayout(new GridLayout(0, 4, 0, 0));
+    comboProfesor = new JComboBox<String>();
+    this.panelContents.add(this.comboProfesor);
+    this.comboProfesor.setModel(new DefaultComboBoxModel<String>(new String[] {
+        "Godinez", "Chavo del 8", "Popis", "Chilindrina"
+    }));
+    comboProfesor.setFont(FontController.getRegularLabelFont());
+    
+        this.lblHorario = new JLabel("Horario");
+        this.lblHorario.setHorizontalAlignment(SwingConstants.CENTER);
+        this.panelContents.add(this.lblHorario);
+        
+            this.lblHorario.setFont(FontController.getBoldLabelFont());
 
-		chckbxDomingo = new JCheckBox("Domingo");
-		this.chckbxDomingo.setFont(FontController.getRegularLabelFont());
-		panelSemana.add(chckbxDomingo);
-		chckbxDomingo.setOpaque(false);
-		
-		chckbxLunes = new JCheckBox("Lunes");
-		this.chckbxLunes.setFont(FontController.getRegularLabelFont());
-		panelSemana.add(chckbxLunes);
-		chckbxLunes.setOpaque(false);
-		
-		chckbxMartes = new JCheckBox("Martes");
-		this.chckbxMartes.setFont(FontController.getRegularLabelFont());
-		panelSemana.add(chckbxMartes);
-		chckbxMartes.setOpaque(false);
-		
-		chckbxMircoles = new JCheckBox("Mi\u00E9rcoles");
-		this.chckbxMircoles.setFont(FontController.getRegularLabelFont());
-		panelSemana.add(chckbxMircoles);
-		chckbxMircoles.setOpaque(false);
-		
-		chckbxJueves = new JCheckBox("Jueves");
-		this.chckbxJueves.setFont(FontController.getRegularLabelFont());
-		panelSemana.add(chckbxJueves);
-		chckbxJueves.setOpaque(false);
+    panelSemana = new JPanel();
+    panelSemana.setBackground(DesignController.getWindowBGColor());
+    panelContents.add(panelSemana);
+    this.panelSemana.setLayout(new GridLayout(0, 3, 0, 0));
 
-		chckbxViernes = new JCheckBox("Viernes");
-		this.chckbxViernes.setFont(FontController.getRegularLabelFont());
-		panelSemana.add(chckbxViernes);
-		chckbxViernes.setOpaque(false);
+    chckbxLunes = new JCheckBox("Lunes");
+    this.chckbxLunes.setFont(FontController.getRegularLabelFont());
+    panelSemana.add(chckbxLunes);
+    chckbxLunes.setOpaque(false);
 
-		chckbxSbado = new JCheckBox("S\u00E1bado");
-		this.chckbxSbado.setFont(FontController.getRegularLabelFont());
-		panelSemana.add(chckbxSbado);
-		chckbxSbado.setOpaque(false);
+    chckbxMartes = new JCheckBox("Martes");
+    this.chckbxMartes.setFont(FontController.getRegularLabelFont());
+    panelSemana.add(chckbxMartes);
+    chckbxMartes.setOpaque(false);
 
-		panelHorario = new JPanel();
-		panelHorario.setOpaque(false);
-		panelHorario.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Horario", TitledBorder.LEADING,
-				TitledBorder.TOP, FontController.getBoldLabelFont(), null));
-		panelContents.add(panelHorario);
-		this.panelHorario.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    chckbxMircoles = new JCheckBox("Mi\u00E9rcoles");
+    this.chckbxMircoles.setFont(FontController.getRegularLabelFont());
+    panelSemana.add(chckbxMircoles);
+    chckbxMircoles.setOpaque(false);
 
-		spinHoraInicio = new JSpinner();
-		this.spinHoraInicio.setModel(new SpinnerNumberModel(1, 1, 12, 1));
-		this.spinHoraInicio.setFont(FontController.getRegularLabelFont());
-		panelHorario.add(spinHoraInicio);
+    chckbxJueves = new JCheckBox("Jueves");
+    this.chckbxJueves.setFont(FontController.getRegularLabelFont());
+    panelSemana.add(chckbxJueves);
+    chckbxJueves.setOpaque(false);
 
-		labeltime1 = new JLabel(":");
-		panelHorario.add(labeltime1);
-		labeltime1.setFont(FontController.getRegularLabelFont());
+    chckbxViernes = new JCheckBox("Viernes");
+    this.chckbxViernes.setFont(FontController.getRegularLabelFont());
+    panelSemana.add(chckbxViernes);
+    chckbxViernes.setOpaque(false);
 
-		spinMinutoInicio = new JSpinner();
-		this.spinMinutoInicio.setModel(new SpinnerNumberModel(0, 0, 59, 1));
-		this.spinMinutoInicio.setFont(FontController.getRegularLabelFont());
-		panelHorario.add(spinMinutoInicio);
-		
-		this.spinnerAMPMinicio = new JSpinner();
-		this.spinnerAMPMinicio.setModel(new SpinnerListModel(new String[] {"AM", "PM"}));
-		this.spinnerAMPMinicio.setFont(FontController.getRegularLabelFont());
-		this.panelHorario.add(this.spinnerAMPMinicio);
+    chckbxSbado = new JCheckBox("S\u00E1bado");
+    this.chckbxSbado.setFont(FontController.getRegularLabelFont());
+    panelSemana.add(chckbxSbado);
+    chckbxSbado.setOpaque(false);
+    
+        chckbxDomingo = new JCheckBox("Domingo");
+        this.chckbxDomingo.setFont(FontController.getRegularLabelFont());
+        panelSemana.add(chckbxDomingo);
+        chckbxDomingo.setOpaque(false);
 
-		lblHasta = new JLabel("hasta");
-		panelHorario.add(lblHasta);
-		lblHasta.setFont(FontController.getRegularLabelFont());
+    this.panel = new JPanel();
+    this.panel.setBackground(new Color(255, 143, 0));
+    this.panelContents.add(this.panel);
+                GridBagLayout gbl_panel = new GridBagLayout();
+                gbl_panel.columnWidths = new int[] {42, 3, 42, 36, 31, 42, 3, 42, 36};
+                gbl_panel.rowHeights = new int[] {20};
+                gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+                gbl_panel.rowWeights = new double[]{0.0};
+                this.panel.setLayout(gbl_panel);
+                        
+                            spinHoraInicio = new JSpinner();
+                            this.spinHoraInicio.setBackground(UIManager.getColor("Spinner.background"));
+                            this.spinHoraInicio.setModel(new SpinnerNumberModel(1, 1, 12, 1));
+                            this.spinHoraInicio.setFont(FontController.getRegularLabelFont());
+                            GridBagConstraints gbc_spinHoraInicio = new GridBagConstraints();
+                            gbc_spinHoraInicio.anchor = GridBagConstraints.NORTHWEST;
+                            gbc_spinHoraInicio.insets = new Insets(0, 0, 0, 5);
+                            gbc_spinHoraInicio.gridx = 0;
+                            gbc_spinHoraInicio.gridy = 0;
+                            this.panel.add(this.spinHoraInicio, gbc_spinHoraInicio);
+                    
+                        labeltime1 = new JLabel(":");
+                        labeltime1.setFont(FontController.getRegularLabelFont());
+                        GridBagConstraints gbc_labeltime1 = new GridBagConstraints();
+                        gbc_labeltime1.anchor = GridBagConstraints.WEST;
+                        gbc_labeltime1.insets = new Insets(0, 0, 0, 5);
+                        gbc_labeltime1.gridx = 1;
+                        gbc_labeltime1.gridy = 0;
+                        this.panel.add(this.labeltime1, gbc_labeltime1);
+                        
+                            spinMinutoInicio = new JSpinner();
+                            this.spinMinutoInicio.setModel(new SpinnerNumberModel(0, 0, 59, 1));
+                            this.spinMinutoInicio.setFont(FontController.getRegularLabelFont());
+                            GridBagConstraints gbc_spinMinutoInicio = new GridBagConstraints();
+                            gbc_spinMinutoInicio.anchor = GridBagConstraints.NORTHWEST;
+                            gbc_spinMinutoInicio.insets = new Insets(0, 0, 0, 5);
+                            gbc_spinMinutoInicio.gridx = 2;
+                            gbc_spinMinutoInicio.gridy = 0;
+                            this.panel.add(this.spinMinutoInicio, gbc_spinMinutoInicio);
+                        
+                            this.spinnerAMPMinicio = new JSpinner();
+                            this.spinnerAMPMinicio.setModel(new SpinnerListModel(new String[] {
+                                "AM", "PM"
+                            }));
+                            this.spinnerAMPMinicio.setFont(FontController.getRegularLabelFont());
+                            GridBagConstraints gbc_spinnerAMPMinicio = new GridBagConstraints();
+                            gbc_spinnerAMPMinicio.anchor = GridBagConstraints.NORTHWEST;
+                            gbc_spinnerAMPMinicio.insets = new Insets(0, 0, 0, 5);
+                            gbc_spinnerAMPMinicio.gridx = 3;
+                            gbc_spinnerAMPMinicio.gridy = 0;
+                            this.panel.add(this.spinnerAMPMinicio, gbc_spinnerAMPMinicio);
+                    
+                        lblHasta = new JLabel("hasta");
+                        this.lblHasta.setHorizontalAlignment(SwingConstants.CENTER);
+                        lblHasta.setFont(FontController.getRegularLabelFont());
+                        GridBagConstraints gbc_lblHasta = new GridBagConstraints();
+                        gbc_lblHasta.anchor = GridBagConstraints.WEST;
+                        gbc_lblHasta.insets = new Insets(0, 0, 0, 5);
+                        gbc_lblHasta.gridx = 4;
+                        gbc_lblHasta.gridy = 0;
+                        this.panel.add(this.lblHasta, gbc_lblHasta);
+                    
+                        spinHoraFinal = new JSpinner();
+                        this.spinHoraFinal.setModel(new SpinnerNumberModel(1, 1, 12, 1));
+                        this.spinHoraFinal.setFont(FontController.getRegularLabelFont());
+                        GridBagConstraints gbc_spinHoraFinal = new GridBagConstraints();
+                        gbc_spinHoraFinal.anchor = GridBagConstraints.NORTHWEST;
+                        gbc_spinHoraFinal.insets = new Insets(0, 0, 0, 5);
+                        gbc_spinHoraFinal.gridx = 5;
+                        gbc_spinHoraFinal.gridy = 0;
+                        this.panel.add(this.spinHoraFinal, gbc_spinHoraFinal);
+                
+                    labeltime2 = new JLabel(":");
+                    labeltime2.setFont(FontController.getRegularLabelFont());
+                    GridBagConstraints gbc_labeltime2 = new GridBagConstraints();
+                    gbc_labeltime2.anchor = GridBagConstraints.WEST;
+                    gbc_labeltime2.insets = new Insets(0, 0, 0, 5);
+                    gbc_labeltime2.gridx = 6;
+                    gbc_labeltime2.gridy = 0;
+                    this.panel.add(this.labeltime2, gbc_labeltime2);
+                    
+                        spinMinutoFinal = new JSpinner();
+                        this.spinMinutoFinal.setModel(new SpinnerNumberModel(0, 0, 59, 1));
+                        this.spinMinutoFinal.setFont(FontController.getRegularLabelFont());
+                        GridBagConstraints gbc_spinMinutoFinal = new GridBagConstraints();
+                        gbc_spinMinutoFinal.anchor = GridBagConstraints.NORTHWEST;
+                        gbc_spinMinutoFinal.insets = new Insets(0, 0, 0, 5);
+                        gbc_spinMinutoFinal.gridx = 7;
+                        gbc_spinMinutoFinal.gridy = 0;
+                        this.panel.add(this.spinMinutoFinal, gbc_spinMinutoFinal);
+                
+                    this.spinnerAMPMfinal = new JSpinner();
+                    this.spinnerAMPMfinal.setModel(new SpinnerListModel(new String[] {
+                        "AM", "PM"
+                    }));
+                    this.spinnerAMPMfinal.setFont(FontController.getRegularLabelFont());
+                    GridBagConstraints gbc_spinnerAMPMfinal = new GridBagConstraints();
+                    gbc_spinnerAMPMfinal.anchor = GridBagConstraints.NORTHWEST;
+                    gbc_spinnerAMPMfinal.gridx = 8;
+                    gbc_spinnerAMPMfinal.gridy = 0;
+                    this.panel.add(this.spinnerAMPMfinal, gbc_spinnerAMPMfinal);
 
-		spinHoraFinal = new JSpinner();
-		this.spinHoraFinal.setModel(new SpinnerNumberModel(1, 1, 12, 1));
-		this.spinHoraFinal.setFont(FontController.getRegularLabelFont());
-		panelHorario.add(spinHoraFinal);
+    panelCosto = new JPanel();
+    panelCosto.setOpaque(false);
+    panelContents.add(panelCosto);
+    this.panelCosto.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		labeltime2 = new JLabel(":");
-		panelHorario.add(labeltime2);
-		labeltime2.setFont(FontController.getRegularLabelFont());
+    lblColones = new JLabel("Costo en moneda local:");
+    lblColones.setFont(FontController.getBoldLabelFont());
+    panelCosto.add(lblColones);
 
-		spinMinutoFinal = new JSpinner();
-		this.spinMinutoFinal.setModel(new SpinnerNumberModel(0, 0, 59, 1));
-		this.spinMinutoFinal.setFont(FontController.getRegularLabelFont());
-		panelHorario.add(spinMinutoFinal);
-		
-		this.spinnerAMPMfinal = new JSpinner();
-		this.spinnerAMPMfinal.setModel(new SpinnerListModel(new String[] {"AM", "PM"}));
-		this.spinnerAMPMfinal.setFont(FontController.getRegularLabelFont());
-		this.panelHorario.add(this.spinnerAMPMfinal);
+    txtCosto = new JDatabaseText(LibertadDatabaseConstraints.Curso_costo_NUMBER);
+    txtCosto.setColumns(LibertadDatabaseConstraints.Curso_costo_NUMBER);
+    txtCosto.setFont(FontController.getRegularLabelFont());
+    panelCosto.add(txtCosto);
 
-		panelCosto = new JPanel();
-		panelCosto.setOpaque(false);
-		panelCosto.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Costo", TitledBorder.LEADING,
-				TitledBorder.TOP, FontController.getBoldLabelFont(), null));
-		panelContents.add(panelCosto);
-		this.panelCosto.setLayout(new BorderLayout(0, 0));
+    panelMercado = new JPanel();
+    panelMercado.setOpaque(false);
+    panelContents.add(panelMercado);
+    this.panelMercado.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		lblColones = new JLabel("\u20A1");
-		panelCosto.add(lblColones, BorderLayout.WEST);
+    this.lblMercadoMeta = new JLabel("Mercado Meta: ");
+    this.lblMercadoMeta.setFont(FontController.getBoldLabelFont());
+    this.panelMercado.add(this.lblMercadoMeta);
 
-		txtCosto = new JDatabaseText(LibertadDatabaseConstraints.Curso_costo_NUMBER);
-		this.txtCosto.setFont(FontController.getRegularLabelFont());
-		panelCosto.add(txtCosto);
-		txtCosto.setColumns(LibertadDatabaseConstraints.Curso_costo_NUMBER);
+    comboMercadoMeta = new JComboBox<String>();
+    this.comboMercadoMeta.setModel(new DefaultComboBoxModel(new String[] {
+        "12 a 17", "18 a 24"
+    }));
+    comboMercadoMeta.setFont(FontController.getRegularLabelFont());
+    panelMercado.add(comboMercadoMeta);
 
-		panelMercado = new JPanel();
-		panelMercado.setOpaque(false);
-		panelMercado.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Mercado Meta",
-				TitledBorder.LEADING, TitledBorder.TOP, FontController.getBoldLabelFont(), null));
-		panelContents.add(panelMercado);
-		panelMercado.setLayout(new BorderLayout(0, 0));
+    panelBottom = new JPanel();
+    panelBottom.setBackground(DesignController.getWindowBGColor());
+    FlowLayout fl_panelBottom = (FlowLayout) panelBottom.getLayout();
+    fl_panelBottom.setAlignment(FlowLayout.RIGHT);
+    getContentPane().add(panelBottom, BorderLayout.SOUTH);
 
-		comboMercadoMeta = new JComboBox<String>();
-		comboMercadoMeta.setFont(FontController.getRegularLabelFont());
-		panelMercado.add(comboMercadoMeta);
+    btnConfirmar = new JButton("Confirmar");
+    btnConfirmar.setFont(FontController.getRegularLabelFont());
+    panelBottom.add(btnConfirmar);
 
-		panelBottom = new JPanel();
-		panelBottom.setBackground(DesignController.getWindowBGColor());
-		FlowLayout fl_panelBottom = (FlowLayout) panelBottom.getLayout();
-		fl_panelBottom.setAlignment(FlowLayout.RIGHT);
-		getContentPane().add(panelBottom, BorderLayout.SOUTH);
-
-		btnRegistrar = new JButton("Registrar");
-		btnRegistrar.setFont(FontController.getRegularLabelFont());
-		panelBottom.add(btnRegistrar);
-		
-	}
+  }
 }

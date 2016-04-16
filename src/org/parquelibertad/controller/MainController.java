@@ -32,7 +32,7 @@ import org.parquelibertad.view.general.AgregarPersonas;
  */
 public class MainController {
   private static MainController instance = null;
-  
+
   private JDialog               territorySelector;
   private JDialog               debugFontSelector;
   private JFrame                mainScreen;
@@ -53,8 +53,8 @@ public class MainController {
   }
 
   public void showEditTerritories() {
-    territorySelector = new EditarTerritorio(mainScreen, "Registro de Territorios",
-        600, 350, false);
+    territorySelector = new EditarTerritorio(mainScreen, "Registro de Territorios", 600,
+        350, false);
     territorySelector.setVisible(true);
   }
 
@@ -95,7 +95,7 @@ public class MainController {
   }
 
   public void showAgregarCurso() {
-	JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 750, 450, false);
+    JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 400, 520, true);
     now.setVisible(true);
   }
 

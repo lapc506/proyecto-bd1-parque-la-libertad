@@ -43,7 +43,7 @@ public class FiltroPersona extends DialogTemplate {
 	private final ButtonGroup buttonGroupBusqueda = new ButtonGroup();
 	private JPanel panel;
 	private JButton btnSeleccionar;
-
+	// Size 500 x 350 min 
   public FiltroPersona(JFrame parent, String windowName, int width, int height,
       boolean isResizable) throws HeadlessException {
     super(parent, windowName, width, height, isResizable);
@@ -105,6 +105,7 @@ public class FiltroPersona extends DialogTemplate {
     panel.setBackground(new Color(255, 143, 0));
     content.add(panel, BorderLayout.SOUTH);
     
+    btnSeleccionar = new JButton("Seleccionar");
     btnSeleccionar = new JButton("Seleccionar");
     panel.add(btnSeleccionar);
     

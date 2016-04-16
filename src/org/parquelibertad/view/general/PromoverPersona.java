@@ -21,6 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class PromoverPersona extends DialogTemplate {
 	private JPanel panelAcciones;
@@ -44,7 +46,8 @@ public class PromoverPersona extends DialogTemplate {
 	private JPanel panelSeleccion;
 	private JComboBox<String> comboPersonas;
 	private JButton btnFiltrarPersona;
-
+	
+	// Size 350x450 min
 	public PromoverPersona(JFrame parent, String windowName, int width, int height, boolean isResizable)
 			throws HeadlessException {
 		super(parent, windowName, width, height, isResizable);
@@ -67,7 +70,11 @@ public class PromoverPersona extends DialogTemplate {
 		this.panelSeleccion.add(this.comboPersonas);
 		
 		this.btnFiltrarPersona = new JButton("Filtrar Persona...");
-		this.btnFiltrarPersona.setBackground(DesignController.getWindowBGColor());
+		this.btnFiltrarPersona.addMouseListener(new MouseAdapter() {
+		  @Override
+		  public void mouseClicked(MouseEvent arg0) {
+		  }
+		});
 		this.panelSeleccion.add(this.btnFiltrarPersona);
 		
 		this.panelOpcionesEmpleado = new JPanel();
@@ -133,7 +140,6 @@ public class PromoverPersona extends DialogTemplate {
 		getContentPane().add(this.panelAcciones, BorderLayout.SOUTH);
 		
 		this.btnConfirmarPromocion = new JButton("Confirmar Promoci\u00F3n");
-		this.btnConfirmarPromocion.setBackground(DesignController.getWindowBGColor());
 		this.panelAcciones.add(this.btnConfirmarPromocion);
 		
 		JLabel label3 = new JLabel(" ");

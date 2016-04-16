@@ -59,7 +59,7 @@ public class Principal extends WindowTemplate {
 		});
 		// Al parecer esta manera de usar métodos lambda es incorrecta:
 		// mntmTerritorios.addActionListener(event -> MainController.getInstance().showAddPersona());
-		menuAgregarPersona.setFont(FontController.getBoldLabelFont());
+		menuAgregarPersona.setFont(FontController.getRegularLabelFont());
 		menuAnadir.add(menuAgregarPersona);
 		
 		this.menuAgregarCurso = new JMenuItem("Agregar nuevo Curso...");

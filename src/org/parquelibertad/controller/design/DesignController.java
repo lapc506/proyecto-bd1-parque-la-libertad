@@ -99,13 +99,14 @@ public class DesignController {
     // Establece un look and feel metálico, si no lo encuentra, establece el
     // look and feel del sistema operativo.
     try {
-      UIManager.setLookAndFeel(javax.swing.plaf.nimbus.NimbusLookAndFeel.class.getName());
+      UIManager.setLookAndFeel(javax.swing.plaf.metal.MetalLookAndFeel.class.getName());
     } catch (ClassNotFoundException |
              InstantiationException |
              IllegalAccessException |
              UnsupportedLookAndFeelException e) {
       try {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        UIManager.put("Spinner.background", windowBGColor);
       } catch (ClassNotFoundException |
                InstantiationException |
                IllegalAccessException |
