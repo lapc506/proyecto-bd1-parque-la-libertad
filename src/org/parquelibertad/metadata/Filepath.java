@@ -39,8 +39,7 @@ public class Filepath {
           + slash
           + "parquelibertad"
           + slash
-          + "metadata"
-          + slash;
+          + "metadata";
     pictures = metadata + slash + "pictures" + slash;
     fonts = metadata + slash + "fonts" + slash;
   }

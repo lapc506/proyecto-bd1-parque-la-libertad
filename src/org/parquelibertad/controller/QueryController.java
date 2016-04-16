@@ -18,11 +18,13 @@ public class QueryController {
   private static Vector<String> columnasUltimaConsulta;
 
   public static void promoverPersona(Integer selectedPersonaID) {
-    // PENDING TESTS FROM METHODS BELOW.
-    JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-        "FELICIDADES: las pruebas han sido satisfactorias y logró seleccionar\n"
-            + "el ID para promover una persona a Estudiante o Profesora.\n\n"
-              + "ID interno seleccionado: " + selectedPersonaID.toString());
+    if (selectedPersonaID != null){
+      // PENDING TESTS FROM METHODS BELOW.
+      JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
+          "FELICIDADES: las pruebas han sido satisfactorias y logró seleccionar\n"
+              + "el ID para promover una persona a Estudiante o Profesora.\n\n"
+                + "ID interno seleccionado: " + selectedPersonaID.toString());
+    }
   }
 
   public static Vector<String> getColumnasUltimaConsulta() {

@@ -18,40 +18,40 @@ import org.parquelibertad.view.jmodels.JDatabaseText;
 import org.parquelibertad.view.templates.DialogTemplate;
 
 import java.awt.Color;
-import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 import javax.swing.JRadioButton;
 import javax.swing.JComboBox;
-import java.awt.Font;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.GridLayout;
 import javax.swing.JTextField;
 import javax.swing.ButtonGroup;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
-import java.util.Vector;
+import javax.swing.JLabel;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FiltroPersona extends DialogTemplate {
+  private static final long serialVersionUID = 5606586311814273552L;
   private JPanel            content;
   private JTable            table;
   private JButton           btnBuscar;
   private JPanel            panelBusqueda;
-  private JRadioButton      rdbtnIdentificacion;
+  private JLabel      lblIdentificacion;
   private JComboBox<String> comboTipoIdentificacion;
-  private JRadioButton      rdbtnNombre;
+  private JLabel      lblNombre;
   private JTextField        txtNombre;
   private JComboBox<String> comboAtributos;
   private JTextField        txtIdentificacion;
   private JPanel            panelTop;
-  private final ButtonGroup buttonGroupBusqueda = new ButtonGroup();
-  private JPanel            panel;
+  
+  private JPanel            actions;
   private JButton           btnSeleccionar;
   private Integer           selectedPersonaID;
+  private JButton btnConfirmar;
 
   // Size 500 x 350 min
   public FiltroPersona(JFrame parent, String windowName, int width, int height,
@@ -75,14 +75,14 @@ public class FiltroPersona extends DialogTemplate {
     this.panelBusqueda.setBackground(DesignController.getWindowBGColor());
     panelBusqueda.setLayout(new GridLayout(0, 3, 5, 0));
 
-    rdbtnIdentificacion = new JRadioButton("Identificaci\u00F3n...");
-    buttonGroupBusqueda.add(rdbtnIdentificacion);
-    rdbtnIdentificacion.setFont(FontController.getRegularLabelFont());
-    rdbtnIdentificacion.setBackground(DesignController.getWindowBGColor());
-    panelBusqueda.add(rdbtnIdentificacion);
-    rdbtnIdentificacion.setSelected(true);
+    lblIdentificacion = new JLabel("Identidad de tipo...");
+    
+    lblIdentificacion.setFont(FontController.getRegularLabelFont());
+    lblIdentificacion.setBackground(DesignController.getWindowBGColor());
+    panelBusqueda.add(lblIdentificacion);
 
     comboTipoIdentificacion = new JComboBox<String>();
+    this.comboTipoIdentificacion.setModel(new DefaultComboBoxModel(new String[] {"C\u00E9dula", "Tarjeta Identificaci\u00F3n Menores", "Pasaporte"}));
     comboTipoIdentificacion.setFont(FontController.getRegularLabelFont());
     panelBusqueda.add(comboTipoIdentificacion);
 
@@ -91,11 +91,10 @@ public class FiltroPersona extends DialogTemplate {
     txtIdentificacion.setColumns(10);
     panelBusqueda.add(txtIdentificacion);
 
-    rdbtnNombre = new JRadioButton("Otro Atributo...");
-    buttonGroupBusqueda.add(rdbtnNombre);
-    rdbtnNombre.setFont(FontController.getRegularLabelFont());
-    rdbtnNombre.setBackground(DesignController.getWindowBGColor());
-    panelBusqueda.add(rdbtnNombre);
+    lblNombre = new JLabel("...o Atributo por especificar:");
+    lblNombre.setFont(FontController.getRegularLabelFont());
+    lblNombre.setBackground(DesignController.getWindowBGColor());
+    panelBusqueda.add(lblNombre);
 
     comboAtributos = new JComboBox<String>();
     comboAtributos.setFont(FontController.getRegularLabelFont());
@@ -104,31 +103,41 @@ public class FiltroPersona extends DialogTemplate {
     txtNombre = new JDatabaseText(LibertadDatabaseConstraints.Persona_nombre_VARCHAR2);
     panelBusqueda.add(txtNombre);
     txtNombre.setColumns(10);
+    
+        this.btnBuscar = new JButton("Buscar...");
+        this.btnBuscar.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent arg0) {
+          }
+        });
+        this.panelTop.add(this.btnBuscar);
+        this.btnBuscar.addMouseListener(new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent arg0) {
+            try {
+              table.setModel(QueryController.buscarPersona(
+                  (String) comboTipoIdentificacion.getSelectedItem(),
+                  txtIdentificacion.getText(), (String) comboAtributos.getSelectedItem(),
+                  txtNombre.getText()));
+            } catch (SQLException e) {
+              JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
+                  e.getMessage(), "Error de consulta en la base de datos",
+                  JOptionPane.ERROR_MESSAGE);
+            }
+          }
+        });
 
     this.table = new JTable();
     this.content.add(this.table);
 
-    this.btnBuscar = new JButton("Buscar...");
-    this.btnBuscar.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent arg0) {
-        try {
-          table.setModel(QueryController.buscarPersona(
-              (String) comboTipoIdentificacion.getSelectedItem(),
-              txtIdentificacion.getText(), (String) comboAtributos.getSelectedItem(),
-              txtNombre.getText()));
-        } catch (SQLException e) {
-          JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-              e.getMessage(), "Error de consulta en la base de datos",
-              JOptionPane.ERROR_MESSAGE);
-        }
-      }
-    });
-    panelTop.add(btnBuscar);
-
-    btnSeleccionar = new JButton("Seleccionar");
-    btnSeleccionar = new JButton("Seleccionar");
-    this.btnSeleccionar.addMouseListener(new MouseAdapter() {
+    // Final de construcción de la ventana:
+    actions = new JPanel();
+    getContentPane().add(this.actions, BorderLayout.SOUTH);
+    FlowLayout fl_actions = (FlowLayout) actions.getLayout();
+    fl_actions.setAlignment(FlowLayout.RIGHT);
+    actions.setBackground(new Color(255, 143, 0));
+    
+    this.btnConfirmar = new JButton("Confirmar Selecci\u00F3n");
+    this.btnConfirmar.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent arg0) {
         /**
@@ -160,14 +169,7 @@ public class FiltroPersona extends DialogTemplate {
         }
       }
     });
-    panel.add(btnSeleccionar);
-
-    // Final de construcción de la ventana:
-    panel = new JPanel();
-    FlowLayout flowLayout = (FlowLayout) panel.getLayout();
-    flowLayout.setAlignment(FlowLayout.RIGHT);
-    panel.setBackground(new Color(255, 143, 0));
-    content.add(panel, BorderLayout.SOUTH);
+    this.actions.add(this.btnConfirmar);
   }
 
   public Integer getSelectedValue() {

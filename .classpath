@@ -3,5 +3,6 @@
 	<classpathentry excluding="model/" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="src/org/parquelibertad/ojdbc6.jar"/>
+	<classpathentry kind="lib" path="src/org/parquelibertad/thumbnailator-0.4.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

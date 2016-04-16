@@ -22,6 +22,7 @@ import org.parquelibertad.view.busquedas.FiltroPersona;
 import org.parquelibertad.view.debugDialogs.FontSelectorForm;
 import org.parquelibertad.view.general.AgregarCurso;
 import org.parquelibertad.view.general.AgregarPersonas;
+import org.parquelibertad.view.general.PromoverPersona;
 
 /**
  * proyecto-bd1-parque-la-libertad
@@ -69,7 +70,7 @@ public class MainController {
   
   public JFrame getMainScreen() {
     if (mainScreen == null) {
-      mainScreen = new Principal("Parque La Libertad", 800, 400, false, true);
+      mainScreen = new Principal("Parque La Libertad", 750, 500, false, true);
     }
     return mainScreen;
   }
@@ -112,9 +113,14 @@ public class MainController {
 
   public Integer selectPersona(String prompt) {
     // No es cualquier JDialog:
-    FiltroPersona now = new FiltroPersona(mainScreen, prompt, 400, 520, true);
+    FiltroPersona now = new FiltroPersona(mainScreen, prompt, 725, 520, true);
     now.setVisible(true);
     return now.getSelectedValue();
+  }
+  
+  public void showPromoverPersona() {
+    JDialog now = new PromoverPersona(mainScreen, "Agregar Curso", 500, 520, true);
+    now.setVisible(true);
   }
 
 }
