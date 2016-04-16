@@ -41,7 +41,7 @@ public class App {
     // Will only run Swing JFrames and JDialogs
     EventQueue.invokeLater(new Runnable() {
       public void run() {
-        MainController.getInstance().getMainScreen();
+        MainController.getInstance().showMainScreen();
       }
     });
   }

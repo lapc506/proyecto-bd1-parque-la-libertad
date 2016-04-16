@@ -18,6 +18,7 @@ import org.parquelibertad.view.Principal;
 import org.parquelibertad.view.adminDialogs.AgregarPais;
 import org.parquelibertad.view.adminDialogs.EditarPais;
 import org.parquelibertad.view.adminDialogs.EditarTerritorio;
+import org.parquelibertad.view.busquedas.FiltroPersona;
 import org.parquelibertad.view.debugDialogs.FontSelectorForm;
 import org.parquelibertad.view.general.AgregarCurso;
 import org.parquelibertad.view.general.AgregarPersonas;
@@ -62,9 +63,19 @@ public class MainController {
     myConnection = ConnectionFactory.getConnection();
   }
 
-  public void getMainScreen() {
-    mainScreen = new Principal("Parque La Libertad", 800, 400, false, true);
-    mainScreen.setVisible(true);
+  public Connection getMyConnection() {
+    return myConnection;
+  }
+  
+  public JFrame getMainScreen() {
+    if (mainScreen == null) {
+      mainScreen = new Principal("Parque La Libertad", 800, 400, false, true);
+    }
+    return mainScreen;
+  }
+  
+  public void showMainScreen() {
+    getMainScreen().setVisible(true);
   }
 
   public void showAddPais() {
@@ -97,6 +108,13 @@ public class MainController {
   public void showAgregarCurso() {
     JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 400, 520, true);
     now.setVisible(true);
+  }
+
+  public Integer selectPersona(String prompt) {
+    // No es cualquier JDialog:
+    FiltroPersona now = new FiltroPersona(mainScreen, prompt, 400, 520, true);
+    now.setVisible(true);
+    return now.getSelectedValue();
   }
 
 }
