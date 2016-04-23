@@ -33,6 +33,7 @@ import java.awt.FlowLayout;
  *
  */
 public class Principal extends WindowTemplate {
+  private static final long serialVersionUID = 2787942091814370720L;
   private JMenuBar  menuBar;
   private JMenu     menuAdministrador;
   private JMenuItem mntmTerritorios;
@@ -45,8 +46,6 @@ public class Principal extends WindowTemplate {
   private JLabel    lblLogoParque;
   private JLabel    lblBienvenidos;
   private JPanel    panelPictures;
-  private JPanel panel;
-
   /**
    * @param windowName
    *          Título de la ventana

@@ -38,13 +38,11 @@ public class MainController {
   private JDialog               territorySelector;
   private JDialog               debugFontSelector;
   private JFrame                mainScreen;
-  private Connection            myConnection;
 
   private MainController() {
     territorySelector = null;
     debugFontSelector = null;
     mainScreen = null;
-    myConnection = null;
   }
 
   public static MainController getInstance() {
@@ -60,13 +58,7 @@ public class MainController {
     territorySelector.setVisible(true);
   }
 
-  public void initializeDBConnection() throws SQLException {
-    myConnection = ConnectionFactory.getConnection();
-  }
 
-  public Connection getMyConnection() {
-    return myConnection;
-  }
   
   public JFrame getMainScreen() {
     if (mainScreen == null) {

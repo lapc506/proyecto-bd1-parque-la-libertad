@@ -2,6 +2,7 @@ package org.parquelibertad.controller;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -13,17 +14,70 @@ import org.parquelibertad.view.jmodels.DatabaseTableModel;
 import org.parquelibertad.view.jmodels.TableModelFactory;
 
 import oracle.jdbc.OracleTypes;
+import oracle.jdbc.internal.OracleCallableStatement;
 
 public class QueryController {
   private static Vector<String> columnasUltimaConsulta;
+  private static Connection     myConnection = null;
 
+  public static void startJDBC() throws SQLException{
+    DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
+  }
+  public static void closeConnection() throws SQLException {
+    if (myConnection != null) {
+      myConnection.close();
+    }
+    myConnection = null;
+  }
+
+  public static Connection openConnection() throws SQLException {
+    if (myConnection == null) {
+      myConnection = ConnectionFactory.getConnection();
+    }
+    return myConnection;
+  }
+  /** SQL Syntax based on:
+   * https://docs.oracle.com/cd/E16338_01/appdev.112/e13995/oracle/jdbc/OracleCallableStatement.html
+   *   // Oracle PL/SQL block syntax
+   *   CallableStatement cs3 = conn.prepareCall
+   *   ( "begin proc (?,?); end;" ) ; // stored proc
+   *   CallableStatement cs4 = conn.prepareCall
+   *   ( "begin ? := func(?,?); end;" ) ; // stored func
+   *   
+   *   Column indexes always start in 1, based on:
+   *   http://javarevisited.blogspot.com/2012/01/javasqlsqlexception-invalid-column.html
+   *   
+   *   Learn how to obtain cursors at:
+   *   ttps://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets#11g-updates
+   */
+  public static Integer getPaisID(String pNombrePais) throws SQLException{
+    String proposal = "BEGIN ? := get_Pais_ID(?); END;";
+    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection.prepareCall(proposal);
+    cstmt.registerOutParameter(1, OracleTypes.INTEGER);
+    cstmt.setString(2, pNombrePais);
+    cstmt.executeQuery();
+    Integer paisID = cstmt.getInt(1);
+    cstmt.close();
+    return paisID;
+  }
+  
+  public static ResultSet getProvinciasPorPais(Integer pPaisID) throws SQLException{
+    String proposal = "{call get_Provincias_por_Pais(?, ?) }";
+    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection.prepareCall(proposal);
+    cstmt.setInt(1, pPaisID);
+    cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+    ResultSet rs = cstmt.executeQuery();
+    return rs;
+  }
+  
   public static void promoverPersona(Integer selectedPersonaID) {
-    if (selectedPersonaID != null){
+    if (selectedPersonaID != null) {
       // PENDING TESTS FROM METHODS BELOW.
       JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
           "FELICIDADES: las pruebas han sido satisfactorias y logró seleccionar\n"
               + "el ID para promover una persona a Estudiante o Profesora.\n\n"
-                + "ID interno seleccionado: " + selectedPersonaID.toString());
+                + "ID interno seleccionado: "
+                + selectedPersonaID.toString());
     }
   }
 
@@ -39,13 +93,14 @@ public class QueryController {
      * La cláusula WHERE debe NO incluir ID en los parámetros para que tenga
      * sentido. Esta búsqueda no depende del número de identificación.
      */
-    String proposedSQLStatement = "{? = call BUSCARPersona (? , ?, ?, ?)}";
-    Connection database = MainController.getInstance().getMyConnection();
-    CallableStatement cstmt = database.prepareCall(proposedSQLStatement);
+    String proposal = "BEGIN buscarPersona(?, ?, ?, ?); END;";
+    CallableStatement cstmt = myConnection.prepareCall(proposal);
     cstmt.registerOutParameter(1, OracleTypes.CURSOR);
     cstmt.setString(2, tipoIdentificacion);
     cstmt.setInt(3, validarNumero(numeroIdentificacion));
-    ResultSet rset = cstmt.executeQuery();
+    // ResultSet rset = cstmt.executeQuery();
+    // Based on: https://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets#11g-updates
+    ResultSet rs = ((OracleCallableStatement) cstmt).getCursor(2);
 
     columnasUltimaConsulta = new Vector<String>();
     columnasUltimaConsulta.add("Nombre");
@@ -56,9 +111,12 @@ public class QueryController {
     columnasUltimaConsulta.add("Numero de " + tipoIdentificacion);
 
     DatabaseTableModel toReturn = TableModelFactory
-        .getDatabaseModel(columnasUltimaConsulta, rset);
+        .getDatabaseModel(columnasUltimaConsulta, rs);
     // Avoid meamory leak:
-    rset.close();
+    rs.close();
+    rs = null;
+    cstmt.close();
+    cstmt = null;
     // Based on:
     // http://stackoverflow.com/questions/22136168/will-resultset-leak-if-not-explicitly-closed
     return toReturn;
@@ -67,8 +125,7 @@ public class QueryController {
   public static Integer selectPersona(String tipoIdentificacion,
       String numeroIdentificacion) throws SQLException, IllegalArgumentException {
     String proposedSQLStatement = "{? = call SELECTPersona (?, ?)}";
-    Connection database = MainController.getInstance().getMyConnection();
-    CallableStatement cstmt = database.prepareCall(proposedSQLStatement);
+    CallableStatement cstmt = myConnection.prepareCall(proposedSQLStatement);
     // !! Test pending
     cstmt.registerOutParameter(1, OracleTypes.INTEGER);
     cstmt.setString(2, tipoIdentificacion);

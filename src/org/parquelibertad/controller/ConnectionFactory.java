@@ -42,7 +42,6 @@ public class ConnectionFactory {
   public static final String schemaPassword = "user123";
 
   public static Connection getConnection() throws SQLException {
-    DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
     String connectionURL = "";
     if (alreadyConnected()) {
       // App is running within Oracle JVM and should be using the built-in kprb
