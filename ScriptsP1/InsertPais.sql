@@ -1,0 +1,5 @@
+CREATE OR REPLACE PROCEDURE insert_pais(descripcion VARCHAR2) AS
+BEGIN
+INSERT INTO PAIS(id,descripcion)
+VALUES(S_PAIS.NEXTVAL,descripcion);
+END;
