@@ -85,26 +85,26 @@ public class QueryController {
    * for (Integer x : parameterIndexes) {
    * System.out.println(x);
    * }
+   * @return 
    */
-  public static void getProvinciasPorPais(Integer pPaisID) throws SQLException {
+  public static Vector<String> getProvinciasPorPais(Integer pPaisID) throws SQLException {
     String statement = "get_Provincias_por_Pais";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pPaisID);
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
-    /*
-    System.out.println(result.getType() == ResultSet.TYPE_FORWARD_ONLY);
-    System.out.println(result.getFetchDirection() == ResultSet.FETCH_FORWARD);
-    System.out.println(result.isBeforeFirst());
-    System.out.println(result.next());
-    System.out.println(result.isFirst());
-    System.out.println(result.getInt(1) + " || " + result.getString(2));
-    System.out.println(result.next());
-    System.out.println(result.getInt(1) + " || " + result.getString(2));
-    System.out.println(result.next());
-    System.out.println(result.getInt(1) + " || " + result.getString(2));
-    System.out.println(result.next());
-    */
+    boolean lastOperationResult;
+    lastOperationResult = result.next(); // System.out.println(lastOperationResult);
+    lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
+    Vector<String> comboBoxContents = new Vector<String>();
+    if (lastOperationResult) {
+      while (lastOperationResult){
+        comboBoxContents.addElement(result.getString(1));
+        // Sabemos que el procedimiento es de una sola columna.
+        lastOperationResult = result.next();
+      }
+    }
     result.close();
+    return comboBoxContents;
   }
 
   public static void promoverPersona(Integer selectedPersonaID) {
@@ -202,7 +202,10 @@ public class QueryController {
      * OracleTypes.CURSOR.
      * 
      * Retorna un conjunto de datos resultado de ejecutar una sentencia PL/SQL
-     * aleatoria.
+     * aleatoria. Estado inicial del ResultSet siempre será:
+     * result.getType() == ResultSet.TYPE_FORWARD_ONLY
+     * result.getFetchDirection() == ResultSet.FETCH_FORWARD
+     * result.isBeforeFirst() == true
      */
     public static ResultSet callStoredProc(String originalSTMT, Vector<Object> variables,
         int cursorMarkPosition) throws SQLException {
@@ -215,7 +218,7 @@ public class QueryController {
       newStatement += "?); END;";
       OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
           .prepareCall(newStatement);
-            System.out.println("GETTING cursorOutputIndex at " + cursorMarkPosition);
+            // System.out.println("GETTING cursorOutputIndex at " + cursorMarkPosition);
       // Assume all initial ? marks are input variables:
       if (!variables.isEmpty()) {
         for (int mark = 0; mark < variables.size(); mark++) {

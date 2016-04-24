@@ -39,7 +39,9 @@ public class App {
     try {
       QueryController.startJDBC();
       QueryController.openConnection();
-      QueryController.getProvinciasPorPais(QueryController.getPaisID("Costa Rica"));
+      for (String x : QueryController.getProvinciasPorPais(QueryController.getPaisID("Costa Rica"))){
+        System.out.println(x);
+      };
       // http://stackoverflow.com/questions/192078/how-do-i-get-the-size-of-a-java-sql-resultset
       // Para ResultSets de Oracle no es necesario 
       // result.first();
