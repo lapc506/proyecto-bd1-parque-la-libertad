@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
@@ -20,9 +22,10 @@ public class QueryController {
   private static Vector<String> columnasUltimaConsulta;
   private static Connection     myConnection = null;
 
-  public static void startJDBC() throws SQLException{
+  public static void startJDBC() throws SQLException {
     DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
   }
+
   public static void closeConnection() throws SQLException {
     if (myConnection != null) {
       myConnection.close();
@@ -36,23 +39,29 @@ public class QueryController {
     }
     return myConnection;
   }
-  /** SQL Syntax based on:
-   * https://docs.oracle.com/cd/E16338_01/appdev.112/e13995/oracle/jdbc/OracleCallableStatement.html
-   *   // Oracle PL/SQL block syntax
-   *   CallableStatement cs3 = conn.prepareCall
-   *   ( "begin proc (?,?); end;" ) ; // stored proc
-   *   CallableStatement cs4 = conn.prepareCall
-   *   ( "begin ? := func(?,?); end;" ) ; // stored func
-   *   
-   *   Column indexes always start in 1, based on:
-   *   http://javarevisited.blogspot.com/2012/01/javasqlsqlexception-invalid-column.html
-   *   
-   *   Learn how to obtain cursors at:
-   *   ttps://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets#11g-updates
+
+  /**
+   * SQL Syntax based on:
+   * https://docs.oracle.com/cd/E16338_01/appdev.112/e13995/oracle/jdbc/
+   * OracleCallableStatement.html
+   * // Oracle PL/SQL block syntax
+   * CallableStatement cs3 = conn.prepareCall
+   * ( "begin proc (?,?); end;" ) ; // stored proc
+   * CallableStatement cs4 = conn.prepareCall
+   * ( "begin ? := func(?,?); end;" ) ; // stored func
+   * 
+   * Column indexes always start in 1, based on:
+   * http://javarevisited.blogspot.com/2012/01/javasqlsqlexception-invalid-
+   * column.html
+   * 
+   * Learn how to obtain cursors at:
+   * ttps://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets
+   * #11g-updates
    */
-  public static Integer getPaisID(String pNombrePais) throws SQLException{
+  public static Integer getPaisID(String pNombrePais) throws SQLException {
     String proposal = "BEGIN ? := get_Pais_ID(?); END;";
-    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection.prepareCall(proposal);
+    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
+        .prepareCall(proposal);
     cstmt.registerOutParameter(1, OracleTypes.INTEGER);
     cstmt.setString(2, pNombrePais);
     cstmt.executeQuery();
@@ -60,14 +69,30 @@ public class QueryController {
     cstmt.close();
     return paisID;
   }
-  
-  public static void getProvinciasPorPais(Integer pPaisID) throws SQLException{
+
+  public static void getProvinciasPorPais(Integer pPaisID) throws SQLException {
     String proposal = "BEGIN get_Provincias_por_Pais(?, ?); END;";
-    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection.prepareCall(proposal);
+    Vector<Integer> parameterIndexes = new Vector<Integer>();
+    boolean next = true;
+    while (next) {
+      int index = proposal.indexOf("?",
+          (parameterIndexes.size() == 0) ? 0 : parameterIndexes.lastElement() + 1);
+      if (index != -1) {
+        parameterIndexes.addElement(index);
+      } else {
+        next = false;
+      }
+    }
+    for (Integer x : parameterIndexes) {
+      System.out.println(x);
+    }
+
+    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
+        .prepareCall(proposal);
     cstmt.setInt(1, pPaisID);
     cstmt.registerOutParameter(2, OracleTypes.CURSOR);
-    // http://stackoverflow.com/questions/14946959/
-    // callablestatement-getresultset-always-return-null-when-calling-an-oracle-funct
+    // Why use .execute() instead of .executeQuery():
+    // http://stackoverflow.com/questions/19443213/cannot-perform-fetch-on-a-plsql-statement-next
     System.out.println(cstmt.execute());
     ResultSet result = cstmt.getCursor(2);
     System.out.println(result.getType() == ResultSet.TYPE_FORWARD_ONLY);
@@ -83,7 +108,7 @@ public class QueryController {
     System.out.println(result.next());
     result.close();
   }
-  
+
   public static void promoverPersona(Integer selectedPersonaID) {
     if (selectedPersonaID != null) {
       // PENDING TESTS FROM METHODS BELOW.
@@ -113,7 +138,8 @@ public class QueryController {
     cstmt.setString(2, tipoIdentificacion);
     cstmt.setInt(3, validarNumero(numeroIdentificacion));
     // ResultSet rset = cstmt.executeQuery();
-    // Based on: https://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets#11g-updates
+    // Based on:
+    // https://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets#11g-updates
     ResultSet rs = ((OracleCallableStatement) cstmt).getCursor(2);
 
     columnasUltimaConsulta = new Vector<String>();
@@ -162,4 +188,67 @@ public class QueryController {
     // which-is-better-more-efficient-check-for-bad-values-or-catch-exceptions-in-java
     return Integer.parseInt(test);
   }
+
+  // Static nested class:
+  public static class ResultSetFactory {
+    /**
+     * Esta clase permitirá la generalización de las consultas en algo más
+     * abstracto que no se relacione tan cercanamente al driver JDBC.
+     * Requiere únicamente que las sentencias invoquen directamente
+     * al procedimiento almacenado de la base de datos de Oracle, en formato:
+     * 
+     * nobmre_procedimiento_almacenado(?{, ?, ...,}, ?)
+     * 
+     * usando N parámetros de entrada y asumiendo que existe un parámetro
+     * que será @type OracleTypes.CURSOR.
+     * 
+     * Retorna un conjunto de datos resultado de ejecutar una sentencia PL/SQL
+     * aleatoria.
+     */
+    public static ResultSet executeStatement(String originalSTMT,
+        HashMap<Integer, Object> inputsVariables, int cursorOutputIndex)
+        throws SQLException {
+      // Assume the procedure call is well-formed.
+      // Assume we don't know how to construct the PL/SQL sentence:
+      String newStatement = "BEGIN " + originalSTMT + "; END;";
+      OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
+          .prepareCall(newStatement);
+
+      // Find all ? indexes:
+      Vector<Integer> parameterIndexes = new Vector<Integer>();
+      boolean next = true;
+      while (next) {
+        int index = originalSTMT.indexOf("?",
+            (parameterIndexes.size() == 0) ? 0 : parameterIndexes.lastElement() + 1);
+        if (index != -1) {
+          parameterIndexes.addElement(index);
+        } else {
+          next = false;
+        }
+      }
+
+      // Choose whether these indexes are inputs or the cursor output index:
+      for (int indexes = 0; indexes < parameterIndexes.size(); indexes++) {
+        if (inputsVariables.containsKey(indexes)) {
+          if (inputsVariables.get(indexes) instanceof String) {
+            cstmt.setString(parameterIndexes.elementAt(indexes),
+                (String) inputsVariables.get(indexes));
+          } else if (inputsVariables.get(indexes) instanceof Integer) {
+            cstmt.setInt(parameterIndexes.elementAt(indexes),
+                (Integer) inputsVariables.get(indexes));
+          } else {
+            cstmt.setObject(parameterIndexes.elementAt(indexes),
+                inputsVariables.get(indexes));
+          }
+        } else if (indexes == cursorOutputIndex) {
+          cstmt.registerOutParameter(parameterIndexes.elementAt(indexes),
+              OracleTypes.CURSOR);
+        }
+      }
+      cstmt.execute();
+      ResultSet result = cstmt.getCursor(cursorOutputIndex);
+      return result;
+    }
+  }
+
 }
