@@ -46,6 +46,8 @@ public class Principal extends WindowTemplate {
   private JLabel    lblLogoParque;
   private JLabel    lblBienvenidos;
   private JPanel    panelPictures;
+  private JMenu mnBuscar;
+  private JMenuItem mntmPersonaPorTerritorio;
   /**
    * @param windowName
    *          Título de la ventana
@@ -104,6 +106,19 @@ public class Principal extends WindowTemplate {
     });
     this.menuPromoverPersona.setFont(FontController.getRegularLabelFont());
     this.menuEditar.add(this.menuPromoverPersona);
+    
+    this.mnBuscar = new JMenu("Buscar");
+    this.mnBuscar.setFont(FontController.getRegularLabelFont());
+    this.menuBar.add(this.mnBuscar);
+    
+    this.mntmPersonaPorTerritorio = new JMenuItem("Persona por Territorio de Origen...");
+    this.mntmPersonaPorTerritorio.setFont(FontController.getRegularLabelFont());
+    this.mntmPersonaPorTerritorio.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        MainController.getInstance().showBuscarPersonaTerritorio();
+      }
+    });
+    this.mnBuscar.add(this.mntmPersonaPorTerritorio);
 
     this.menuAdministrador = new JMenu("Administrador");
     this.menuAdministrador.setFont(FontController.getRegularLabelFont());

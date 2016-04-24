@@ -19,6 +19,7 @@ import org.parquelibertad.view.adminDialogs.AgregarPais;
 import org.parquelibertad.view.adminDialogs.EditarPais;
 import org.parquelibertad.view.adminDialogs.EditarTerritorio;
 import org.parquelibertad.view.busquedas.FiltroPersona;
+import org.parquelibertad.view.busquedas.FiltroTerritorio;
 import org.parquelibertad.view.debugDialogs.FontSelectorForm;
 import org.parquelibertad.view.general.AgregarCurso;
 import org.parquelibertad.view.general.AgregarPersonas;
@@ -58,15 +59,13 @@ public class MainController {
     territorySelector.setVisible(true);
   }
 
-
-  
   public JFrame getMainScreen() {
     if (mainScreen == null) {
       mainScreen = new Principal("Parque La Libertad", 750, 500, false, true);
     }
     return mainScreen;
   }
-  
+
   public void showMainScreen() {
     getMainScreen().setVisible(true);
   }
@@ -93,6 +92,19 @@ public class MainController {
     }
   }
 
+  public void showBuscarPersonaTerritorio() {
+    try {
+      QueryController.openConnection();
+      JDialog now = new FiltroTerritorio(mainScreen, "Buscar Personas", 600, 600, false);
+      now.setVisible(true);
+      QueryController.closeConnection();
+    } catch (SQLException e) {
+      JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
+          "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+    }
+
+  }
+
   public void showAgregarPersona() {
     JDialog now = new AgregarPersonas(mainScreen, "Agregar Persona", 600, 600, false);
     now.setVisible(true);
@@ -109,7 +121,7 @@ public class MainController {
     now.setVisible(true);
     return now.getSelectedValue();
   }
-  
+
   public void showPromoverPersona() {
     JDialog now = new PromoverPersona(mainScreen, "Agregar Curso", 500, 520, true);
     now.setVisible(true);

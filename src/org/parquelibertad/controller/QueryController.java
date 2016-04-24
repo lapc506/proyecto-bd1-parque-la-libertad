@@ -39,7 +39,6 @@ public class QueryController {
     }
     return myConnection;
   }
-
   /**
    * SQL Syntax based on:
    * https://docs.oracle.com/cd/E16338_01/appdev.112/e13995/oracle/jdbc/
@@ -58,6 +57,25 @@ public class QueryController {
    * ttps://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets
    * #11g-updates
    */
+  
+  public static Vector<String> getPaises() throws SQLException {
+    String statement = "get_Paises";
+    ResultSet result = ResultSetFactory.callStoredProc(statement, new Vector<Object>(), 1);
+    boolean lastOperationResult;
+    lastOperationResult = result.next(); // System.out.println(lastOperationResult);
+    lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
+    Vector<String> comboBoxContents = new Vector<String>();
+    if (lastOperationResult) {
+      while (lastOperationResult) {
+        comboBoxContents.addElement(result.getString(1));
+        // Sabemos que el procedimiento es de una sola columna.
+        lastOperationResult = result.next();
+      }
+    }
+    result.close();
+    return comboBoxContents;
+  }
+  
   public static Integer getPaisID(String pNombrePais) throws SQLException {
     String proposal = "BEGIN ? := get_Pais_ID(?); END;";
     OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
@@ -68,25 +86,12 @@ public class QueryController {
     Integer paisID = cstmt.getInt(1);
     cstmt.close();
     return paisID;
+
+    /* Vector<Object> variables = new Vector<Object>();
+     * variables.addElement(pNombrePais);
+     * return (Integer) callStoredFunc("get_Pais_ID", variables, Integer.class); */
   }
 
-  /**
-   * Vector<Integer> parameterIndexes = new Vector<Integer>();
-   * boolean next = true;
-   * while (next) {
-   * int index = proposal.indexOf("?",
-   * (parameterIndexes.size() == 0) ? 0 : parameterIndexes.lastElement() + 1);
-   * if (index != -1) {
-   * parameterIndexes.addElement(index);
-   * } else {
-   * next = false;
-   * }
-   * }
-   * for (Integer x : parameterIndexes) {
-   * System.out.println(x);
-   * }
-   * @return 
-   */
   public static Vector<String> getProvinciasPorPais(Integer pPaisID) throws SQLException {
     String statement = "get_Provincias_por_Pais";
     Vector<Object> parametros = new Vector<Object>();
@@ -97,7 +102,7 @@ public class QueryController {
     lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
     Vector<String> comboBoxContents = new Vector<String>();
     if (lastOperationResult) {
-      while (lastOperationResult){
+      while (lastOperationResult) {
         comboBoxContents.addElement(result.getString(1));
         // Sabemos que el procedimiento es de una sola columna.
         lastOperationResult = result.next();
@@ -187,8 +192,21 @@ public class QueryController {
     return Integer.parseInt(test);
   }
 
+  private static void demo() {
+    try {
+      openConnection();
+      for (String x : QueryController
+          .getProvinciasPorPais(QueryController.getPaisID("Costa Rica"))) {
+        System.out.println(x);
+      }
+      closeConnection();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
   // Static nested class:
-  public static class ResultSetFactory {
+  private static class ResultSetFactory {
     /**
      * Esta clase permitirá la generalización de las consultas en algo más
      * abstracto que no se relacione tan cercanamente al driver JDBC.
@@ -207,23 +225,26 @@ public class QueryController {
      * result.getFetchDirection() == ResultSet.FETCH_FORWARD
      * result.isBeforeFirst() == true
      */
-    public static ResultSet callStoredProc(String originalSTMT, Vector<Object> variables,
+    static ResultSet callStoredProc(String originalSTMT, Vector<Object> variables,
         int cursorMarkPosition) throws SQLException {
       // Assume the procedure call is well-formed.
       // Assume we don't know how to construct the PL/SQL sentence:
       String newStatement = "BEGIN " + originalSTMT + "(";
-      for (@SuppressWarnings("unused") Object x : variables){
-        newStatement += "?, " ;
+      for (@SuppressWarnings("unused")
+      Object x : variables) {
+        newStatement += "?, ";
       }
       newStatement += "?); END;";
       OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
           .prepareCall(newStatement);
-            // System.out.println("GETTING cursorOutputIndex at " + cursorMarkPosition);
+      // System.out.println("GETTING cursorOutputIndex at " +
+      // cursorMarkPosition);
       // Assume all initial ? marks are input variables:
       if (!variables.isEmpty()) {
         for (int mark = 0; mark < variables.size(); mark++) {
           if (variables.get(mark).getClass() == Integer.class) {
-            // System.out.println("cstmt.setInt(" + (mark+1) + ", " + (Integer) variables.get(mark));
+            // System.out.println("cstmt.setInt(" + (mark+1) + ", " + (Integer)
+            // variables.get(mark));
             cstmt.setInt(mark + 1, (Integer) variables.get(mark));
           } else if (variables.get(mark).getClass() == String.class) {
             cstmt.setString(mark + 1, (String) variables.get(mark));
@@ -232,9 +253,8 @@ public class QueryController {
           }
         }
       }
-      if(variables.size() + 1 != cursorMarkPosition){
-        throw new SQLException("Invalid cursor ? position.");
-      }
+      if (variables.size() + 1 != cursorMarkPosition) { throw new SQLException(
+          "Invalid cursor ? position."); }
       // Assume the last ? mark is always a CURSOR:
       cstmt.registerOutParameter(cursorMarkPosition, OracleTypes.CURSOR);
 

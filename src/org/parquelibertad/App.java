@@ -38,21 +38,11 @@ public class App {
     FontController.loadDefaultFonts();
     try {
       QueryController.startJDBC();
-      QueryController.openConnection();
-      for (String x : QueryController.getProvinciasPorPais(QueryController.getPaisID("Costa Rica"))){
-        System.out.println(x);
-      };
-      // http://stackoverflow.com/questions/192078/how-do-i-get-the-size-of-a-java-sql-resultset
-      // Para ResultSets de Oracle no es necesario 
-      // result.first();
-      // http://es.comp.lenguajes.java.narkive.com/7gOrsdbL/problema-con-resultset-en-jdbc
-      
-      QueryController.closeConnection();
-      /* EventQueue.invokeLater(new Runnable() {
-       * public void run() {
-       * MainController.getInstance().showMainScreen();
-       * }
-       * }); */
+      EventQueue.invokeLater(new Runnable() {
+        public void run() {
+          MainController.getInstance().showMainScreen();
+        }
+      });
     } catch (SQLException e) {
       JOptionPane.showMessageDialog(null,
           "No es posible conectarse a la base de datos Oracle: \n" + e.getMessage(),
