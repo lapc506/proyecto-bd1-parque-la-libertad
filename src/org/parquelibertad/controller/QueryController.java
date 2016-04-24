@@ -14,7 +14,7 @@ import org.parquelibertad.view.jmodels.DatabaseTableModel;
 import org.parquelibertad.view.jmodels.TableModelFactory;
 
 import oracle.jdbc.OracleTypes;
-import oracle.jdbc.internal.OracleCallableStatement;
+import oracle.jdbc.OracleCallableStatement;
 
 public class QueryController {
   private static Vector<String> columnasUltimaConsulta;
@@ -61,13 +61,27 @@ public class QueryController {
     return paisID;
   }
   
-  public static ResultSet getProvinciasPorPais(Integer pPaisID) throws SQLException{
-    String proposal = "{call get_Provincias_por_Pais(?, ?) }";
+  public static void getProvinciasPorPais(Integer pPaisID) throws SQLException{
+    String proposal = "BEGIN get_Provincias_por_Pais(?, ?); END;";
     OracleCallableStatement cstmt = (OracleCallableStatement) myConnection.prepareCall(proposal);
     cstmt.setInt(1, pPaisID);
     cstmt.registerOutParameter(2, OracleTypes.CURSOR);
-    ResultSet rs = cstmt.executeQuery();
-    return rs;
+    // http://stackoverflow.com/questions/14946959/
+    // callablestatement-getresultset-always-return-null-when-calling-an-oracle-funct
+    System.out.println(cstmt.execute());
+    ResultSet result = cstmt.getCursor(2);
+    System.out.println(result.getType() == ResultSet.TYPE_FORWARD_ONLY);
+    System.out.println(result.getFetchDirection() == ResultSet.FETCH_FORWARD);
+    System.out.println(result.isBeforeFirst());
+    System.out.println(result.next());
+    System.out.println(result.isFirst());
+    System.out.println(result.getInt(1) + " || " + result.getString(2));
+    System.out.println(result.next());
+    System.out.println(result.getInt(1) + " || " + result.getString(2));
+    System.out.println(result.next());
+    System.out.println(result.getInt(1) + " || " + result.getString(2));
+    System.out.println(result.next());
+    result.close();
   }
   
   public static void promoverPersona(Integer selectedPersonaID) {

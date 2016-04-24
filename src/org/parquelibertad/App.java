@@ -6,6 +6,7 @@ package org.parquelibertad;
 import java.awt.EventQueue;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -26,6 +27,7 @@ import org.parquelibertad.metadata.Filepath;
 public class App {
   public static void main(String[] args) {
     // test();
+    Locale.setDefault(new Locale("en", "US"));
     Filepath.loadAllProjectFolders();
     DesignController.startLookAndFeel();
     // Background color based on www.parquelalibertad.org
@@ -37,21 +39,12 @@ public class App {
     try {
       QueryController.startJDBC();
       QueryController.openConnection();
-      Integer paisID = QueryController.getPaisID("Costa Rica");
-      System.out.println(paisID + " - Costa Rica");
-      ResultSet result = QueryController.getProvinciasPorPais(paisID);
+      QueryController.getProvinciasPorPais(QueryController.getPaisID("Costa Rica"));
       // http://stackoverflow.com/questions/192078/how-do-i-get-the-size-of-a-java-sql-resultset
       // Para ResultSets de Oracle no es necesario 
       // result.first();
       // http://es.comp.lenguajes.java.narkive.com/7gOrsdbL/problema-con-resultset-en-jdbc
-      Vector<String> listaProvincias = new Vector<String>();
-      while (result.next()) {
-        listaProvincias.addElement(result.getString(0));
-      }
-      for (String x : listaProvincias) {
-        System.out.println(x);
-      }
-      result.close();
+      
       QueryController.closeConnection();
       /* EventQueue.invokeLater(new Runnable() {
        * public void run() {
