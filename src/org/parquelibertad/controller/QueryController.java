@@ -70,31 +70,28 @@ public class QueryController {
     return paisID;
   }
 
+  /**
+   * Vector<Integer> parameterIndexes = new Vector<Integer>();
+   * boolean next = true;
+   * while (next) {
+   * int index = proposal.indexOf("?",
+   * (parameterIndexes.size() == 0) ? 0 : parameterIndexes.lastElement() + 1);
+   * if (index != -1) {
+   * parameterIndexes.addElement(index);
+   * } else {
+   * next = false;
+   * }
+   * }
+   * for (Integer x : parameterIndexes) {
+   * System.out.println(x);
+   * }
+   */
   public static void getProvinciasPorPais(Integer pPaisID) throws SQLException {
-    String proposal = "BEGIN get_Provincias_por_Pais(?, ?); END;";
-    Vector<Integer> parameterIndexes = new Vector<Integer>();
-    boolean next = true;
-    while (next) {
-      int index = proposal.indexOf("?",
-          (parameterIndexes.size() == 0) ? 0 : parameterIndexes.lastElement() + 1);
-      if (index != -1) {
-        parameterIndexes.addElement(index);
-      } else {
-        next = false;
-      }
-    }
-    for (Integer x : parameterIndexes) {
-      System.out.println(x);
-    }
-
-    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
-        .prepareCall(proposal);
-    cstmt.setInt(1, pPaisID);
-    cstmt.registerOutParameter(2, OracleTypes.CURSOR);
-    // Why use .execute() instead of .executeQuery():
-    // http://stackoverflow.com/questions/19443213/cannot-perform-fetch-on-a-plsql-statement-next
-    System.out.println(cstmt.execute());
-    ResultSet result = cstmt.getCursor(2);
+    String statement = "get_Provincias_por_Pais";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pPaisID);
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
+    /*
     System.out.println(result.getType() == ResultSet.TYPE_FORWARD_ONLY);
     System.out.println(result.getFetchDirection() == ResultSet.FETCH_FORWARD);
     System.out.println(result.isBeforeFirst());
@@ -106,6 +103,7 @@ public class QueryController {
     System.out.println(result.next());
     System.out.println(result.getInt(1) + " || " + result.getString(2));
     System.out.println(result.next());
+    */
     result.close();
   }
 
@@ -200,53 +198,48 @@ public class QueryController {
      * nobmre_procedimiento_almacenado(?{, ?, ...,}, ?)
      * 
      * usando N parámetros de entrada y asumiendo que existe un parámetro
-     * que será @type OracleTypes.CURSOR.
+     * que siempre estará ubicado en el último ? y será @type
+     * OracleTypes.CURSOR.
      * 
      * Retorna un conjunto de datos resultado de ejecutar una sentencia PL/SQL
      * aleatoria.
      */
-    public static ResultSet executeStatement(String originalSTMT,
-        HashMap<Integer, Object> inputsVariables, int cursorOutputIndex)
-        throws SQLException {
+    public static ResultSet callStoredProc(String originalSTMT, Vector<Object> variables,
+        int cursorMarkPosition) throws SQLException {
       // Assume the procedure call is well-formed.
       // Assume we don't know how to construct the PL/SQL sentence:
-      String newStatement = "BEGIN " + originalSTMT + "; END;";
+      String newStatement = "BEGIN " + originalSTMT + "(";
+      for (@SuppressWarnings("unused") Object x : variables){
+        newStatement += "?, " ;
+      }
+      newStatement += "?); END;";
       OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
           .prepareCall(newStatement);
-
-      // Find all ? indexes:
-      Vector<Integer> parameterIndexes = new Vector<Integer>();
-      boolean next = true;
-      while (next) {
-        int index = originalSTMT.indexOf("?",
-            (parameterIndexes.size() == 0) ? 0 : parameterIndexes.lastElement() + 1);
-        if (index != -1) {
-          parameterIndexes.addElement(index);
-        } else {
-          next = false;
-        }
-      }
-
-      // Choose whether these indexes are inputs or the cursor output index:
-      for (int indexes = 0; indexes < parameterIndexes.size(); indexes++) {
-        if (inputsVariables.containsKey(indexes)) {
-          if (inputsVariables.get(indexes) instanceof String) {
-            cstmt.setString(parameterIndexes.elementAt(indexes),
-                (String) inputsVariables.get(indexes));
-          } else if (inputsVariables.get(indexes) instanceof Integer) {
-            cstmt.setInt(parameterIndexes.elementAt(indexes),
-                (Integer) inputsVariables.get(indexes));
+            System.out.println("GETTING cursorOutputIndex at " + cursorMarkPosition);
+      // Assume all initial ? marks are input variables:
+      if (!variables.isEmpty()) {
+        for (int mark = 0; mark < variables.size(); mark++) {
+          if (variables.get(mark).getClass() == Integer.class) {
+            // System.out.println("cstmt.setInt(" + (mark+1) + ", " + (Integer) variables.get(mark));
+            cstmt.setInt(mark + 1, (Integer) variables.get(mark));
+          } else if (variables.get(mark).getClass() == String.class) {
+            cstmt.setString(mark + 1, (String) variables.get(mark));
           } else {
-            cstmt.setObject(parameterIndexes.elementAt(indexes),
-                inputsVariables.get(indexes));
+            cstmt.setObject(mark + 1, variables.get(mark));
           }
-        } else if (indexes == cursorOutputIndex) {
-          cstmt.registerOutParameter(parameterIndexes.elementAt(indexes),
-              OracleTypes.CURSOR);
         }
       }
+      if(variables.size() + 1 != cursorMarkPosition){
+        throw new SQLException("Invalid cursor ? position.");
+      }
+      // Assume the last ? mark is always a CURSOR:
+      cstmt.registerOutParameter(cursorMarkPosition, OracleTypes.CURSOR);
+
+      // Why use .execute() instead of .executeQuery(): sety
+      // http://stackoverflow.com/questions/19443213/
+      // cannot-perform-fetch-on-a-plsql-statement-next
       cstmt.execute();
-      ResultSet result = cstmt.getCursor(cursorOutputIndex);
+      ResultSet result = cstmt.getCursor(cursorMarkPosition);
       return result;
     }
   }
