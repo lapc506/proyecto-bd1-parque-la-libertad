@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION CantPersonasProvincia
+RETURN  NUMBER
+IS
+CANTPERSONAS NUMBER;
+BEGIN
+SELECT COUNT(*) into cantpersonas
+FROM PERSONA P INNER JOIN
+DISTRITO D ON P.iddistrito = d.id
+INNER JOIN CANTON C ON d.idcanton= c.id
+INNER JOIN PROVINCIA PV ON c.idprovincia= pv.id;
+END;

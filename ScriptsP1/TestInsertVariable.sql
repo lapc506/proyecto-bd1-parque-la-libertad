@@ -1,0 +1,17 @@
+DECLARE
+  NOMBRECOLUMNA ArrayVarchar;
+  TEXT ArrayVarchar;
+BEGIN
+  NOMBRECOLUMNA := ArrayVarchar();
+  TEXT := ArrayVarchar();
+  NOMBRECOLUMNA.EXTEND(2);
+  TEXT.EXTEND(2);
+  NOMBRECOLUMNA(1) := 'LOL2';
+  NOMBRECOLUMNA(2) := 'LOL3';
+  TEXT(1) := 'Boom3';
+  TEXT(2) := 'Boom4';
+  UPDATE_TEST(
+    NOMBRECOLUMNA => NOMBRECOLUMNA,
+    TEXT => TEXT
+  );
+END;

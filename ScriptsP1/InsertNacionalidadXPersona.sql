@@ -1,0 +1,5 @@
+CREATE OR REPLACE PROCEDURE insert_NacionalidadXPersona(IDNACIONALIDAD NUMBER,IDPERSONA VARCHAR2) AS
+BEGIN
+INSERT INTO NacionalidadXPersona(id, idnacionalidad, idpersona)
+VALUES(s_NacionalidadXPersona.NEXTVAL, IDNACIONALIDAD,IDPERSONA);
+END;

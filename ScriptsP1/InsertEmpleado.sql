@@ -1,0 +1,5 @@
+CREATE OR REPLACE PROCEDURE insert_empleado(idPersona NUMBER) AS
+BEGIN
+INSERT INTO EMPLEADO(id, idpersona)
+VALUES(S_EMPLEADO.NEXTVAL, idpersona);
+END;
