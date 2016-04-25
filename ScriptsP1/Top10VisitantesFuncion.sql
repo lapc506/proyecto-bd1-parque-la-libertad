@@ -1,0 +1,15 @@
+create or replace
+FUNCTION TOP10VISITANTES
+RETURN SYS_REFCURSOR
+AS
+set_personas SYS_REFCURSOR;
+BEGIN
+OPEN set_personas FOR
+SELECT (NOMBRE ||' '|| PRIMERAPELLIDO||' ' ||SEGUNDOAPELLIDO)AS NOMBRE_COMPLETO FROM(
+SELECT P.NOMBRE,P.primerapellido, p.segundoapellido, COUNT(*) C
+FROM PERSONA P INNER JOIN
+TODASVISITAS  TV ON P.ID =TV.IDPERSONA
+GROUP BY p.nombre, p.primerapellido,P.segundoapellido
+ORDER BY C desc);
+RETURN set_personas;
+END;
