@@ -4,17 +4,8 @@
 SID_LIST_LISTENER =
   (SID_LIST =
     (SID_DESC =
-      (SID_NAME = CLRExtProc)
+      (SID_NAME = DBPQLIBERTAD)
       (ORACLE_HOME = C:\OracleApp\product\11.2.0\dbhome_1)
-      (PROGRAM = extproc)
-      (ENVS = "EXTPROC_DLLS=ONLY:C:\OracleApp\product\11.2.0\dbhome_1\bin\oraclr11.dll")
-    )
-  )
-
-LISTENER =
-  (DESCRIPTION_LIST =
-    (DESCRIPTION =
-      (ADDRESS = (PROTOCOL = TCP)(HOST = JinxExecutor)(PORT = 1521))
     )
   )
 
