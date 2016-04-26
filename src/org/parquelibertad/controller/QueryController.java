@@ -6,15 +6,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
 import org.parquelibertad.view.jmodels.DatabaseTableModel;
-import org.parquelibertad.view.jmodels.TableModelFactory;
-
 import oracle.jdbc.OracleTypes;
 import oracle.jdbc.OracleCallableStatement;
 
@@ -39,6 +36,7 @@ public class QueryController {
     }
     return myConnection;
   }
+
   /**
    * SQL Syntax based on:
    * https://docs.oracle.com/cd/E16338_01/appdev.112/e13995/oracle/jdbc/
@@ -57,10 +55,11 @@ public class QueryController {
    * ttps://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets
    * #11g-updates
    */
-  
+
   public static HashMap<Integer, String> getPaises() throws SQLException {
     String statement = "get_Paises";
-    ResultSet result = ResultSetFactory.callStoredProc(statement, new Vector<Object>(), 1);
+    ResultSet result = ResultSetFactory.callStoredProc(statement, new Vector<Object>(),
+        1);
     boolean lastOperationResult;
     lastOperationResult = result.next(); // System.out.println(lastOperationResult);
     lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
@@ -68,14 +67,15 @@ public class QueryController {
     if (lastOperationResult) {
       while (lastOperationResult) {
         comboBoxContents.put(result.getInt(1), result.getString(2));
-        // Sabemos que el procedimiento tiene una columna de IDs y otra de descripcion.
+        // Sabemos que el procedimiento tiene una columna de IDs y otra de
+        // descripcion.
         lastOperationResult = result.next();
       }
     }
     result.close();
     return comboBoxContents;
   }
-  
+
   public static Integer getPaisID(String pNombrePais) throws SQLException {
     String proposal = "BEGIN ? := get_Pais_ID(?); END;";
     OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
@@ -92,7 +92,8 @@ public class QueryController {
      * return (Integer) callStoredFunc("get_Pais_ID", variables, Integer.class); */
   }
 
-  public static HashMap<Integer, String> getProvinciasPorPais(Integer pPaisID) throws SQLException {
+  public static HashMap<Integer, String> getProvinciasPorPais(Integer pPaisID)
+      throws SQLException {
     String statement = "get_Provincias_por_Pais";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pPaisID);
@@ -104,15 +105,17 @@ public class QueryController {
     if (lastOperationResult) {
       while (lastOperationResult) {
         comboBoxContents.put(result.getInt(1), result.getString(2));
-        // Sabemos que el procedimiento tiene una columna de IDs y otra de descripcion.
+        // Sabemos que el procedimiento tiene una columna de IDs y otra de
+        // descripcion.
         lastOperationResult = result.next();
       }
     }
     result.close();
     return comboBoxContents;
   }
-  
-  public static HashMap<Integer, String> getCantonesPorProvincia(Integer pProvinciaID) throws SQLException {
+
+  public static HashMap<Integer, String> getCantonesPorProvincia(Integer pProvinciaID)
+      throws SQLException {
     String statement = "get_Cantones_por_Provincia";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pProvinciaID);
@@ -124,15 +127,17 @@ public class QueryController {
     if (lastOperationResult) {
       while (lastOperationResult) {
         comboBoxContents.put(result.getInt(1), result.getString(2));
-        // Sabemos que el procedimiento tiene una columna de IDs y otra de descripcion.
+        // Sabemos que el procedimiento tiene una columna de IDs y otra de
+        // descripcion.
         lastOperationResult = result.next();
       }
     }
     result.close();
     return comboBoxContents;
   }
-  
-  public static HashMap<Integer, String> getDistritosPorCanton(Integer pCantonID) throws SQLException {
+
+  public static HashMap<Integer, String> getDistritosPorCanton(Integer pCantonID)
+      throws SQLException {
     String statement = "get_Distritos_por_Canton";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pCantonID);
@@ -144,7 +149,8 @@ public class QueryController {
     if (lastOperationResult) {
       while (lastOperationResult) {
         comboBoxContents.put(result.getInt(1), result.getString(2));
-        // Sabemos que el procedimiento tiene una columna de IDs y otra de descripcion.
+        // Sabemos que el procedimiento tiene una columna de IDs y otra de
+        // descripcion.
         lastOperationResult = result.next();
       }
     }
@@ -167,42 +173,36 @@ public class QueryController {
     return columnasUltimaConsulta;
   }
 
-  public static DatabaseTableModel buscarPersona(String tipoIdentificacion,
-      String numeroIdentificacion, String tipoAtributo, String atributo)
-      throws SQLException, IllegalArgumentException {
-    /**
-     * Llamada a procedimiento almacenado que implique SELECT FROM Persona...
-     * La cláusula WHERE debe NO incluir ID en los parámetros para que tenga
-     * sentido. Esta búsqueda no depende del número de identificación.
-     */
-    String proposal = "BEGIN buscarPersona(?, ?, ?, ?); END;";
-    CallableStatement cstmt = myConnection.prepareCall(proposal);
-    cstmt.registerOutParameter(1, OracleTypes.CURSOR);
-    cstmt.setString(2, tipoIdentificacion);
-    cstmt.setInt(3, validarNumero(numeroIdentificacion));
-    // ResultSet rset = cstmt.executeQuery();
-    // Based on:
-    // https://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets#11g-updates
-    ResultSet rs = ((OracleCallableStatement) cstmt).getCursor(2);
-
-    columnasUltimaConsulta = new Vector<String>();
-    columnasUltimaConsulta.add("Nombre");
-    columnasUltimaConsulta.add("Primer Apellido");
-    columnasUltimaConsulta.add("Segundo Apellido");
-    columnasUltimaConsulta.add("Distrito Origen");
-    columnasUltimaConsulta.add("Nacionalidad");
-    columnasUltimaConsulta.add("Numero de " + tipoIdentificacion);
-
-    DatabaseTableModel toReturn = TableModelFactory
-        .getDatabaseModel(columnasUltimaConsulta, rs);
-    // Avoid meamory leak:
-    rs.close();
-    rs = null;
-    cstmt.close();
-    cstmt = null;
-    // Based on:
-    // http://stackoverflow.com/questions/22136168/will-resultset-leak-if-not-explicitly-closed
-    return toReturn;
+  public static DatabaseTableModel buscarPersonaTerritorios(Integer pTerritorioID,
+      boolean buscarPorPais, boolean buscarPorProvincia, boolean buscarPorCanton,
+      boolean buscarPorDistrito) throws SQLException {
+    String statement = "";
+    if (buscarPorPais){
+      statement = "personas_PAIS";
+    } else if (buscarPorProvincia) {
+      statement = "personas_PROVINCIA";
+    } else if (buscarPorCanton) {
+      statement = "personas_CANTON";
+    } else if (buscarPorDistrito) {
+      statement = "personas_DISTRITO";
+    }
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pTerritorioID);
+    Vector<String> columnHeaders = new Vector<String>();
+    columnHeaders.addElement("Nombre");
+    columnHeaders.addElement("Primer Apellido");
+    columnHeaders.addElement("Segundo Apellido");
+    
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
+    boolean lastOperationResult;
+    lastOperationResult = result.next(); System.out.println(lastOperationResult);
+    lastOperationResult = result.isFirst(); System.out.println(lastOperationResult);
+    if (lastOperationResult) {
+      DatabaseTableModel tbmdl = new DatabaseTableModel(columnHeaders, result);
+      result.close();
+      return tbmdl;
+    }
+    return null;
   }
 
   public static Integer selectPersona(String tipoIdentificacion,
@@ -231,20 +231,19 @@ public class QueryController {
     // which-is-better-more-efficient-check-for-bad-values-or-catch-exceptions-in-java
     return Integer.parseInt(test);
   }
-  /*
-  private static void demo() {
-    try {
-      openConnection();
-      for (String x : QueryController
-          .getProvinciasPorPais(QueryController.getPaisID("Costa Rica"))) {
-        System.out.println(x);
-      }
-      closeConnection();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-  */
+
+  /* private static void demo() {
+   * try {
+   * openConnection();
+   * for (String x : QueryController
+   * .getProvinciasPorPais(QueryController.getPaisID("Costa Rica"))) {
+   * System.out.println(x);
+   * }
+   * closeConnection();
+   * } catch (SQLException e) {
+   * e.printStackTrace();
+   * }
+   * } */
   // Static nested class:
   private static class ResultSetFactory {
     /**
@@ -306,6 +305,5 @@ public class QueryController {
       return result;
     }
   }
-  
 
 }

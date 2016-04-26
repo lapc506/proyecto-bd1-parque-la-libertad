@@ -47,6 +47,18 @@ BEGIN
   FROM PERSONA 
   WHERE IDDISTRITO = DISTRITO_origen_ID;
 END;
+
+GRANT EXECUTE ON personas_PAIS TO libertadDemoUser;
+GRANT EXECUTE ON personas_PROVINCIA TO libertadDemoUser;
+GRANT EXECUTE ON personas_CANTON TO libertadDemoUser;
+GRANT EXECUTE ON personas_DISTRITO TO libertadDemoUser;
+
+CREATE SYNONYM personas_PAIS FOR libertadAdmin.personas_PAIS;
+CREATE SYNONYM personas_PROVINCIA FOR libertadAdmin.personas_PROVINCIA;
+CREATE SYNONYM personas_CANTON FOR libertadAdmin.personas_CANTON;
+CREATE SYNONYM personas_DISTRITO FOR libertadAdmin.personas_DISTRITO;
+
+
 --6.Personas que desertan un curso
 CREATE OR REPLACE PROCEDURE personas_DESERTORES(CURSO_DESERTADO IN VarChar2, p_recordset OUT SYS_REFCURSOR) AS
 BEGIN

@@ -13,21 +13,29 @@ public class DatabaseTableModel extends AbstractTableModel {
 
   private static final long      serialVersionUID = 9063340574991700213L;
   private Vector<String>         columnHeaders;
+  private Vector<Integer>        rowIDs;
   private Vector<Vector<Object>> dataVector;
 
-  public DatabaseTableModel(Vector<String> pColumnHeaders, ResultSet contents) throws SQLException {
+  public DatabaseTableModel(Vector<String> pColumnHeaders, ResultSet contents)
+      throws SQLException {
+    rowIDs = new Vector<Integer>();
     columnHeaders = new Vector<String>();
     if (pColumnHeaders != null) {
       columnHeaders = pColumnHeaders;
     }
-    assert(columnHeaders.size() == contents.getMetaData().getColumnCount());
+    assert (columnHeaders.size() == contents.getMetaData().getColumnCount() - 1);
     dataVector = new Vector<Vector<Object>>();
-    try {
+    try {      
       while (contents.next()) {
         Vector<Object> newRow = new Vector<Object>();
         // Omit first column that contains the database IDs:
-        for (int i = 1; i < contents.getMetaData().getColumnCount(); i++) {
-          newRow.addElement(contents.getObject(i));
+        for (int i = 0; i < contents.getMetaData().getColumnCount(); i++) {
+          if (i == 0) {
+            rowIDs.addElement(contents.getInt(i));
+          } else {
+            newRow.addElement(contents.getString(i));
+          }
+          System.out.println(contents.getString(i));
         }
         dataVector.addElement(newRow);
       }
@@ -37,20 +45,23 @@ public class DatabaseTableModel extends AbstractTableModel {
       try {
         /**
          * @author Luis Andrés Peña Castillo
-         * Closing the SQL ResultSet is a GOOD PRACTICE as explained on:
-         * http://stackoverflow.com/questions/4507440/
-         * must-jdbc-resultsets-and-statements-be-closed-separately-although-the
-         * -connection
+         *         Closing the SQL ResultSet is a GOOD PRACTICE as explained on:
+         *         http://stackoverflow.com/questions/4507440/
+         *         must-jdbc-resultsets-and-statements-be-closed-separately-
+         *         although-the
+         *         -connection
          * 
-         * See also:
-         * http://stackoverflow.com/questions/22136168/will-resultset-leak-if-
-         * not-explicitly-closed
+         *         See also:
+         *         http://stackoverflow.com/questions/22136168/will-resultset-
+         *         leak-if-
+         *         not-explicitly-closed
          * 
-         * Why closing ResultSet twice is neccesary
-         * (since this was "also" closed on QueryController):
-         * see "Java is always pass-by-value":
-         * http://stackoverflow.com/questions/40480/is-java-pass-by-reference-or
-         * -pass-by-value
+         *         Why closing ResultSet twice is neccesary
+         *         (since this was "also" closed on QueryController):
+         *         see "Java is always pass-by-value":
+         *         http://stackoverflow.com/questions/40480/is-java-pass-by-
+         *         reference-or
+         *         -pass-by-value
          * 
          */
         contents.close();
@@ -60,6 +71,10 @@ public class DatabaseTableModel extends AbstractTableModel {
             e.getMessage());
       }
     }
+  }
+
+  public Vector<Integer> getDatabaseRowIDs() {
+    return rowIDs;
   }
 
   @Override
@@ -82,7 +97,7 @@ public class DatabaseTableModel extends AbstractTableModel {
     }
     return null;
   }
-  
+
   // !! Testing pending, possibly unreachable code
   public Object getRecordAt(int row) {
     if (dataVector != null) { return dataVector.get(row); }

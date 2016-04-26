@@ -114,7 +114,7 @@ public class FiltroPersona extends DialogTemplate {
           @Override
           public void mouseClicked(MouseEvent arg0) {
             try {
-              table.setModel(QueryController.buscarPersona(
+              table.setModel(QueryController.buscarPersonaTerritorios(
                   (String) comboTipoIdentificacion.getSelectedItem(),
                   txtIdentificacion.getText(), (String) comboAtributos.getSelectedItem(),
                   txtNombre.getText()));
