@@ -56,8 +56,7 @@ public class App {
     for (int i = 0; i < 24; i++) {
       for (int j = 0; j < 60; j++) {
         System.out.println("INSERT INTO TranscursoDia (id, hora, minuto) VALUES ("
-            + ((i * 60) + j + 1)
-              + ", "
+            + "s_TranscursoDia.NEXTVAL, "
               + i
               + ", "
               + j
@@ -74,8 +73,7 @@ public class App {
       int domingo = ((i & 0b0000001) == 0b0000001) ? 1 : 0;
       System.out.println("INSERT INTO HorarioSemanal "
           + "(id, lunes, martes, miercoles, jueves, viernes, sabado, domingo) VALUES ("
-            + i
-            + ", "
+            + "s_HorarioSemana.NEXTVAL, "
             + lunes
             + ", "
             + martes

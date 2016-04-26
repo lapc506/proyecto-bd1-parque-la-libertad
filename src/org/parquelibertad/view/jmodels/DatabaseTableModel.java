@@ -13,19 +13,20 @@ public class DatabaseTableModel extends AbstractTableModel {
 
   private static final long      serialVersionUID = 9063340574991700213L;
   private Vector<String>         columnHeaders;
-  private Vector<Integer>        rowIDs;
   private Vector<Vector<Object>> dataVector;
 
-  public DatabaseTableModel(Vector<String> pColumnHeaders, ResultSet contents) {
+  public DatabaseTableModel(Vector<String> pColumnHeaders, ResultSet contents) throws SQLException {
     columnHeaders = new Vector<String>();
     if (pColumnHeaders != null) {
       columnHeaders = pColumnHeaders;
     }
+    assert(columnHeaders.size() == contents.getMetaData().getColumnCount());
     dataVector = new Vector<Vector<Object>>();
     try {
       while (contents.next()) {
         Vector<Object> newRow = new Vector<Object>();
-        for (int i = 0; i < columnHeaders.size(); i++) {
+        // Omit first column that contains the database IDs:
+        for (int i = 1; i < contents.getMetaData().getColumnCount(); i++) {
           newRow.addElement(contents.getObject(i));
         }
         dataVector.addElement(newRow);

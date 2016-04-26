@@ -58,17 +58,17 @@ public class QueryController {
    * #11g-updates
    */
   
-  public static Vector<String> getPaises() throws SQLException {
+  public static HashMap<Integer, String> getPaises() throws SQLException {
     String statement = "get_Paises";
     ResultSet result = ResultSetFactory.callStoredProc(statement, new Vector<Object>(), 1);
     boolean lastOperationResult;
     lastOperationResult = result.next(); // System.out.println(lastOperationResult);
     lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
-    Vector<String> comboBoxContents = new Vector<String>();
+    HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
     if (lastOperationResult) {
       while (lastOperationResult) {
-        comboBoxContents.addElement(result.getString(1));
-        // Sabemos que el procedimiento es de una sola columna.
+        comboBoxContents.put(result.getInt(1), result.getString(2));
+        // Sabemos que el procedimiento tiene una columna de IDs y otra de descripcion.
         lastOperationResult = result.next();
       }
     }
@@ -92,7 +92,7 @@ public class QueryController {
      * return (Integer) callStoredFunc("get_Pais_ID", variables, Integer.class); */
   }
 
-  public static Vector<String> getProvinciasPorPais(Integer pPaisID) throws SQLException {
+  public static HashMap<Integer, String> getProvinciasPorPais(Integer pPaisID) throws SQLException {
     String statement = "get_Provincias_por_Pais";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pPaisID);
@@ -100,11 +100,31 @@ public class QueryController {
     boolean lastOperationResult;
     lastOperationResult = result.next(); // System.out.println(lastOperationResult);
     lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
-    Vector<String> comboBoxContents = new Vector<String>();
+    HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
     if (lastOperationResult) {
       while (lastOperationResult) {
-        comboBoxContents.addElement(result.getString(1));
-        // Sabemos que el procedimiento es de una sola columna.
+        comboBoxContents.put(result.getInt(1), result.getString(2));
+        // Sabemos que el procedimiento tiene una columna de IDs y otra de descripcion.
+        lastOperationResult = result.next();
+      }
+    }
+    result.close();
+    return comboBoxContents;
+  }
+  
+  public static HashMap<Integer, String> getCantonesPorProvincia(Integer pProvinciaID) throws SQLException {
+    String statement = "get_Cantones_por_Provincia";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pProvinciaID);
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
+    boolean lastOperationResult;
+    lastOperationResult = result.next(); // System.out.println(lastOperationResult);
+    lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
+    HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
+    if (lastOperationResult) {
+      while (lastOperationResult) {
+        comboBoxContents.put(result.getInt(1), result.getString(2));
+        // Sabemos que el procedimiento tiene una columna de IDs y otra de descripcion.
         lastOperationResult = result.next();
       }
     }
@@ -191,7 +211,7 @@ public class QueryController {
     // which-is-better-more-efficient-check-for-bad-values-or-catch-exceptions-in-java
     return Integer.parseInt(test);
   }
-
+  /*
   private static void demo() {
     try {
       openConnection();
@@ -204,7 +224,7 @@ public class QueryController {
       e.printStackTrace();
     }
   }
-
+  */
   // Static nested class:
   private static class ResultSetFactory {
     /**
@@ -266,5 +286,6 @@ public class QueryController {
       return result;
     }
   }
+  
 
 }
