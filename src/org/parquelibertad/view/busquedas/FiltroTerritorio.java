@@ -26,6 +26,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import java.awt.Color;
 import javax.swing.JCheckBox;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class FiltroTerritorio extends DialogTemplate {
 	private static final long serialVersionUID = 59331234940240453L;
@@ -46,7 +48,7 @@ public class FiltroTerritorio extends DialogTemplate {
 	private JCheckBox checkProvincia;
 	private JCheckBox checkCanton;
 	private JComboBox<String> comboBoxCanton;
-	private JCheckBox lblDistrito;
+	private JCheckBox checkDistrito;
 	private JComboBox<String> comboBoxDistrito;
 	private JPanel panel;
 	private JTable tableContents;
@@ -108,15 +110,19 @@ public class FiltroTerritorio extends DialogTemplate {
               idsProvincias.addElement(x);
               contents.addElement(provincias.get(x));
             }
+            comboBoxPaises.setEnabled(false); // Para mantener consistencia
             comboBoxProvincias.setEnabled(true);
             comboBoxProvincias.setModel(new DefaultComboBoxModel<String>(contents));
+            checkCanton.setEnabled(true);
           } catch (SQLException e) {
             JOptionPane.showMessageDialog(rootPane, e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
           };
 		    } else {
 		      comboBoxProvincias.setModel(new DefaultComboBoxModel<>());
 		      idsProvincias.clear();
+		      comboBoxPaises.setEnabled(true); // Para mantener consistencia
 		      comboBoxProvincias.setEnabled(false);
+		      checkCanton.setEnabled(false);
 		    }
 		  }
 		});
@@ -131,6 +137,7 @@ public class FiltroTerritorio extends DialogTemplate {
 		panelContent.add(comboBoxProvincias);
 		// ----------------------------------
 		checkCanton = new JCheckBox("Cant\u00F3n");
+		this.checkCanton.setEnabled(false);
 		checkCanton.setOpaque(false);
 		checkCanton.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent arg0) {
@@ -141,19 +148,24 @@ public class FiltroTerritorio extends DialogTemplate {
             for (Integer x : cantones.keySet()){
               idsCantones.addElement(x);
               contents.addElement(cantones.get(x));
+              //System.out.println(x + "  " + cantones.get(x));
             }
+            checkProvincia.setEnabled(false); // Para mantener consistencia
+            comboBoxProvincias.setEnabled(false); // Para mantener consistencia
+            
             comboBoxCanton.setEnabled(true);
             comboBoxCanton.setModel(new DefaultComboBoxModel<String>(contents));
-            for (Integer x : idsCantones){
-              System.out.println(x);
-            }
+            checkDistrito.setEnabled(true);
           } catch (SQLException e) {
             JOptionPane.showMessageDialog(rootPane, e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
           };
         } else {
           comboBoxCanton.setModel(new DefaultComboBoxModel<>());
+          checkProvincia.setEnabled(true);  // Para mantener consistencia
+          comboBoxProvincias.setEnabled(true); // Para mantener consistencia
           idsCantones.clear();
           comboBoxCanton.setEnabled(false);
+          checkDistrito.setEnabled(false);
         }
       }
     });
@@ -164,16 +176,72 @@ public class FiltroTerritorio extends DialogTemplate {
 		this.comboBoxCanton.setEnabled(false);
 		panelContent.add(comboBoxCanton);
 		// ----------------------------------
-		lblDistrito = new JCheckBox("Distrito");
-		lblDistrito.setOpaque(false);
-		this.lblDistrito.setHorizontalAlignment(SwingConstants.CENTER);
-		panelContent.add(lblDistrito);
+		checkDistrito = new JCheckBox("Distrito");
+		this.checkDistrito.setEnabled(false);
+		checkDistrito.setOpaque(false);
+		checkDistrito.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent arg0) {
+        if(checkDistrito.isSelected()){
+          try {
+            // System.out.println(idsCantones.get(comboBoxCanton.getSelectedIndex()));
+            HashMap<Integer, String> distritos = QueryController.getDistritosPorCanton(idsCantones.get(comboBoxCanton.getSelectedIndex()));
+            Vector<String> contents = new Vector<String>();
+            for (Integer x : distritos.keySet()){
+              idsDistritos.addElement(x);
+              contents.addElement(distritos.get(x));
+            }
+            checkCanton.setEnabled(false); // Para mantener consistencia
+            comboBoxCanton.setEnabled(false);
+            comboBoxDistrito.setEnabled(true);
+            comboBoxDistrito.setModel(new DefaultComboBoxModel<String>(contents));
+            
+          } catch (SQLException e) {
+            JOptionPane.showMessageDialog(rootPane, e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+          };
+        } else {
+          comboBoxDistrito.setModel(new DefaultComboBoxModel<>());
+          checkCanton.setEnabled(true);  // Para mantener consistencia
+          comboBoxCanton.setEnabled(true);
+          idsDistritos.clear();
+          comboBoxDistrito.setEnabled(false);
+        }
+      }
+    });
+		this.checkDistrito.setHorizontalAlignment(SwingConstants.CENTER);
+		panelContent.add(checkDistrito);
 		// ----------------------------------
 		comboBoxDistrito = new JComboBox<String>();
 		this.comboBoxDistrito.setEnabled(false);
 		panelContent.add(comboBoxDistrito);
 
 		this.btnBuscar = new JButton("Buscar...");
+		this.btnBuscar.addMouseListener(new MouseAdapter() {
+		  @Override
+      public void mouseClicked(MouseEvent arg0) {
+        if(checkDistrito.isSelected()){
+          try {
+            // System.out.println(idsCantones.get(comboBoxCanton.getSelectedIndex()));
+            HashMap<Integer, String> distritos = QueryController.getDistritosPorCanton(idsCantones.get(comboBoxCanton.getSelectedIndex()));
+            Vector<String> contents = new Vector<String>();
+            for (Integer x : distritos.keySet()){
+              idsDistritos.addElement(x);
+              contents.addElement(distritos.get(x));
+            }
+            checkCanton.setEnabled(false); // Para mantener consistencia
+            comboBoxDistrito.setEnabled(true);
+            comboBoxDistrito.setModel(new DefaultComboBoxModel<String>(contents));
+            
+          } catch (SQLException e) {
+            JOptionPane.showMessageDialog(rootPane, e.getMessage(), "SQL Error", JOptionPane.ERROR_MESSAGE);
+          };
+        } else {
+          comboBoxDistrito.setModel(new DefaultComboBoxModel<>());
+          checkCanton.setEnabled(true);  // Para mantener consistencia
+          idsDistritos.clear();
+          comboBoxDistrito.setEnabled(false);
+        }
+      }
+    });
 		this.btnBuscar.setOpaque(false);
 		panel.add(btnBuscar);
 		// ----------------------------------
@@ -196,9 +264,6 @@ public class FiltroTerritorio extends DialogTemplate {
 	    contents.addElement(paises.get(x));
 	  }
 		this.comboBoxPaises.setModel(new DefaultComboBoxModel<String>(contents));
-		for (Integer x : idsPaises){
-		  System.out.println(x);
-		}
 	}
 
 }

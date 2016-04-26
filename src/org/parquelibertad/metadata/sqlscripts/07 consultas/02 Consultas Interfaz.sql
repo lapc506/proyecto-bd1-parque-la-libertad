@@ -4,7 +4,7 @@ CREATE OR REPLACE PROCEDURE get_Paises
   BEGIN
     OPEN p_recordset FOR
       SELECT p.id, p.descripcion
-        FROM PAIS p
+        FROM PAIS p;
   END;
 
 CREATE OR REPLACE FUNCTION get_Pais_ID (pNombrePais IN VARCHAR2)
@@ -31,12 +31,24 @@ CREATE OR REPLACE PROCEDURE get_Cantones_por_Provincia
     OPEN p_recordset FOR
       SELECT c.id, c.descripcion
         FROM CANTON c WHERE c.idProvincia = pIDProvincia;
-  END;  
+  END;
+  
+CREATE OR REPLACE PROCEDURE get_Distritos_por_Canton
+    (pIDCanton IN NUMBER, p_recordset OUT SYS_REFCURSOR)
+   AS
+  BEGIN
+    OPEN p_recordset FOR
+      SELECT d.id, d.descripcion FROM DISTRITO d WHERE d.idCanton = pIDCanton;
+  END;
+
+SELECT id from CANTON where descripcion = 'Desamparados';
+SELECT id, descripcion FROM DISTRITO WHERE idCanton = (SELECT id from CANTON where descripcion = 'Desamparados');
 
 GRANT EXECUTE ON get_Paises TO libertadDemoUser;
 GRANT EXECUTE ON get_Pais_ID TO libertadDemoUser;
 GRANT EXECUTE ON get_Provincias_por_Pais TO libertadDemoUser;
 GRANT EXECUTE ON get_Cantones_por_Provincia TO libertadDemoUser;
+GRANT EXECUTE ON get_Distritos_por_Canton TO libertadDemoUser;
 
 -- Ejecutar como SYSTEM:
 GRANT CREATE SYNONYM TO libertadDemoUser;
@@ -45,3 +57,4 @@ CREATE SYNONYM get_Paises FOR libertadAdmin.get_Paises;
 CREATE SYNONYM get_Pais_ID FOR libertadAdmin.get_Pais_ID;
 CREATE SYNONYM get_Provincias_por_Pais FOR libertadAdmin.get_Provincias_por_Pais;
 CREATE SYNONYM get_Cantones_por_Provincia FOR libertadAdmin.get_Cantones_por_Provincia;
+CREATE SYNONYM get_Distritos_por_Canton FOR libertadAdmin.get_Distritos_por_Canton;

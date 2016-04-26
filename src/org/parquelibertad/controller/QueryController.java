@@ -131,6 +131,26 @@ public class QueryController {
     result.close();
     return comboBoxContents;
   }
+  
+  public static HashMap<Integer, String> getDistritosPorCanton(Integer pCantonID) throws SQLException {
+    String statement = "get_Distritos_por_Canton";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pCantonID);
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
+    boolean lastOperationResult;
+    lastOperationResult = result.next(); // System.out.println(lastOperationResult);
+    lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
+    HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
+    if (lastOperationResult) {
+      while (lastOperationResult) {
+        comboBoxContents.put(result.getInt(1), result.getString(2));
+        // Sabemos que el procedimiento tiene una columna de IDs y otra de descripcion.
+        lastOperationResult = result.next();
+      }
+    }
+    result.close();
+    return comboBoxContents;
+  }
 
   public static void promoverPersona(Integer selectedPersonaID) {
     if (selectedPersonaID != null) {
