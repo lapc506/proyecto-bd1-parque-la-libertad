@@ -230,15 +230,23 @@ public class FiltroTerritorio extends DialogTemplate {
       public void mouseClicked(MouseEvent arg0) {
         try {
           // System.out.println(idsCantones.get(comboBoxCanton.getSelectedIndex()));
-          int idTerritorio = 0;
+          int idTerritorio = -1;
           if (comboBoxPaises.isEnabled()) {
+            
             idTerritorio = idsPaises.get(comboBoxPaises.getSelectedIndex());
+            
           } else if (comboBoxProvincias.isEnabled()) {
+            
             idTerritorio = idsProvincias.get(comboBoxProvincias.getSelectedIndex());
+            
           } else if (comboBoxCanton.isEnabled()) {
+            
             idTerritorio = idsCantones.get(comboBoxCanton.getSelectedIndex());
+            
           } else if (comboBoxDistrito.isEnabled()) {
+            
             idTerritorio = idsDistritos.get(comboBoxDistrito.getSelectedIndex());
+            
           }
           DatabaseTableModel distritos = QueryController.buscarPersonaTerritorios(
               idTerritorio, comboBoxPaises.isEnabled(), comboBoxProvincias.isEnabled(),

@@ -186,6 +186,7 @@ public class QueryController {
     } else if (buscarPorDistrito) {
       statement = "personas_DISTRITO";
     }
+    System.out.println(statement + " || " + pTerritorioID);
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pTerritorioID);
     Vector<String> columnHeaders = new Vector<String>();
@@ -195,8 +196,8 @@ public class QueryController {
     
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
     boolean lastOperationResult;
-    lastOperationResult = result.next(); System.out.println(lastOperationResult);
-    lastOperationResult = result.isFirst(); System.out.println(lastOperationResult);
+    lastOperationResult = result.next(); System.out.println("IS SET FILLED IN? " + lastOperationResult);
+    lastOperationResult = result.isFirst(); System.out.println("IS SET READY TO FETCH? " + lastOperationResult);
     if (lastOperationResult) {
       DatabaseTableModel tbmdl = new DatabaseTableModel(columnHeaders, result);
       result.close();
@@ -274,6 +275,9 @@ public class QueryController {
         newStatement += "?, ";
       }
       newStatement += "?); END;";
+      
+      System.out.println(newStatement);
+      
       OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
           .prepareCall(newStatement);
       // System.out.println("GETTING cursorOutputIndex at " +
@@ -287,6 +291,8 @@ public class QueryController {
             cstmt.setInt(mark + 1, (Integer) variables.get(mark));
           } else if (variables.get(mark).getClass() == String.class) {
             cstmt.setString(mark + 1, (String) variables.get(mark));
+          } else if (variables.get(mark).getClass() == Boolean.class) {
+            cstmt.setBoolean(mark + 1, (Boolean) variables.get(mark));
           } else {
             cstmt.setObject(mark + 1, variables.get(mark));
           }
@@ -300,7 +306,13 @@ public class QueryController {
       // Why use .execute() instead of .executeQuery(): sety
       // http://stackoverflow.com/questions/19443213/
       // cannot-perform-fetch-on-a-plsql-statement-next
-      cstmt.execute();
+      boolean executeQueryResult = cstmt.execute();
+      // This line will always return FALSE, as there is no RETURN on the stored
+      // procedures, instead there is a OUT SYS_REFCURSOR parameter at the end.
+      // https://docs.oracle.com/javase/8/docs/api/java/sql/PreparedStatement.html#execute--
+      System.out.println("WAS CALL SUCCESSFULL? " + executeQueryResult);
+      
+      
       ResultSet result = cstmt.getCursor(cursorMarkPosition);
       return result;
     }
