@@ -31,11 +31,11 @@ public class DatabaseTableModel extends AbstractTableModel {
         // Omit first column that contains the database IDs:
         for (int i = 0; i < contents.getMetaData().getColumnCount(); i++) {
           if (i == 0) {
-            rowIDs.addElement(contents.getInt(i));
+            rowIDs.addElement(contents.getInt(i+1));
           } else {
-            newRow.addElement(contents.getString(i));
+            newRow.addElement(contents.getString(i+1));
           }
-          System.out.println(contents.getString(i));
+          // System.out.println(contents.getString(i+1));
         }
         dataVector.addElement(newRow);
       }
@@ -120,8 +120,9 @@ public class DatabaseTableModel extends AbstractTableModel {
 
   @Override
   public Class<?> getColumnClass(int columnIndex) {
+  // System.out.println("getColumnClass(int " + columnIndex + ")");
     if (dataVector != null
-        && dataVector.size() > 0) { return dataVector.get(columnIndex).getClass(); }
+        && dataVector.size() > 0) { return dataVector.get(0).get(columnIndex).getClass(); }
     return String.class;
   }
 

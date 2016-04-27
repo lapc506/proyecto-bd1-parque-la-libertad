@@ -186,7 +186,7 @@ public class QueryController {
     } else if (buscarPorDistrito) {
       statement = "personas_DISTRITO";
     }
-    System.out.println(statement + " || " + pTerritorioID);
+    //System.out.println(statement + " || " + pTerritorioID);
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pTerritorioID);
     Vector<String> columnHeaders = new Vector<String>();
@@ -196,14 +196,11 @@ public class QueryController {
     
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
     boolean lastOperationResult;
-    lastOperationResult = result.next(); System.out.println("IS SET FILLED IN? " + lastOperationResult);
-    lastOperationResult = result.isFirst(); System.out.println("IS SET READY TO FETCH? " + lastOperationResult);
-    if (lastOperationResult) {
-      DatabaseTableModel tbmdl = new DatabaseTableModel(columnHeaders, result);
-      result.close();
-      return tbmdl;
-    }
-    return null;
+    lastOperationResult = result.next(); //System.out.println("IS SET FILLED IN? " + lastOperationResult);
+    lastOperationResult = result.isFirst(); //System.out.println("IS SET READY TO FETCH? " + lastOperationResult);
+    DatabaseTableModel tbmdl = new DatabaseTableModel(columnHeaders, result);
+    result.close();
+    return tbmdl;
   }
 
   public static Integer selectPersona(String tipoIdentificacion,
@@ -276,7 +273,7 @@ public class QueryController {
       }
       newStatement += "?); END;";
       
-      System.out.println(newStatement);
+      //System.out.println(newStatement);
       
       OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
           .prepareCall(newStatement);
@@ -310,7 +307,7 @@ public class QueryController {
       // This line will always return FALSE, as there is no RETURN on the stored
       // procedures, instead there is a OUT SYS_REFCURSOR parameter at the end.
       // https://docs.oracle.com/javase/8/docs/api/java/sql/PreparedStatement.html#execute--
-      System.out.println("WAS CALL SUCCESSFULL? " + executeQueryResult);
+      // System.out.println("WAS CALL SUCCESSFULL? " + executeQueryResult);
       
       
       ResultSet result = cstmt.getCursor(cursorMarkPosition);
