@@ -19,6 +19,7 @@ import org.parquelibertad.view.adminDialogs.AgregarPais;
 import org.parquelibertad.view.adminDialogs.EditarPais;
 import org.parquelibertad.view.adminDialogs.EditarTerritorio;
 import org.parquelibertad.view.busquedas.FiltroPersona;
+import org.parquelibertad.view.busquedas.FiltroRangoFechaRegistro;
 import org.parquelibertad.view.busquedas.FiltroTerritorio;
 import org.parquelibertad.view.debugDialogs.FontSelectorForm;
 import org.parquelibertad.view.general.AgregarCurso;
@@ -80,7 +81,7 @@ public class MainController {
     now.setVisible(true);
   }
 
-  public void showSelectFont(String desiredType) {
+  public void testSelectFont(String desiredType) {
     if (Filepath.listAvailableFonts().size() != 0) {
       debugFontSelector = new FontSelectorForm("Choose " + desiredType + " font", 400,
           100, false, desiredType);
@@ -92,19 +93,38 @@ public class MainController {
     }
   }
 
-  public void showBuscarPersonaTerritorio() {
+  public Integer testBuscarPersonaTerritorio() {
     try {
       QueryController.openConnection();
-      JDialog now = new FiltroTerritorio(mainScreen, "Buscar Personas", 600, 600, false);
+      FiltroTerritorio now = new FiltroTerritorio(mainScreen, "Buscar Personas", 600, 600, false);
       now.setVisible(true);
+      // A partir de aquí asume que la ventana seguirá en memoria después de ser desplegada y cerrada:
+      Integer id = now.getSelectedPersonaID();
+      JOptionPane.showMessageDialog(mainScreen, "ID Seleccionado: " + now.getSelectedPersonaID());
       QueryController.closeConnection();
+      return id;
     } catch (SQLException e) {
       JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
           "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+      return -1;
     }
-
   }
-
+  public Integer testBuscarPersonaRangosFechas() {
+    try {
+      QueryController.openConnection();
+      FiltroRangoFechaRegistro now = new FiltroRangoFechaRegistro(mainScreen, "Buscar Personas", 600, 600, false);
+      now.setVisible(true);
+      // A partir de aquí asume que la ventana seguirá en memoria después de ser desplegada y cerrada:
+      Integer id = now.getSelectedPersonaID();
+      JOptionPane.showMessageDialog(mainScreen, "ID Seleccionado: " + now.getSelectedPersonaID());
+      QueryController.closeConnection();
+      return id;
+    } catch (SQLException e) {
+      JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
+          "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+      return -1;
+    }
+  }
   public void showAgregarPersona() {
     JDialog now = new AgregarPersonas(mainScreen, "Agregar Persona", 600, 600, false);
     now.setVisible(true);
@@ -126,5 +146,7 @@ public class MainController {
     JDialog now = new PromoverPersona(mainScreen, "Agregar Curso", 500, 520, true);
     now.setVisible(true);
   }
+
+
 
 }

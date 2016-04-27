@@ -48,6 +48,7 @@ public class Principal extends WindowTemplate {
   private JPanel    panelPictures;
   private JMenu mnBuscar;
   private JMenuItem mntmPersonaPorTerritorio;
+  private JMenuItem mntmPersonaPorFechas;
   /**
    * @param windowName
    *          Título de la ventana
@@ -110,15 +111,6 @@ public class Principal extends WindowTemplate {
     this.mnBuscar = new JMenu("Buscar");
     this.mnBuscar.setFont(FontController.getRegularLabelFont());
     this.menuBar.add(this.mnBuscar);
-    
-    this.mntmPersonaPorTerritorio = new JMenuItem("Persona por Territorio de Origen...");
-    this.mntmPersonaPorTerritorio.setFont(FontController.getRegularLabelFont());
-    this.mntmPersonaPorTerritorio.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        MainController.getInstance().showBuscarPersonaTerritorio();
-      }
-    });
-    this.mnBuscar.add(this.mntmPersonaPorTerritorio);
 
     this.menuAdministrador = new JMenu("Administrador");
     this.menuAdministrador.setFont(FontController.getRegularLabelFont());
@@ -127,6 +119,24 @@ public class Principal extends WindowTemplate {
     this.mntmTerritorios = new JMenuItem("A\u00F1adir y Editar Territorios");
     this.mntmTerritorios
         .addActionListener(event -> MainController.getInstance().showEditTerritories());
+    
+    this.mntmPersonaPorTerritorio = new JMenuItem("Probar B\u00FAsqueda de Personas por Territorio de Origen...");
+    this.mntmPersonaPorTerritorio.setFont(FontController.getRegularLabelFont());
+    this.mntmPersonaPorTerritorio.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        MainController.getInstance().testBuscarPersonaTerritorio();
+      }
+    });
+    this.menuAdministrador.add(this.mntmPersonaPorTerritorio);
+    
+    this.mntmPersonaPorFechas = new JMenuItem("Probar B\u00FAsqueda de Personas por Fechas de Registro...");
+    this.mntmPersonaPorFechas.setFont(FontController.getRegularLabelFont());
+    this.mntmPersonaPorFechas.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        MainController.getInstance().testBuscarPersonaRangosFechas();
+      }
+    });
+    this.menuAdministrador.add(this.mntmPersonaPorFechas);
     this.mntmTerritorios.setFont(FontController.getRegularLabelFont());
     this.menuAdministrador.add(this.mntmTerritorios);
     getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));

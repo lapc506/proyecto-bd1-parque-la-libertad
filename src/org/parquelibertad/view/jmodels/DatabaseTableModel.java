@@ -98,11 +98,18 @@ public class DatabaseTableModel extends AbstractTableModel {
     return null;
   }
 
-  // !! Testing pending, possibly unreachable code
+  // Permite extraer el ID de la persona seleccionada
+  // en el JTable desde la interfaz.
+  public Integer getDBIndex(int row){
+    return rowIDs.get(row);
+  }
+  
+  /* !! Testing pending, possibly unreachable code
   public Object getRecordAt(int row) {
     if (dataVector != null) { return dataVector.get(row); }
     return null;
   }
+  */
 
   @Override
   public String getColumnName(int column) {

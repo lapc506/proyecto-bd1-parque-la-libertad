@@ -29,15 +29,13 @@ import java.awt.Color;
 import javax.swing.JCheckBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class FiltroTerritorio extends DialogTemplate {
-  private static final long serialVersionUID = 59331234940240453L;
+  private static final long serialVersionUID  = 59331234940240453L;
 
-  private Integer           selectedPaisID;
-  private Integer           selectedProvinciaID;
-  private Integer           selectedCantonID;
-  private Integer           selectedDistritoID;
-  private Integer           selectedPersonaID;
+  private Integer           selectedPersonaID = -1;
 
   private JLabel            lblBsquedaPorTerritorio;
   private JPanel            panelActions;
@@ -80,7 +78,14 @@ public class FiltroTerritorio extends DialogTemplate {
     getContentPane().add(this.panelActions, BorderLayout.SOUTH);
 
     btnSeleccionar = new JButton("Seleccionar");
-    btnSeleccionar.setBackground(new Color(255, 143, 0));
+    this.btnSeleccionar.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        // Asume que el modelo es un modelo concreto de AbstractTableModel
+        selectedPersonaID = ((DatabaseTableModel) tableContents.getModel())
+            .getDBIndex(tableContents.getSelectedRow());
+        dispose();
+      }
+    });
     panelActions.add(btnSeleccionar);
 
     panel = new JPanel();
@@ -232,26 +237,26 @@ public class FiltroTerritorio extends DialogTemplate {
           // System.out.println(idsCantones.get(comboBoxCanton.getSelectedIndex()));
           int idTerritorio = -1;
           if (comboBoxPaises.isEnabled()) {
-            
+
             idTerritorio = idsPaises.get(comboBoxPaises.getSelectedIndex());
-            
+
           } else if (comboBoxProvincias.isEnabled()) {
-            
+
             idTerritorio = idsProvincias.get(comboBoxProvincias.getSelectedIndex());
-            
+
           } else if (comboBoxCanton.isEnabled()) {
-            
+
             idTerritorio = idsCantones.get(comboBoxCanton.getSelectedIndex());
-            
+
           } else if (comboBoxDistrito.isEnabled()) {
-            
+
             idTerritorio = idsDistritos.get(comboBoxDistrito.getSelectedIndex());
-            
+
           }
-          DatabaseTableModel distritos = QueryController.buscarPersonaTerritorios(
+          DatabaseTableModel personas = QueryController.buscarPersonaTerritorios(
               idTerritorio, comboBoxPaises.isEnabled(), comboBoxProvincias.isEnabled(),
               comboBoxCanton.isEnabled(), comboBoxDistrito.isEnabled());
-          tableContents.setModel(distritos);
+          tableContents.setModel(personas);
         } catch (SQLException e) {
           JOptionPane.showMessageDialog(rootPane, e.getMessage(), "SQL Error",
               JOptionPane.ERROR_MESSAGE);
@@ -280,6 +285,10 @@ public class FiltroTerritorio extends DialogTemplate {
       contents.addElement(paises.get(x));
     }
     this.comboBoxPaises.setModel(new DefaultComboBoxModel<String>(contents));
+  }
+
+  public Integer getSelectedPersonaID() {
+    return selectedPersonaID;
   }
 
 }

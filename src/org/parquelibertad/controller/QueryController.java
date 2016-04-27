@@ -5,12 +5,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
+import org.jdatepicker.JDatePanel;
+import org.jdatepicker.JDatePicker;
 import org.parquelibertad.view.jmodels.DatabaseTableModel;
 import oracle.jdbc.OracleTypes;
 import oracle.jdbc.OracleCallableStatement;
@@ -75,73 +78,47 @@ public class QueryController {
     result.close();
     return comboBoxContents;
   }
-
-  public static Integer getPaisID(String pNombrePais) throws SQLException {
-    String proposal = "BEGIN ? := get_Pais_ID(?); END;";
-    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
-        .prepareCall(proposal);
-    cstmt.registerOutParameter(1, OracleTypes.INTEGER);
-    cstmt.setString(2, pNombrePais);
-    cstmt.executeQuery();
-    Integer paisID = cstmt.getInt(1);
-    cstmt.close();
-    return paisID;
-
-    /* Vector<Object> variables = new Vector<Object>();
-     * variables.addElement(pNombrePais);
-     * return (Integer) callStoredFunc("get_Pais_ID", variables, Integer.class); */
-  }
+  /* private static Integer getPaisID(String pNombrePais) throws SQLException {
+   * String proposal = "BEGIN ? := get_Pais_ID(?); END;";
+   * OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
+   * .prepareCall(proposal);
+   * cstmt.registerOutParameter(1, OracleTypes.INTEGER);
+   * cstmt.setString(2, pNombrePais);
+   * cstmt.executeQuery();
+   * Integer paisID = cstmt.getInt(1);
+   * cstmt.close();
+   * return paisID;
+   * } */
 
   public static HashMap<Integer, String> getProvinciasPorPais(Integer pPaisID)
       throws SQLException {
-    String statement = "get_Provincias_por_Pais";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pPaisID);
-    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
-    boolean lastOperationResult;
-    lastOperationResult = result.next(); // System.out.println(lastOperationResult);
-    lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
-    HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
-    if (lastOperationResult) {
-      while (lastOperationResult) {
-        comboBoxContents.put(result.getInt(1), result.getString(2));
-        // Sabemos que el procedimiento tiene una columna de IDs y otra de
-        // descripcion.
-        lastOperationResult = result.next();
-      }
-    }
-    result.close();
-    return comboBoxContents;
+    String statement = "get_Provincias_por_Pais";
+    return getComboBoxContents(statement, parametros);
   }
 
   public static HashMap<Integer, String> getCantonesPorProvincia(Integer pProvinciaID)
       throws SQLException {
-    String statement = "get_Cantones_por_Provincia";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pProvinciaID);
-    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
-    boolean lastOperationResult;
-    lastOperationResult = result.next(); // System.out.println(lastOperationResult);
-    lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
-    HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
-    if (lastOperationResult) {
-      while (lastOperationResult) {
-        comboBoxContents.put(result.getInt(1), result.getString(2));
-        // Sabemos que el procedimiento tiene una columna de IDs y otra de
-        // descripcion.
-        lastOperationResult = result.next();
-      }
-    }
-    result.close();
-    return comboBoxContents;
+    String statement = "get_Cantones_por_Provincia";
+    return getComboBoxContents(statement, parametros);
   }
 
   public static HashMap<Integer, String> getDistritosPorCanton(Integer pCantonID)
       throws SQLException {
-    String statement = "get_Distritos_por_Canton";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pCantonID);
-    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
+    String statement = "get_Distritos_por_Canton";
+    return getComboBoxContents(statement, parametros);
+  }
+
+  private static HashMap<Integer, String> getComboBoxContents(String statement,
+      Vector<Object> parametros) throws SQLException {
+    ResultSet result = ResultSetFactory.callStoredProc(statement,
+        (parametros == null ? new Vector<Object>() : parametros),
+        (parametros == null ? 1 : parametros.size() + 1));
     boolean lastOperationResult;
     lastOperationResult = result.next(); // System.out.println(lastOperationResult);
     lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
@@ -177,7 +154,7 @@ public class QueryController {
       boolean buscarPorPais, boolean buscarPorProvincia, boolean buscarPorCanton,
       boolean buscarPorDistrito) throws SQLException {
     String statement = "";
-    if (buscarPorPais){
+    if (buscarPorPais) {
       statement = "personas_PAIS";
     } else if (buscarPorProvincia) {
       statement = "personas_PROVINCIA";
@@ -186,18 +163,46 @@ public class QueryController {
     } else if (buscarPorDistrito) {
       statement = "personas_DISTRITO";
     }
-    //System.out.println(statement + " || " + pTerritorioID);
+    // System.out.println(statement + " || " + pTerritorioID);
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pTerritorioID);
     Vector<String> columnHeaders = new Vector<String>();
     columnHeaders.addElement("Nombre");
     columnHeaders.addElement("Primer Apellido");
     columnHeaders.addElement("Segundo Apellido");
-    
+
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
+    @SuppressWarnings("unused")
     boolean lastOperationResult;
-    lastOperationResult = result.next(); //System.out.println("IS SET FILLED IN? " + lastOperationResult);
-    lastOperationResult = result.isFirst(); //System.out.println("IS SET READY TO FETCH? " + lastOperationResult);
+    lastOperationResult = result.next(); // System.out.println("IS SET FILLED
+                                         // IN? " + lastOperationResult);
+    lastOperationResult = result.isFirst(); // System.out.println("IS SET READY
+                                            // TO FETCH? " +
+                                            // lastOperationResult);
+    DatabaseTableModel tbmdl = new DatabaseTableModel(columnHeaders, result);
+    result.close();
+    return tbmdl;
+  }
+
+  public static DatabaseTableModel getPersonasPorFechasRegistro(Calendar initialCal,
+      Calendar finalCal) throws SQLException {
+    String statement = "personas_RANGO_FECHA_REG";
+    // System.out.println(statement + " || " + pTerritorioID);
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(initialCal);
+    parametros.addElement(finalCal);
+    Vector<String> columnHeaders = new Vector<String>();
+    columnHeaders.addElement("Nombre");
+    columnHeaders.addElement("Primer Apellido");
+    columnHeaders.addElement("Segundo Apellido");
+
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 3);
+    boolean lastOperationResult;
+    lastOperationResult = result.next(); // System.out.println("IS SET FILLED
+                                         // IN? " + lastOperationResult);
+    lastOperationResult = result.isFirst(); // System.out.println("IS SET READY
+                                            // TO FETCH? " +
+                                            // lastOperationResult);
     DatabaseTableModel tbmdl = new DatabaseTableModel(columnHeaders, result);
     result.close();
     return tbmdl;
@@ -272,9 +277,9 @@ public class QueryController {
         newStatement += "?, ";
       }
       newStatement += "?); END;";
-      
-      //System.out.println(newStatement);
-      
+
+      // System.out.println(newStatement);
+
       OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
           .prepareCall(newStatement);
       // System.out.println("GETTING cursorOutputIndex at " +
@@ -282,15 +287,18 @@ public class QueryController {
       // Assume all initial ? marks are input variables:
       if (!variables.isEmpty()) {
         for (int mark = 0; mark < variables.size(); mark++) {
-          if (variables.get(mark).getClass() == Integer.class) {
+          if (variables.get(mark) instanceof Integer) {
             // System.out.println("cstmt.setInt(" + (mark+1) + ", " + (Integer)
             // variables.get(mark));
             cstmt.setInt(mark + 1, (Integer) variables.get(mark));
-          } else if (variables.get(mark).getClass() == String.class) {
+          } else if (variables.get(mark) instanceof String) {
             cstmt.setString(mark + 1, (String) variables.get(mark));
-          } else if (variables.get(mark).getClass() == Boolean.class) {
+          } else if (variables.get(mark) instanceof Boolean) {
             cstmt.setBoolean(mark + 1, (Boolean) variables.get(mark));
+          } else if (variables.get(mark) instanceof Calendar) {
+            cstmt.setDate(mark + 1, new java.sql.Date(((Calendar) variables.get(mark)).getTimeInMillis()));
           } else {
+            
             cstmt.setObject(mark + 1, variables.get(mark));
           }
         }
@@ -308,8 +316,7 @@ public class QueryController {
       // procedures, instead there is a OUT SYS_REFCURSOR parameter at the end.
       // https://docs.oracle.com/javase/8/docs/api/java/sql/PreparedStatement.html#execute--
       // System.out.println("WAS CALL SUCCESSFULL? " + executeQueryResult);
-      
-      
+
       ResultSet result = cstmt.getCursor(cursorMarkPosition);
       return result;
     }

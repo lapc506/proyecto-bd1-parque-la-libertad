@@ -82,7 +82,8 @@ public class FiltroPersona extends DialogTemplate {
     panelBusqueda.add(lblIdentificacion);
 
     comboTipoIdentificacion = new JComboBox<String>();
-    this.comboTipoIdentificacion.setModel(new DefaultComboBoxModel(new String[] {"C\u00E9dula", "Tarjeta Identificaci\u00F3n Menores", "Pasaporte"}));
+    
+    this.comboTipoIdentificacion.setModel();
     comboTipoIdentificacion.setFont(FontController.getRegularLabelFont());
     panelBusqueda.add(comboTipoIdentificacion);
 
