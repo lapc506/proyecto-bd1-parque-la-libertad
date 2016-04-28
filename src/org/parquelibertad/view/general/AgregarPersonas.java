@@ -2,15 +2,22 @@ package org.parquelibertad.view.general;
 
 import javax.swing.JFrame;
 
+import org.parquelibertad.controller.MainController;
+import org.parquelibertad.controller.QueryController;
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
+import org.parquelibertad.model.LibertadDatabaseConstraints;
+import org.parquelibertad.view.jmodels.JDatabaseText;
 import org.parquelibertad.view.templates.DialogTemplate;
 
-import java.awt.Color;
 import javax.swing.JTextField;
 import java.awt.HeadlessException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
@@ -19,185 +26,223 @@ import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
+import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class AgregarPersonas extends DialogTemplate {
+  private Integer           selectedDistritoID;
 
-	private JTextField txtNombre;
-	private JTextField txtPrimerApellido;
-	private JTextField txtSegundoApellido;
-	private JTextField txtIdentificacion;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JLabel label_8;
-	private JLabel lblDistrito;
-	private JComboBox<String> comboDistrito;
-	private JLabel label_1;
-	private JComboBox<String> comboBox_1;
-	private JLabel label;
-	private JLabel label_2;
-	private JLabel label_3;
-	private JLabel label_4;
+  private JTextField        txtPrimerApellido;
+  private JTextField        txtSegundoApellido;
+  private JTextField        txtIdentificacion;
+  private JTextField        txtDireccionExacta;
+  private JLabel            label;
+  private JLabel            label_3;
+  private JLabel            label_4;
+  private JLabel            lblNombre;
+  private JLabel            lblPrimerApellido;
+  private JLabel            lblSegundoApellido;
+  private JTextField        txtNombre;
+  private JLabel            lblIdentificacion;
+  private JLabel            lblTipoDeIdentificacin;
+  private JLabel            lblNacionalidad;
+  private JComboBox<String> comboTiposDocumento;
+  private JComboBox<String> comboNacionalidad;
+  private JLabel            lblPaisResidencia;
+  private JPanel            panelActions;
+  private JPanel            panelDireccion;
+  private JPanel            panelDistrito;
+  private JPanel            panelDocumento;
+  private JPanel            panelDetalles;
+  private Vector<Integer>   idsNacionalidades;
+  private Vector<Integer>   idsTiposDocumento;
+  private JTextField        txtDistritoResidencia;
 
-	public AgregarPersonas(JFrame parent, String windowName, int width, int height, boolean isResizable)
-			throws HeadlessException {
-		super(parent, windowName, width, height, isResizable);
-		/*
-		 * Comportamientos heredados de DialogTemplate:
-		 * 
-		 * setSize(1000, 500); setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		 * setResizable(false); setVisible(true);
-		 */
-		getContentPane().setBackground(DesignController.getWindowBGColor());
-		getContentPane().setLayout(new BorderLayout(20, 30));
-		// ----------------------------------
-		label = new JLabel("  ");
-		getContentPane().add(label, BorderLayout.NORTH);
-		// ----------------------------------
-		label_2 = new JLabel("  ");
-		getContentPane().add(label_2, BorderLayout.SOUTH);
-		// ----------------------------------
-		label_3 = new JLabel("  ");
-		getContentPane().add(label_3, BorderLayout.WEST);
-		// ----------------------------------
-		label_4 = new JLabel("  ");
-		getContentPane().add(label_4, BorderLayout.EAST);
+  public AgregarPersonas(JFrame parent, String windowName, int width, int height,
+      boolean isResizable) throws HeadlessException, SQLException {
+    super(parent, windowName, width, height, isResizable);
+    getContentPane().setBackground(DesignController.getWindowBGColor());
+    getContentPane().setLayout(new BorderLayout(20, 30));
+    // ----------------------------------
+    label = new JLabel("Registrar nueva Persona");
+    this.label.setHorizontalAlignment(SwingConstants.CENTER);
+    label.setFont(FontController.getTitleFont());
+    getContentPane().add(label, BorderLayout.NORTH);
+    // ----------------------------------
+    label_3 = new JLabel("  ");
+    getContentPane().add(label_3, BorderLayout.WEST);
+    // ----------------------------------
+    label_4 = new JLabel("  ");
+    getContentPane().add(label_4, BorderLayout.EAST);
 
-		JPanel panel = new JPanel();
-		panel.setFocusable(false);
-		panel.setOpaque(false);
-		panel.setBorder(new TitledBorder(new LineBorder(new Color(255, 255, 0)), "Nueva Persona", TitledBorder.LEADING,
-				TitledBorder.TOP, FontController.getSubtitleFont()));
-		getContentPane().add(panel);
-		panel.setLayout(new GridLayout(0, 3, 10, 3));
+    JPanel panelContents = new JPanel();
+    panelContents.setFocusable(false);
+    panelContents.setOpaque(false);
+    getContentPane().add(panelContents);
+    panelContents.setLayout(new GridLayout(0, 1, 30, 10));
 
-		JLabel lblNombre = new JLabel("Nombre");
-		panel.add(lblNombre);
-		lblNombre.setFont(FontController.getRegularLabelFont());
+    this.panelDetalles = new JPanel();
+    this.panelDetalles.setOpaque(false);
+    panelContents.add(this.panelDetalles);
+    this.panelDetalles.setLayout(new GridLayout(2, 3, 5, 10));
 
-		JLabel lblPrimerApellido = new JLabel("Primer Apellido");
-		panel.add(lblPrimerApellido);
-		lblPrimerApellido.setFont(FontController.getRegularLabelFont());
+    lblNombre = new JLabel("Nombre");
+    this.lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelDetalles.add(this.lblNombre);
+    lblNombre.setFont(FontController.getRegularLabelFont());
 
-		JLabel lblSegundoApellido = new JLabel("Segundo Apellido");
-		panel.add(lblSegundoApellido);
-		lblSegundoApellido.setFont(FontController.getRegularLabelFont());
+    lblPrimerApellido = new JLabel("Primer Apellido");
+    this.lblPrimerApellido.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelDetalles.add(this.lblPrimerApellido);
+    lblPrimerApellido.setFont(FontController.getRegularLabelFont());
 
-		txtNombre = new JTextField();
-		panel.add(txtNombre);
-		txtNombre.setFont(FontController.getRegularLabelFont());
-		txtNombre.setColumns(10);
+    lblSegundoApellido = new JLabel("Segundo Apellido");
+    this.lblSegundoApellido.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelDetalles.add(this.lblSegundoApellido);
+    lblSegundoApellido.setFont(FontController.getRegularLabelFont());
 
-		txtPrimerApellido = new JTextField();
-		panel.add(txtPrimerApellido);
-		txtPrimerApellido.setFont(FontController.getRegularLabelFont());
-		txtPrimerApellido.setColumns(10);
+    txtNombre = new JDatabaseText(LibertadDatabaseConstraints.Persona_nombre_VARCHAR2);
+    txtNombre.setFont(FontController.getRegularLabelFont());
+    this.panelDetalles.add(this.txtNombre);
 
-		txtSegundoApellido = new JTextField();
-		panel.add(txtSegundoApellido);
-		txtSegundoApellido.setFont(FontController.getRegularLabelFont());
-		txtSegundoApellido.setColumns(10);
+    txtPrimerApellido = new JDatabaseText(
+        LibertadDatabaseConstraints.Persona_primerApellido_VARCHAR2);
+    this.panelDetalles.add(this.txtPrimerApellido);
+    txtPrimerApellido.setFont(FontController.getRegularLabelFont());
 
-		JLabel lblIdentificacion = new JLabel("Identificaci\u00F3n");
-		panel.add(lblIdentificacion);
-		lblIdentificacion.setFont(FontController.getRegularLabelFont());
+    txtSegundoApellido = new JDatabaseText(
+        LibertadDatabaseConstraints.Persona_segundoApellido_VARCHAR2);
+    this.panelDetalles.add(this.txtSegundoApellido);
+    txtSegundoApellido.setFont(FontController.getRegularLabelFont());
 
-		JLabel lblTipoDeIdentificacin = new JLabel("Tipo de Identificaci\u00F3n");
-		panel.add(lblTipoDeIdentificacin);
-		lblTipoDeIdentificacin.setFont(FontController.getRegularLabelFont());
+    this.panelDocumento = new JPanel();
+    this.panelDocumento.setOpaque(false);
+    panelContents.add(this.panelDocumento);
+    this.panelDocumento.setLayout(new GridLayout(2, 3, 5, 10));
 
-		JLabel lblNacionalidad = new JLabel("Nacionalidad");
-		lblNacionalidad.setFont(FontController.getRegularLabelFont());
-		panel.add(lblNacionalidad);
+    lblIdentificacion = new JLabel("Documento de Identidad Inicial");
+    this.lblIdentificacion.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelDocumento.add(this.lblIdentificacion);
+    lblIdentificacion.setFont(FontController.getRegularLabelFont());
 
-		txtIdentificacion = new JTextField();
-		panel.add(txtIdentificacion);
-		txtIdentificacion.setFont(FontController.getRegularLabelFont());
-		txtIdentificacion.setColumns(10);
+    lblTipoDeIdentificacin = new JLabel("Tipo de Documento");
+    this.lblTipoDeIdentificacin.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelDocumento.add(this.lblTipoDeIdentificacin);
+    lblTipoDeIdentificacin.setFont(FontController.getRegularLabelFont());
 
-		JComboBox<String> comboTipoID = new JComboBox<String>();
-		panel.add(comboTipoID);
-		comboTipoID.setFont(FontController.getRegularLabelFont());
-		comboTipoID.setModel(new DefaultComboBoxModel(new String[] { "TIM", "C\u00E9dula", "Pasaporte" }));
+    lblNacionalidad = new JLabel("Nacionalidad");
+    this.lblNacionalidad.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelDocumento.add(this.lblNacionalidad);
+    lblNacionalidad.setFont(FontController.getRegularLabelFont());
 
-		JComboBox<String> comboNacionalidad = new JComboBox<String>();
-		comboNacionalidad.setFont(FontController.getRegularLabelFont());
-		panel.add(comboNacionalidad);
+    txtIdentificacion = new JDatabaseText(
+        LibertadDatabaseConstraints.DocumentoIdentidad_numeroIdentidad_NUMBER);
+    this.panelDocumento.add(this.txtIdentificacion);
+    txtIdentificacion.setFont(FontController.getRegularLabelFont());
 
-		JLabel lblPaisResidencia = new JLabel("Pa\u00EDs de residencia");
-		lblPaisResidencia.setFont(FontController.getRegularLabelFont());
-		panel.add(lblPaisResidencia);
+    comboTiposDocumento = new JComboBox<String>();
+    comboTiposDocumento.setFont(FontController.getRegularLabelFont());
+    this.panelDocumento.add(this.comboTiposDocumento);
 
-		JLabel lblProvincia = new JLabel("Provincia");
-		lblProvincia.setFont(FontController.getRegularLabelFont());
-		panel.add(lblProvincia);
+    comboNacionalidad = new JComboBox<String>();
+    this.panelDocumento.add(this.comboNacionalidad);
+    comboNacionalidad.setFont(FontController.getRegularLabelFont());
 
-		JLabel lblCanton = new JLabel("Cant\u00F3n");
-		lblCanton.setFont(FontController.getRegularLabelFont());
-		panel.add(lblCanton);
+    this.panelDistrito = new JPanel();
+    this.panelDistrito.setOpaque(false);
+    panelContents.add(this.panelDistrito);
+    this.panelDistrito.setLayout(new BorderLayout(10, 10));
 
-		JComboBox<String> comboPais = new JComboBox<String>();
-		comboPais.setFont(FontController.getRegularLabelFont());
-		panel.add(comboPais);
+    JButton btnSeleccionarDistrito = new JButton("Seleccionar Distrito...");
+    btnSeleccionarDistrito.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        try {
+          selectedDistritoID = MainController.getInstance()
+              .selectDistrito("Seleccione el distrito de residencia...");
+          if (selectedDistritoID != -1) {
+            txtDistritoResidencia
+                .setText(QueryController.getDistritoNombre(selectedDistritoID));
+          }
+        } catch (SQLException e1) {
+          JOptionPane.showMessageDialog(rootPane, e1.getMessage(),
+              "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    });
+    this.panelDistrito.add(btnSeleccionarDistrito, BorderLayout.WEST);
+    btnSeleccionarDistrito.setFont(FontController.getBoldLabelFont());
 
-		JComboBox<String> comboProvincia = new JComboBox<String>();
-		comboProvincia.setFont(FontController.getRegularLabelFont());
-		panel.add(comboProvincia);
+    txtDistritoResidencia = new JDatabaseText(
+        LibertadDatabaseConstraints.Distrito_descripcion_VARCHAR2);
+    txtDistritoResidencia.setEditable(false);
+    this.panelDistrito.add(txtDistritoResidencia, BorderLayout.CENTER);
+    txtDistritoResidencia.setFont(FontController.getRegularLabelFont());
 
-		JComboBox<String> comboCanton = new JComboBox<String>();
-		comboCanton.setFont(FontController.getRegularLabelFont());
-		panel.add(comboCanton);
-		// ----------------------------------
-		lblDistrito = new JLabel("Distrito");
-		lblDistrito.setFont(null);
-		panel.add(lblDistrito);
-		// ----------------------------------
-		label_1 = new JLabel("Ciudad");
-		label_1.setFont(null);
-		panel.add(label_1);
+    lblPaisResidencia = new JLabel("Distrito de Residencia");
+    this.panelDistrito.add(this.lblPaisResidencia, BorderLayout.NORTH);
+    this.lblPaisResidencia.setHorizontalAlignment(SwingConstants.CENTER);
+    lblPaisResidencia.setFont(FontController.getRegularLabelFont());
 
-		JLabel lblDireccionExacta = new JLabel("Direcci\u00F3n Exacta");
-		lblDireccionExacta.setFont(FontController.getRegularLabelFont());
-		panel.add(lblDireccionExacta);
-		// ----------------------------------
-		comboDistrito = new JComboBox<String>();
-		comboDistrito.setFont(null);
-		panel.add(comboDistrito);
-		// ----------------------------------
-		comboBox_1 = new JComboBox<String>();
-		comboBox_1.setFont(null);
-		panel.add(comboBox_1);
+    this.panelDireccion = new JPanel();
+    this.panelDireccion.setOpaque(false);
+    panelContents.add(this.panelDireccion);
+    this.panelDireccion.setLayout(new BorderLayout(10, 10));
 
-		textField_4 = new JTextField();
-		textField_4.setFont(FontController.getRegularLabelFont());
-		textField_4.setColumns(10);
-		panel.add(textField_4);
+    JLabel lblDireccionExacta = new JLabel("Direcci\u00F3n Exacta");
+    lblDireccionExacta.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelDireccion.add(lblDireccionExacta, BorderLayout.NORTH);
+    lblDireccionExacta.setFont(FontController.getRegularLabelFont());
 
-		JLabel lblUsuario = new JLabel("Usuario");
-		lblUsuario.setFont(FontController.getRegularLabelFont());
-		panel.add(lblUsuario);
+    txtDireccionExacta = new JDatabaseText(
+        LibertadDatabaseConstraints.Persona_direccionExacta_VARCHAR2);
+    txtDireccionExacta.setFont(FontController.getRegularLabelFont());
+    this.panelDireccion.add(this.txtDireccionExacta);
 
-		JLabel lblContrasea = new JLabel("Contrase\u00F1a");
-		lblContrasea.setFont(FontController.getRegularLabelFont());
-		panel.add(lblContrasea);
-		// ----------------------------------
-		label_8 = new JLabel("");
-		panel.add(label_8);
+    this.panelActions = new JPanel();
+    FlowLayout fl_panelActions = (FlowLayout) this.panelActions.getLayout();
+    fl_panelActions.setAlignment(FlowLayout.RIGHT);
+    this.panelActions.setOpaque(false);
+    getContentPane().add(this.panelActions, BorderLayout.SOUTH);
 
-		textField_5 = new JTextField();
-		textField_5.setFont(FontController.getRegularLabelFont());
-		textField_5.setColumns(10);
-		panel.add(textField_5);
+    JButton btnRegistrar = new JButton("Registrar");
+    btnRegistrar.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        txtNombre.getText();
+        txtPrimerApellido.getText();
+        txtSegundoApellido.getText();
+        txtIdentificacion.getText();
+        idsTiposDocumento.elementAt(comboTiposDocumento.getSelectedIndex());
+        idsNacionalidades.elementAt(comboNacionalidad.getSelectedIndex());
 
-		textField_6 = new JTextField();
-		textField_6.setFont(FontController.getRegularLabelFont());
-		textField_6.setColumns(10);
-		panel.add(textField_6);
+        dispose();
+      }
+    });
+    btnRegistrar.setFont(FontController.getSubtitleFont());
+    this.panelActions.add(btnRegistrar);
+    loadConnections();
+  }
 
-		JButton btnRegistrar = new JButton("Registrar");
-		panel.add(btnRegistrar);
-		btnRegistrar.setFont(FontController.getSubtitleFont());
+  private void loadConnections() throws SQLException {
+    idsTiposDocumento = new Vector<Integer>();
+    HashMap<Integer, String> tiposDocumentos = QueryController.getTiposDocumento();
+    Vector<String> textTipos = new Vector<String>();
+    for (Integer x : tiposDocumentos.keySet()) {
+      idsTiposDocumento.addElement(x);
+      textTipos.addElement(tiposDocumentos.get(x));
+    }
+    this.comboTiposDocumento.setModel(new DefaultComboBoxModel<String>(textTipos));
 
-	}
+    idsNacionalidades = new Vector<Integer>();
+    HashMap<Integer, String> nacionalidades = QueryController.getNacionalidades();
+    Vector<String> textNacs = new Vector<String>();
+    for (Integer x : nacionalidades.keySet()) {
+      idsNacionalidades.addElement(x);
+      textNacs.addElement(nacionalidades.get(x));
+    }
+    this.comboNacionalidad.setModel(new DefaultComboBoxModel<String>(textNacs));
+  }
 }

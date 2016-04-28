@@ -94,18 +94,18 @@ public class FiltroTerritorio extends DialogTemplate {
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
     this.panelContent = new JPanel();
-    panel.add(panelContent);
     this.panelContent.setOpaque(false);
+    this.panel.add(panelContent);
 
-    this.comboBoxPaises = new JComboBox<String>();
-    panelContent.setLayout(new GridLayout(0, 2, 0, 0));
-    // ----------------------------------
-    lblPais = new JLabel("Pa\u00EDs");
+    this.lblPais = new JLabel("Pa\u00EDs");
     this.lblPais.setHorizontalAlignment(SwingConstants.CENTER);
-    panelContent.add(lblPais);
+    this.panelContent.add(lblPais);
+    
+    this.comboBoxPaises = new JComboBox<String>();
+    this.panelContent.setLayout(new GridLayout(0, 2, 0, 0));
     this.panelContent.add(this.comboBoxPaises);
-    // ----------------------------------
-    checkProvincia = new JCheckBox("Provincia");
+    
+    this.checkProvincia = new JCheckBox("Provincia");
     this.checkProvincia.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent arg0) {
         if (checkProvincia.isSelected()) {

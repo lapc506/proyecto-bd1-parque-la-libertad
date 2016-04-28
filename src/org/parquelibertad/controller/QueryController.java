@@ -32,6 +32,16 @@ public class QueryController {
     }
     myConnection = null;
   }
+  
+  public static boolean isConnected() throws SQLException {
+    if (myConnection != null){
+      if (!myConnection.isClosed()){
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
 
   public static Connection openConnection() throws SQLException {
     if (myConnection == null) {
@@ -59,29 +69,23 @@ public class QueryController {
    * #11g-updates
    */
 
+  public static HashMap<Integer, String> getTiposDocumento() throws SQLException {
+    String statement = "get_Tipos_Documento";
+    return getComboBoxContents(statement, null);
+  }
+  
+  public static HashMap<Integer, String> getNacionalidades() throws SQLException {
+    String statement = "get_Nacionalidades";
+    return getComboBoxContents(statement, null);
+  }
+  
   public static HashMap<Integer, String> getPaises() throws SQLException {
     String statement = "get_Paises";
-    ResultSet result = ResultSetFactory.callStoredProc(statement, new Vector<Object>(),
-        1);
-    boolean lastOperationResult;
-    lastOperationResult = result.next(); // System.out.println(lastOperationResult);
-    lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
-    HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
-    if (lastOperationResult) {
-      while (lastOperationResult) {
-        comboBoxContents.put(result.getInt(1), result.getString(2));
-        // Sabemos que el procedimiento tiene una columna de IDs y otra de
-        // descripcion.
-        lastOperationResult = result.next();
-      }
-    }
-    result.close();
-    return comboBoxContents;
+    return getComboBoxContents(statement, null);
   }
   /* private static Integer getPaisID(String pNombrePais) throws SQLException {
    * String proposal = "BEGIN ? := get_Pais_ID(?); END;";
-   * OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
-   * .prepareCall(proposal);
+   * 
    * cstmt.registerOutParameter(1, OracleTypes.INTEGER);
    * cstmt.setString(2, pNombrePais);
    * cstmt.executeQuery();
@@ -89,6 +93,17 @@ public class QueryController {
    * cstmt.close();
    * return paisID;
    * } */
+  
+  public static String getDistritoNombre(Integer selectedDistritoID) throws SQLException {
+    String statement = "BEGIN ? := get_Distrito_Nombre(?); END;";
+    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection.prepareCall(statement);
+    cstmt.registerOutParameter(1, OracleTypes.VARCHAR);
+    cstmt.setInt(2, selectedDistritoID);
+    cstmt.executeQuery();
+    String distritoNombre = cstmt.getString(1);
+    cstmt.close();
+    return distritoNombre;
+  }
 
   public static HashMap<Integer, String> getProvinciasPorPais(Integer pPaisID)
       throws SQLException {

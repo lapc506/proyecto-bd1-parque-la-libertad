@@ -7,12 +7,29 @@ CREATE OR REPLACE PROCEDURE get_Paises
         FROM PAIS p;
   END;
 
-CREATE OR REPLACE FUNCTION get_Pais_ID (pNombrePais IN VARCHAR2)
-    RETURN NUMBER IS out_PaisID PAIS.ID%TYPE;
+CREATE OR REPLACE PROCEDURE get_Tipos_Documento
+    (p_recordset OUT SYS_REFCURSOR)
+   AS
   BEGIN
-    SELECT ps.id INTO out_PaisID FROM PAIS ps
-    WHERE ps.descripcion = pNombrePais;
-    RETURN out_PaisID;
+    OPEN p_recordset FOR
+      SELECT id, descripcion FROM Tipodocumentoidentidad;
+  END;
+
+CREATE OR REPLACE PROCEDURE get_Nacionalidades
+    (p_recordset OUT SYS_REFCURSOR)
+   AS
+  BEGIN
+    OPEN p_recordset FOR
+      SELECT id, descripcion FROM Nacionalidad;
+  END;  
+  
+
+CREATE OR REPLACE FUNCTION get_Distrito_Nombre (pDistritoID IN NUMBER)
+    RETURN VARCHAR2 IS out_DistritoNombre DISTRITO.DESCRIPCION%TYPE;
+  BEGIN
+    SELECT DESCRIPCION INTO out_DistritoNombre FROM DISTRITO
+    WHERE id = pDistritoID;
+    RETURN out_DistritoNombre;
   END;
 
 CREATE OR REPLACE PROCEDURE get_Provincias_por_Pais
@@ -49,6 +66,10 @@ GRANT EXECUTE ON get_Pais_ID TO libertadDemoUser;
 GRANT EXECUTE ON get_Provincias_por_Pais TO libertadDemoUser;
 GRANT EXECUTE ON get_Cantones_por_Provincia TO libertadDemoUser;
 GRANT EXECUTE ON get_Distritos_por_Canton TO libertadDemoUser;
+GRANT EXECUTE ON get_Tipos_Documento TO libertadDemoUser;
+GRANT EXECUTE ON get_Nacionalidades TO libertadDemoUser;
+GRANT EXECUTE ON get_Distrito_Nombre TO libertadDemoUser;
+
 
 -- Ejecutar como SYSTEM:
 GRANT CREATE SYNONYM TO libertadDemoUser;
@@ -58,3 +79,6 @@ CREATE SYNONYM get_Pais_ID FOR libertadAdmin.get_Pais_ID;
 CREATE SYNONYM get_Provincias_por_Pais FOR libertadAdmin.get_Provincias_por_Pais;
 CREATE SYNONYM get_Cantones_por_Provincia FOR libertadAdmin.get_Cantones_por_Provincia;
 CREATE SYNONYM get_Distritos_por_Canton FOR libertadAdmin.get_Distritos_por_Canton;
+CREATE SYNONYM get_Tipos_Documento FOR libertadAdmin.get_Tipos_Documento;
+CREATE SYNONYM get_Nacionalidades FOR libertadAdmin.get_Nacionalidades;
+CREATE SYNONYM get_Distrito_Nombre FOR libertadAdmin.get_Distrito_Nombre;
