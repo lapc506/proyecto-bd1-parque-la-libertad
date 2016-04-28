@@ -21,8 +21,15 @@ CREATE OR REPLACE PROCEDURE get_Nacionalidades
   BEGIN
     OPEN p_recordset FOR
       SELECT id, descripcion FROM Nacionalidad;
-  END;  
+  END;
   
+CREATE OR REPLACE PROCEDURE get_Rangos_Edad
+    (p_recordset OUT SYS_REFCURSOR)
+   AS
+  BEGIN
+    OPEN p_recordset FOR
+      SELECT id, valormin, valormax FROM RANGOEDAD;
+  END;
 
 CREATE OR REPLACE FUNCTION get_Distrito_Nombre (pDistritoID IN NUMBER)
     RETURN VARCHAR2 IS out_DistritoNombre DISTRITO.DESCRIPCION%TYPE;
@@ -68,6 +75,7 @@ GRANT EXECUTE ON get_Cantones_por_Provincia TO libertadDemoUser;
 GRANT EXECUTE ON get_Distritos_por_Canton TO libertadDemoUser;
 GRANT EXECUTE ON get_Tipos_Documento TO libertadDemoUser;
 GRANT EXECUTE ON get_Nacionalidades TO libertadDemoUser;
+GRANT EXECUTE ON get_Rangos_Edad TO libertadDemoUser;
 GRANT EXECUTE ON get_Distrito_Nombre TO libertadDemoUser;
 
 
@@ -81,4 +89,5 @@ CREATE SYNONYM get_Cantones_por_Provincia FOR libertadAdmin.get_Cantones_por_Pro
 CREATE SYNONYM get_Distritos_por_Canton FOR libertadAdmin.get_Distritos_por_Canton;
 CREATE SYNONYM get_Tipos_Documento FOR libertadAdmin.get_Tipos_Documento;
 CREATE SYNONYM get_Nacionalidades FOR libertadAdmin.get_Nacionalidades;
+CREATE SYNONYM get_Rangos_Edad FOR libertadAdmin.get_Rangos_Edad;
 CREATE SYNONYM get_Distrito_Nombre FOR libertadAdmin.get_Distrito_Nombre;

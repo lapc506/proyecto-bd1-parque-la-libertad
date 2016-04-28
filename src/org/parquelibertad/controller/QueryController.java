@@ -32,12 +32,10 @@ public class QueryController {
     }
     myConnection = null;
   }
-  
+
   public static boolean isConnected() throws SQLException {
-    if (myConnection != null){
-      if (!myConnection.isClosed()){
-        return true;
-      }
+    if (myConnection != null) {
+      if (!myConnection.isClosed()) { return true; }
       return false;
     }
     return false;
@@ -73,30 +71,43 @@ public class QueryController {
     String statement = "get_Tipos_Documento";
     return getComboBoxContents(statement, null);
   }
-  
+
   public static HashMap<Integer, String> getNacionalidades() throws SQLException {
     String statement = "get_Nacionalidades";
     return getComboBoxContents(statement, null);
   }
-  
+
+  // Rangos de Edad debe usar una implementación nueva
+  public static HashMap<Integer, String> getRangosEdad() throws SQLException {
+    String statement = "get_Rangos_Edad";
+    ResultSet result = ResultSetFactory.callStoredProc(statement, new Vector<Object>(),
+        1);
+    boolean lastOperationResult;
+    lastOperationResult = result.next(); // System.out.println(lastOperationResult);
+    lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
+    HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
+    if (lastOperationResult) {
+      while (lastOperationResult) {
+        // Este ComboBox debe construirse diferente:
+        comboBoxContents.put(result.getInt(1),
+            "De " + (result.getInt(2)) + " a " + (result.getInt(3)) + " Años");
+        lastOperationResult = result.next();
+      }
+    }
+    result.close();
+    return comboBoxContents;
+  }
+
   public static HashMap<Integer, String> getPaises() throws SQLException {
     String statement = "get_Paises";
     return getComboBoxContents(statement, null);
   }
-  /* private static Integer getPaisID(String pNombrePais) throws SQLException {
-   * String proposal = "BEGIN ? := get_Pais_ID(?); END;";
-   * 
-   * cstmt.registerOutParameter(1, OracleTypes.INTEGER);
-   * cstmt.setString(2, pNombrePais);
-   * cstmt.executeQuery();
-   * Integer paisID = cstmt.getInt(1);
-   * cstmt.close();
-   * return paisID;
-   * } */
-  
+
+
   public static String getDistritoNombre(Integer selectedDistritoID) throws SQLException {
     String statement = "BEGIN ? := get_Distrito_Nombre(?); END;";
-    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection.prepareCall(statement);
+    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
+        .prepareCall(statement);
     cstmt.registerOutParameter(1, OracleTypes.VARCHAR);
     cstmt.setInt(2, selectedDistritoID);
     cstmt.executeQuery();
@@ -129,6 +140,28 @@ public class QueryController {
     return getComboBoxContents(statement, parametros);
   }
 
+  public static void insertarPersona(String pNombre, String pPrimerApellido,
+      String pSegundoApellido, Integer pNumeroDocumento, Integer pIDTipoDoc,
+      Integer pRangoEdadID, Integer pIDNacionalidad, Integer pDistritoID, String pDireccion)
+      throws SQLException {
+    String statement = "insert_persona";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pNombre);
+    parametros.addElement(pPrimerApellido);
+    parametros.addElement(pSegundoApellido);
+    parametros.addElement(pNumeroDocumento);
+    parametros.addElement(pIDTipoDoc);
+    parametros.addElement(pRangoEdadID);
+    parametros.addElement(pIDNacionalidad);
+    parametros.addElement(pDistritoID);
+    parametros.addElement(pDireccion);
+    // Debería retornar on ResultSet NULL porque no hay cursor de salida:
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
+    assert (result == null);
+    JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
+        "Confirmada la inserción de la nueva persona en el sistema.");
+  }
+
   private static HashMap<Integer, String> getComboBoxContents(String statement,
       Vector<Object> parametros) throws SQLException {
     ResultSet result = ResultSetFactory.callStoredProc(statement,
@@ -148,17 +181,6 @@ public class QueryController {
     }
     result.close();
     return comboBoxContents;
-  }
-
-  public static void promoverPersona(Integer selectedPersonaID) {
-    if (selectedPersonaID != null) {
-      // PENDING TESTS FROM METHODS BELOW.
-      JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-          "FELICIDADES: las pruebas han sido satisfactorias y logró seleccionar\n"
-              + "el ID para promover una persona a Estudiante o Profesora.\n\n"
-                + "ID interno seleccionado: "
-                + selectedPersonaID.toString());
-    }
   }
 
   public static Vector<String> getColumnasUltimaConsulta() {
@@ -252,18 +274,6 @@ public class QueryController {
     return Integer.parseInt(test);
   }
 
-  /* private static void demo() {
-   * try {
-   * openConnection();
-   * for (String x : QueryController
-   * .getProvinciasPorPais(QueryController.getPaisID("Costa Rica"))) {
-   * System.out.println(x);
-   * }
-   * closeConnection();
-   * } catch (SQLException e) {
-   * e.printStackTrace();
-   * }
-   * } */
   // Static nested class:
   private static class ResultSetFactory {
     /**
@@ -289,12 +299,27 @@ public class QueryController {
       // Assume the procedure call is well-formed.
       // Assume we don't know how to construct the PL/SQL sentence:
       String newStatement = "BEGIN " + originalSTMT + "(";
-      for (@SuppressWarnings("unused")
-      Object x : variables) {
-        newStatement += "?, ";
+      for (int var = 0; var < variables.size(); var++) {
+        newStatement += "?";
+        if (cursorMarkPosition != -1) { // last question mark handled out of
+                                        // for.
+          newStatement += ", ";
+        } else { // no cursor
+          if (var != variables.size() - 1) { // reached end of parameters?
+            newStatement += ", ";
+          }
+        }
       }
-      newStatement += "?); END;";
+      if (cursorMarkPosition != -1) {
+        newStatement += "?";
+      }
+      newStatement += "); END;";
 
+      /* for (@SuppressWarnings("unused")
+       * Object x : variables) {
+       * newStatement += "?, ";
+       * }
+       * newStatement += "?); END;"; */
       // System.out.println(newStatement);
 
       OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
@@ -321,11 +346,13 @@ public class QueryController {
           }
         }
       }
-      if (variables.size() + 1 != cursorMarkPosition) { throw new SQLException(
-          "Invalid cursor ? position."); }
-      // Assume the last ? mark is always a CURSOR:
-      cstmt.registerOutParameter(cursorMarkPosition, OracleTypes.CURSOR);
-
+      // If it is supposed to have a cursor as last output variable:
+      if (cursorMarkPosition != -1) {
+        if (variables.size() + 1 != cursorMarkPosition) { throw new SQLException(
+            "Invalid cursor ? position."); }
+        // Assume the last ? mark is always a CURSOR:
+        cstmt.registerOutParameter(cursorMarkPosition, OracleTypes.CURSOR);
+      }
       // Why use .execute() instead of .executeQuery(): sety
       // http://stackoverflow.com/questions/19443213/
       // cannot-perform-fetch-on-a-plsql-statement-next
@@ -334,9 +361,12 @@ public class QueryController {
       // procedures, instead there is a OUT SYS_REFCURSOR parameter at the end.
       // https://docs.oracle.com/javase/8/docs/api/java/sql/PreparedStatement.html#execute--
       // System.out.println("WAS CALL SUCCESSFULL? " + executeQueryResult);
-
-      ResultSet result = cstmt.getCursor(cursorMarkPosition);
-      return result;
+      if (cursorMarkPosition != -1) {
+        ResultSet result = cstmt.getCursor(cursorMarkPosition);
+        return result;
+      } else {
+        return null;
+      }
     }
   }
 

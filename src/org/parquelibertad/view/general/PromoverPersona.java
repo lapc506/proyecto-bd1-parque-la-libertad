@@ -76,8 +76,9 @@ public class PromoverPersona extends DialogTemplate {
     this.btnFiltrarPersona.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent arg0) {
+        /*
         QueryController.promoverPersona(MainController.getInstance()
-            .selectPersona("Seleccione la persona por promover: "));
+            .selectPersona("Seleccione la persona por promover: "));*/
       }
     });
     this.panelSeleccion.add(this.btnFiltrarPersona);

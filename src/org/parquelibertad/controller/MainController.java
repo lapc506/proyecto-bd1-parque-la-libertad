@@ -24,7 +24,7 @@ import org.parquelibertad.view.busquedas.FiltroRangoFechaRegistro;
 import org.parquelibertad.view.busquedas.FiltroTerritorio;
 import org.parquelibertad.view.debugDialogs.FontSelectorForm;
 import org.parquelibertad.view.general.AgregarCurso;
-import org.parquelibertad.view.general.AgregarPersonas;
+import org.parquelibertad.view.general.AgregarPersona;
 import org.parquelibertad.view.general.PromoverPersona;
 
 /**
@@ -137,7 +137,7 @@ public class MainController {
   public void showAgregarPersona() {
     try {
       QueryController.openConnection();
-      AgregarPersonas now = new AgregarPersonas(mainScreen, "Agregar Persona", 600, 600,
+      AgregarPersona now = new AgregarPersona(mainScreen, "Parque La Libertad", 700, 600,
           false);
       now.setVisible(true);
       QueryController.closeConnection();

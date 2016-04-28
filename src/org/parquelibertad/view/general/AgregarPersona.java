@@ -21,19 +21,17 @@ import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 import javax.swing.JButton;
-import javax.swing.border.TitledBorder;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-@SuppressWarnings("serial")
-public class AgregarPersonas extends DialogTemplate {
+public class AgregarPersona extends DialogTemplate {
+  private static final long serialVersionUID = -2946814475281597104L;
+
   private Integer           selectedDistritoID;
 
   private JTextField        txtPrimerApellido;
@@ -61,8 +59,12 @@ public class AgregarPersonas extends DialogTemplate {
   private Vector<Integer>   idsNacionalidades;
   private Vector<Integer>   idsTiposDocumento;
   private JTextField        txtDistritoResidencia;
+  private JLabel            lblRangoDeEdad;
+  private JComboBox<String> comboRangosEdad;
 
-  public AgregarPersonas(JFrame parent, String windowName, int width, int height,
+  private Vector<Integer>   idsRangosEdad;
+
+  public AgregarPersona(JFrame parent, String windowName, int width, int height,
       boolean isResizable) throws HeadlessException, SQLException {
     super(parent, windowName, width, height, isResizable);
     getContentPane().setBackground(DesignController.getWindowBGColor());
@@ -134,6 +136,11 @@ public class AgregarPersonas extends DialogTemplate {
     this.panelDocumento.add(this.lblTipoDeIdentificacin);
     lblTipoDeIdentificacin.setFont(FontController.getRegularLabelFont());
 
+    this.lblRangoDeEdad = new JLabel("Rango de Edad");
+    this.lblRangoDeEdad.setHorizontalAlignment(SwingConstants.CENTER);
+    this.lblRangoDeEdad.setFont(FontController.getRegularLabelFont());
+    this.panelDocumento.add(this.lblRangoDeEdad);
+
     lblNacionalidad = new JLabel("Nacionalidad");
     this.lblNacionalidad.setHorizontalAlignment(SwingConstants.CENTER);
     this.panelDocumento.add(this.lblNacionalidad);
@@ -147,6 +154,10 @@ public class AgregarPersonas extends DialogTemplate {
     comboTiposDocumento = new JComboBox<String>();
     comboTiposDocumento.setFont(FontController.getRegularLabelFont());
     this.panelDocumento.add(this.comboTiposDocumento);
+
+    this.comboRangosEdad = new JComboBox<String>();
+    this.comboRangosEdad.setFont(FontController.getRegularLabelFont());
+    this.panelDocumento.add(this.comboRangosEdad);
 
     comboNacionalidad = new JComboBox<String>();
     this.panelDocumento.add(this.comboNacionalidad);
@@ -211,14 +222,26 @@ public class AgregarPersonas extends DialogTemplate {
     JButton btnRegistrar = new JButton("Registrar");
     btnRegistrar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-        txtNombre.getText();
-        txtPrimerApellido.getText();
-        txtSegundoApellido.getText();
-        txtIdentificacion.getText();
-        idsTiposDocumento.elementAt(comboTiposDocumento.getSelectedIndex());
-        idsNacionalidades.elementAt(comboNacionalidad.getSelectedIndex());
-
-        dispose();
+        /* CREATE OR REPLACE PROCEDURE insert_persona
+         * (p_nombre VARCHAR2, p_apellido1 VARCHAR2, p_apellido2 VARCHAR2,
+         * p_num_doc_identidad NUMBER, p_idTipoDocumento NUMBER,
+         * p_idRangosEdad NUMBER, p_idNacionalidad NUMBER,
+         * p_idDistrito NUMBER, p_direccion VARCHAR2) */
+        try {
+          QueryController.insertarPersona(txtNombre.getText(),
+              txtPrimerApellido.getText(),
+              txtSegundoApellido.getText(),
+              Integer.getInteger(txtIdentificacion.getText()),
+              idsTiposDocumento.elementAt(comboTiposDocumento.getSelectedIndex()),
+              idsRangosEdad.elementAt(comboRangosEdad.getSelectedIndex()),
+              idsNacionalidades.elementAt(comboNacionalidad.getSelectedIndex()),
+              selectedDistritoID,
+              txtDireccionExacta.getText());
+          dispose();
+        } catch (SQLException e) {
+          JOptionPane.showMessageDialog(rootPane, e.getMessage(),
+              "Error a la hora de confirmar inserción.", JOptionPane.ERROR_MESSAGE);
+        }
       }
     });
     btnRegistrar.setFont(FontController.getSubtitleFont());
@@ -244,5 +267,14 @@ public class AgregarPersonas extends DialogTemplate {
       textNacs.addElement(nacionalidades.get(x));
     }
     this.comboNacionalidad.setModel(new DefaultComboBoxModel<String>(textNacs));
+
+    idsRangosEdad = new Vector<Integer>();
+    HashMap<Integer, String> rangos = QueryController.getRangosEdad();
+    Vector<String> textRangos = new Vector<String>();
+    for (Integer x : rangos.keySet()) {
+      idsRangosEdad.addElement(x);
+      textRangos.addElement(rangos.get(x));
+    }
+    this.comboRangosEdad.setModel(new DefaultComboBoxModel<String>(textRangos));
   }
 }

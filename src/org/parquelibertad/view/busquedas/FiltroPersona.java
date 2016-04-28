@@ -82,8 +82,6 @@ public class FiltroPersona extends DialogTemplate {
     panelBusqueda.add(lblIdentificacion);
 
     comboTipoIdentificacion = new JComboBox<String>();
-    
-    this.comboTipoIdentificacion.setModel();
     comboTipoIdentificacion.setFont(FontController.getRegularLabelFont());
     panelBusqueda.add(comboTipoIdentificacion);
 
@@ -114,6 +112,7 @@ public class FiltroPersona extends DialogTemplate {
         this.btnBuscar.addMouseListener(new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent arg0) {
+            /*
             try {
               table.setModel(QueryController.buscarPersonaTerritorios(
                   (String) comboTipoIdentificacion.getSelectedItem(),
@@ -123,7 +122,7 @@ public class FiltroPersona extends DialogTemplate {
               JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
                   e.getMessage(), "Error de consulta en la base de datos",
                   JOptionPane.ERROR_MESSAGE);
-            }
+            }*/
           }
         });
 
