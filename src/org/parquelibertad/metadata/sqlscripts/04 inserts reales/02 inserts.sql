@@ -1,103 +1,102 @@
-INSERT ALL
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(0,'Pintacaritas',1000,12,511,631,1,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(4,'Equidad de Genero',3000,75,541,721,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(5,'TaLler Adulto Mayor',2000,64,541,721,5,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(6,'Prevencion Violencia',1000,40,300,541,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(7,'Resolucion de conflictos',1000,20,500,815,4,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(8,'Serigrafia',1000,100,511,750,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(9,'Futbol Femenino',4000,88,400,650,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(10,'Futbol Masculino',5000,25,461,721,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(11,'Volleyball',2500,26,510,800,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(12,'Danza Popular',7000,27,600,840,4,0)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(13,'Mascaradas',3000,28,750,981,4,0)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(14,'Teatro Popular',6000,29,491,785,3,0)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(15,'Taller de Meditacion',3000,30,658,1201,4,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(16,'Robotica',8000,31,651,976,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(17,'Torneo de basquetbol',2000,32,751,1201,3,0)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(18,'Tutoria Matematicas',3000,33,690,951,2,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(19,'Adaptacion Mercado laboral',7000,34,511,980,4,0)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(20,'Yoga',2000,35,521,865,5,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(21,'Exposicion de Pinturas',3000,36,461,1260,4,0)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(22,'Concierto Sinfonico',3000,37,999,1320,4,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(23,'Mezclas en vivo',5000,38,641,846,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(24,'Periodismo comunitario',15000,39,720,981,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(25,'Club de fotografia',9000,40,750,900,3,1)
-  INTO Curso(id,nombre,costo,idHorarioSemanal,idtranscursoDiaInicio,idtranscursoDiaFinal,idMercadoMeta,isActivo)
-  VALUES(26,'Manipulacion de alimentos',8000,41,790,1000,3,1)
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Pintacaritas',1000,12,511,631,1,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Equidad de Género',3000,75,541,721,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Taller Adulto Mayor',2000,64,541,721,5,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Prevencion Violencia',1000,40,300,541,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Resolucion de conflictos',1000,20,500,815,4,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Serigrafía',1000,100,511,750,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Futbol Femenino',4000,88,400,650,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Futbol Masculino',5000,25,461,721,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Volleyball',2500,26,510,800,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Danza Popular',7000,27,600,840,4,0);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Mascaradas',3000,28,750,981,4,0);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Teatro Popular',6000,29,491,785,3,0);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Taller de Meditación',3000,30,658,1201,4,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Robótica',8000,31,651,976,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Torneo de Básquetbol',2000,32,751,1201,3,0);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Tutorias de Matemáticas',3000,33,690,951,2,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Adaptación Mercado Laboral',7000,34,511,980,4,0);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Yoga',2000,35,521,865,5,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Exposición de Pinturas',3000,36,461,1260,4,0);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Concierto Sinfónico',3000,37,999,1320,4,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Mezclas en vivo',5000,38,641,846,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Periodismo comunitario',15000,39,720,981,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Club de fotografia',9000,40,750,900,3,1);
+  INSERT INTO  Curso(id,nombre,costo,idHorarioSemanal,idHoraInicio,idHoraFinal,idMercadoMeta,isActivo)
+  VALUES(s_Curso.Nextval,'Manipulación Alimentos',8000,41,790,1000,3,1);
   
-  INTO TipoEvento(id,descripcion) VALUES(1,'Deportivo')
-  
-  INTO Evento(id,descripcion,fechaHoraInicio,duracionHoras,duracionMinutos,cupoMaximo,idTipoEvento,idInstitucion)
-  VALUES(1,'Carrera Sacos','16-APR-16',2,0,25,1,0)
-  INTO Evento(id,descripcion,fechaHoraInicio,duracionHoras,duracionMinutos,cupoMaximo,idTipoEvento,idInstitucion)
-  VALUES(2,'Carrera 3 pies','16-APR-16',2,0,50,1,0)
-  
-  INTO Periodo(id,IDFECHAINICIAL,IDFECHAFINAL) VALUES(1,'08-FEB-16','23-JUN-16')
-  INTO Periodo(id,IDFECHAINICIAL,IDFECHAFINAL) VALUES(2,'26-JUL-16','24-NOV-16')
-  
-  INTO Empleado(id,idPersona) VALUES(1,1)
-  INTO Empleado(id,idPersona) VALUES(2,2)
-  
-  INTO CuentaUsuario(id,usuario,contraseña,idEmpleado) 
-  VALUES(1,'user1','user1',1)
-  INTO CuentaUsuario(id,usuario,contraseña,idEmpleado) 
-  VALUES(2,'user2','user2',2)
-  
-  INTO Alumno(id,idPersona,ANIOMATRICULA) VALUES(1,3,2016)
-  INTO Alumno(id,idPersona,ANIOMATRICULA) VALUES(0,4,2014)
-  
-  INTO EventoXPersona(id,idEvento,idPersona) VALUES(0,0,5)
-  INTO EventoXPersona(id,idEvento,idPersona) VALUES(1,1,6)
-  
-  INTO CursoXPeriodo(id,id_Curso,id_Periodo) VALUES(0,16,2)
-  INTO CursoXPeriodo(id,id_Curso,id_Periodo) VALUES(1,12,2)
-  INTO CursoXPeriodo(id,id_Curso,id_Periodo) VALUES(2,10,2)
-  INTO CursoXPeriodo(id,id_Curso,id_Periodo) VALUES(3,8,1)
-  
-  INTO ActividadXPersona(id,idActividad,idPersona) VALUES(0,0,8)
-  
-  INTO CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(0,22,1)
-  INTO CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(1,18,1)
-  INTO CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(2,13,2)
-  INTO CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(3,14,2)
-  INTO CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(4,15,1)
-  INTO CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(5,13,1)
-  INTO CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(6,8,2)
-  INTO CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(7,24,2)
+  INSERT INTO  TipoEvento(id,descripcion) VALUES(s_Tipoevento.Nextval,'Deportivo');
+  INSERT INTO  TipoEvento(id,descripcion) VALUES(s_Tipoevento.Nextval,'Cultural');
 
+ -- Datetime en español segun locale de la base Oracle  
+  INSERT INTO  Evento(id,descripcion,fechaHoraInicio,duracionHoras,duracionMinutos,cupoMaximo,idTipoEvento,idInstitucion)
+  VALUES(s_Evento.Nextval,'Carrera Sacos',TO_DATE('16-ABR-16','DD-MON-YY'),2,0,25,1,1);
+
+  INSERT INTO  Evento(id,descripcion,fechaHoraInicio,duracionHoras,duracionMinutos,cupoMaximo,idTipoEvento,idInstitucion)
+  VALUES(s_Evento.Nextval,'Carrera 3 pies',TO_DATE('19-ABR-16','DD-MON-YY'),2,0,50,1,1);
+  INSERT INTO  Evento(id,descripcion,fechaHoraInicio,duracionHoras,duracionMinutos,cupoMaximo,idTipoEvento,idInstitucion)
+  VALUES(s_Evento.Nextval,'Concierto de Maroon 5',TO_DATE('17-JUL-16','DD-MON-YY'),3,0,1600,2,1);
+
+  INSERT INTO  Visitasactividades(id,idActividad,idPersona) VALUES(s_visitasactividades.nextval,0,8);
+
+  INSERT INTO  Empleado(id,idPersona) VALUES(s_Empleado.Nextval,1);
+  INSERT INTO  Empleado(id,idPersona) VALUES(s_Empleado.Nextval,2);
+
+  INSERT INTO  CuentaUsuario(id,usuario,contraseña,idEmpleado) 
+  VALUES(s_Cuentausuario.Nextval,'user1','user1',1);
+  INSERT INTO  CuentaUsuario(id,usuario,contraseña,idEmpleado) 
+  VALUES(s_Cuentausuario.Nextval,'user2','user2',2);
+
+  INSERT INTO  Alumno(id,idPersona,ANIOMATRICULA) VALUES(s_Alumno.Nextval,3,2016);
+  INSERT INTO  Alumno(id,idPersona,ANIOMATRICULA) VALUES(s_Alumno.Nextval,4,2014);
   
-  INTO IMPARTE(id, ID_EMPLEADO,ID_CURSOXPERIODO) VALUES(0,1,0)
-  INTO IMPARTE(ID, ID_EMPLEADO,ID_CURSOXPERIODO) VALUES(1,1,2)
-  INTO IMPARTE(ID, ID_EMPLEADO,ID_CURSOXPERIODO) VALUES(2,2,1)
+  INSERT INTO  EventoXPersona(id,idEvento,idPersona) VALUES(s_eventoxpersona.nextval,1,5);
+  INSERT INTO  EventoXPersona(id,idEvento,idPersona) VALUES(s_eventoxpersona.nextval,2,6);
+
+  INSERT INTO  Periodo(id,IDFECHAINICIAL,IDFECHAFINAL) VALUES(s_Periodo.Nextval,TO_DATE('08-FEB-16','DD-MON-YY'),TO_DATE('23-JUN-16','DD-MON-YY'));
+  INSERT INTO  Periodo(id,IDFECHAINICIAL,IDFECHAFINAL) VALUES(s_Periodo.Nextval,TO_DATE('26-JUL-16','DD-MON-YY'),TO_DATE('24-NOV-16','DD-MON-YY'));
+
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,16,2);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,12,2);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,10,2);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,8,1);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,22,1);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,18,1);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,13,2);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,14,2);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,15,1);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,13,1);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,8,2);
+  INSERT INTO  CURSOXPERIODO(ID, ID_CURSO, ID_PERIODO) VALUES(s_cursoxperiodo.nextval,24,2);
   
-  INTO MATRICULA(ID, ID_ALUMNO,ID_CURSOXPERIODO) VALUES(0,0,5)
-  INTO MATRICULA(ID, ID_ALUMNO,ID_CURSOXPERIODO) VALUES(1,1,6)
+  INSERT INTO  IMPARTE(id, ID_EMPLEADO,ID_CURSOXPERIODO) VALUES(s_imparte.nextval,1,1);
+  INSERT INTO  IMPARTE(ID, ID_EMPLEADO,ID_CURSOXPERIODO) VALUES(s_imparte.nextval,1,3);
+  INSERT INTO  IMPARTE(ID, ID_EMPLEADO,ID_CURSOXPERIODO) VALUES(s_imparte.nextval,2,2);
+
+  INSERT INTO  MATRICULA(ID, ID_ALUMNO,ID_CURSOXPERIODO) VALUES(s_matricula.nextval,1,5);
+  INSERT INTO  MATRICULA(ID, ID_ALUMNO,ID_CURSOXPERIODO) VALUES(s_matricula.nextval,1,6);
   
-  INTO DESERCIONES(ID, ID_ALUMNO,ID_CURSOXPERIODO) VALUES(0,0,1)
-  INTO DESERCIONES(ID, ID_ALUMNO,ID_CURSOXPERIODO) VALUES(1,1,3)
-  
-  select * from dual
-;
+  INSERT INTO  DESERCIONES(ID, ID_ALUMNO,ID_CURSOXPERIODO) VALUES(s_deserciones.nextval,1,1);
+  INSERT INTO  DESERCIONES(ID, ID_ALUMNO,ID_CURSOXPERIODO) VALUES(s_deserciones.nextval,2,3);

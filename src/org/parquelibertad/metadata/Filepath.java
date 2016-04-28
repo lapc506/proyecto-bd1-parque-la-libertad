@@ -43,6 +43,9 @@ public class Filepath {
     pictures = metadata + slash + "pictures" + slash;
     fonts = metadata + slash + "fonts" + slash;
   }
+  public static String getProjectPath(){
+    return project + slash;
+  }
   public static boolean isFontsFolderEmpty(){
     File fontsFolder = new File(fonts);
     File[] fontsList = fontsFolder.listFiles();

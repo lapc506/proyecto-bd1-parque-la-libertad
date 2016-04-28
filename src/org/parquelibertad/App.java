@@ -4,6 +4,9 @@
 package org.parquelibertad;
 
 import java.awt.EventQueue;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
@@ -53,41 +56,49 @@ public class App {
 
   // Dummy method for filling SQL tables
   private static void test() {
-    for (int i = 0; i < 24; i++) {
-      for (int j = 0; j < 60; j++) {
-        System.out.println("INSERT INTO TranscursoDia (id, hora, minuto) VALUES ("
-            + "s_TranscursoDia.NEXTVAL, "
-              + i
+    PrintWriter writer;
+    try {
+      writer = new PrintWriter(Filepath.getProjectPath() + "test.sql", "UTF-8");
+      for (int i = 0; i < 24; i++) {
+        for (int j = 0; j < 60; j++) {
+          writer.println("INSERT INTO TranscursoDia (id, hora, minuto) VALUES ("
+              + "s_TranscursoDia.NEXTVAL, "
+                + i
+                + ", "
+                + j
+                + ");");
+        }
+      }
+      for (int i = 0; i < 128; i++) {
+        int lunes = ((i & 0b1000000) == 0b1000000) ? 1 : 0;
+        int martes = ((i & 0b0100000) == 0b0100000) ? 1 : 0;
+        int miercoles = ((i & 0b0010000) == 0b0010000) ? 1 : 0;
+        int jueves = ((i & 0b0001000) == 0b0001000) ? 1 : 0;
+        int viernes = ((i & 0b0000100) == 0b0000100) ? 1 : 0;
+        int sabado = ((i & 0b0000010) == 0b0000010) ? 1 : 0;
+        int domingo = ((i & 0b0000001) == 0b0000001) ? 1 : 0;
+        writer.println("INSERT INTO HorarioSemanal "
+            + "(id, lunes, martes, miercoles, jueves, viernes, sabado, domingo) VALUES ("
+              + "s_HorarioSemana.NEXTVAL, "
+              + lunes
               + ", "
-              + j
+              + martes
+              + ", "
+              + miercoles
+              + ", "
+              + jueves
+              + ", "
+              + viernes
+              + ", "
+              + sabado
+              + ", "
+              + domingo
               + ");");
       }
-    }
-    for (int i = 0; i < 128; i++) {
-      int lunes = ((i & 0b1000000) == 0b1000000) ? 1 : 0;
-      int martes = ((i & 0b0100000) == 0b0100000) ? 1 : 0;
-      int miercoles = ((i & 0b0010000) == 0b0010000) ? 1 : 0;
-      int jueves = ((i & 0b0001000) == 0b0001000) ? 1 : 0;
-      int viernes = ((i & 0b0000100) == 0b0000100) ? 1 : 0;
-      int sabado = ((i & 0b0000010) == 0b0000010) ? 1 : 0;
-      int domingo = ((i & 0b0000001) == 0b0000001) ? 1 : 0;
-      System.out.println("INSERT INTO HorarioSemanal "
-          + "(id, lunes, martes, miercoles, jueves, viernes, sabado, domingo) VALUES ("
-            + "s_HorarioSemana.NEXTVAL, "
-            + lunes
-            + ", "
-            + martes
-            + ", "
-            + miercoles
-            + ", "
-            + jueves
-            + ", "
-            + viernes
-            + ", "
-            + sabado
-            + ", "
-            + domingo
-            + ");");
+      writer.close();
+    } catch (FileNotFoundException | UnsupportedEncodingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 }

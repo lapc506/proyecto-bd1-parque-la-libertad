@@ -187,7 +187,9 @@ public class QueryController {
   public static DatabaseTableModel getPersonasPorFechasRegistro(Calendar initialCal,
       Calendar finalCal) throws SQLException {
     String statement = "personas_RANGO_FECHA_REG";
-    // System.out.println(statement + " || " + pTerritorioID);
+    if (initialCal.getTimeInMillis() > finalCal
+        .getTimeInMillis()) { throw new SQLException(
+            "La fecha de inicio debe ser menor o igual a la final."); }
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(initialCal);
     parametros.addElement(finalCal);
@@ -296,9 +298,10 @@ public class QueryController {
           } else if (variables.get(mark) instanceof Boolean) {
             cstmt.setBoolean(mark + 1, (Boolean) variables.get(mark));
           } else if (variables.get(mark) instanceof Calendar) {
-            cstmt.setDate(mark + 1, new java.sql.Date(((Calendar) variables.get(mark)).getTimeInMillis()));
+            cstmt.setDate(mark + 1,
+                new java.sql.Date(((Calendar) variables.get(mark)).getTimeInMillis()));
           } else {
-            
+
             cstmt.setObject(mark + 1, variables.get(mark));
           }
         }

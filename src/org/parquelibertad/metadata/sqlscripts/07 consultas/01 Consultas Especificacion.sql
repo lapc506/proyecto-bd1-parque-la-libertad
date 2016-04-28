@@ -1,5 +1,5 @@
 --1.Personas por rango de fecha
-CREATE OR REPLACE PROCEDURE personas_rango_fecha(fechaInicio IN Date, fechaFin IN Date, p_recordset OUT SYS_REFCURSOR) AS
+CREATE OR REPLACE PROCEDURE personas_RANGO_FECHA_REG(fechaInicio IN Date, fechaFin IN Date, p_recordset OUT SYS_REFCURSOR) AS
 BEGIN
   OPEN p_recordset FOR
   SELECT ID, NOMBRE, PRIMERAPELLIDO, SEGUNDOAPELLIDO FROM PERSONA 
@@ -65,11 +65,13 @@ GRANT EXECUTE ON personas_PAIS TO libertadDemoUser;
 GRANT EXECUTE ON personas_PROVINCIA TO libertadDemoUser;
 GRANT EXECUTE ON personas_CANTON TO libertadDemoUser;
 GRANT EXECUTE ON personas_DISTRITO TO libertadDemoUser;
+GRANT EXECUTE ON personas_RANGO_FECHA_REG TO libertadDemoUser;
 
 CREATE SYNONYM personas_PAIS FOR libertadAdmin.personas_PAIS;
 CREATE SYNONYM personas_PROVINCIA FOR libertadAdmin.personas_PROVINCIA;
 CREATE SYNONYM personas_CANTON FOR libertadAdmin.personas_CANTON;
 CREATE SYNONYM personas_DISTRITO FOR libertadAdmin.personas_DISTRITO;
+CREATE SYNONYM personas_RANGO_FECHA_REG FOR libertadAdmin.personas_RANGO_FECHA_REG;
 
 
 --6.Personas que desertan un curso
