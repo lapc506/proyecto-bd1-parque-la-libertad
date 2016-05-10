@@ -5,45 +5,44 @@ INSERT INTO Nacionalidad (id,idPais,Descripcion) VALUES(s_Nacionalidad.Nextval, 
 
 INSERT INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
   VALUES (s_Persona.Nextval,'Maria','Soto','Gomez',13,'Del Bar Cachos 400m N 120m E',SYSDATE);
+INSERT INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (2, 1);
 
-INSERT INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (2, 0);
-    
 INSERT INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
   VALUES (s_Persona.Nextval,'Alejandra','Fernandez','Garcia',14,'De la plaza 350m O 120m S',SYSDATE);
-INSERT INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (2, 1);
+INSERT INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (2, 2);
     
 INSERT INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
   VALUES (s_Persona.Nextval,'Carlos','Guadamuz','Ruiz',15,'De la escuela 800m N 100m O',SYSDATE);
-INSERT INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (3, 2);
+INSERT INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (3, 3);
     
 INSERT  INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
   VALUES (s_Persona.Nextval,'Tatiana','Rojas','Alvarez',13,'De los tribunales 200m S 50m E',SYSDATE);
-INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (3, 3);
+INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (3, 4);
     
 INSERT  INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
   VALUES (s_Persona.Nextval,'Maria Elena','Perez','Sanchez',14,'Del Restaurante Luna 600m S 250m E',SYSDATE);
-INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (4, 4);
-    
-INSERT  INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
-  VALUES (s_Persona.Nextval,'Julian','Camacho','Zumbado',15,'Del Bar Cachos 400m N 120m E',SYSDATE);
 INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (4, 5);
     
 INSERT  INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
-  VALUES (s_Persona.Nextval,'Andres','Mora','Salas',13,'De la iglesa central 500m E 120m N',SYSDATE);
-INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (1, 6);
+  VALUES (s_Persona.Nextval,'Julian','Camacho','Zumbado',15,'Del Bar Cachos 400m N 120m E',SYSDATE);
+INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (4, 6);
     
 INSERT  INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
-  VALUES (s_Persona.Nextval,'Sergio','Aguirre','Rios',14,'De la UNED 300m N 75m E',SYSDATE);
+  VALUES (s_Persona.Nextval,'Andres','Mora','Salas',13,'De la iglesa central 500m E 120m N',SYSDATE);
 INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (1, 7);
     
 INSERT  INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
+  VALUES (s_Persona.Nextval,'Sergio','Aguirre','Rios',14,'De la UNED 300m N 75m E',SYSDATE);
+INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (1, 8);
+    
+INSERT  INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
   VALUES (s_Persona.Nextval,'Roy','Bermudez','Vidal',15,'Frente a la Cerrajeria Arce',SYSDATE);
-INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (2, 8);
+INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (2, 9);
     
 INSERT  INTO Persona(id, nombre,primerApellido, segundoApellido,idDistrito,direccionExacta,fechaRegistro)
   VALUES (s_Persona.Nextval,'Eduardo','Figueroa','Campos',13,'Diagonal al colegio Golden Valley',SYSDATE);
-INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (3, 9);
-  
+INSERT    INTO NACIONALIDADESXPERSONA (IDNACIONALIDAD,IDPERSONA) VALUES (3, 10);
+
 INSERT  INTO RangoEdad(id,valorMin,valorMax) VALUES(s_rangoedad.nextval,0,4);
 INSERT  INTO RangoEdad(id,valorMin,valorMax) VALUES(s_rangoedad.nextval,5,12);
 INSERT  INTO RangoEdad(id,valorMin,valorMax) VALUES(s_rangoedad.nextval,13,17);
@@ -60,11 +59,11 @@ INSERT  INTO DocumentoIdentidad(id,numeroIdentidad,idPersona,idRangoEdad,idTipo)
 INSERT  INTO DocumentoIdentidad(id,numeroIdentidad,idPersona,idRangoEdad,idTipo)
   VALUES (s_documentoidentidad.nextval,501500025,4,3,1);
 INSERT  INTO DocumentoIdentidad(id,numeroIdentidad,idPersona,idRangoEdad,idTipo)
-  VALUES (s_documentoidentidad.nextval,11310256,0,2,2);
+  VALUES (s_documentoidentidad.nextval,11310256,1,2,2);
 INSERT  INTO DocumentoIdentidad(id,numeroIdentidad,idPersona,idRangoEdad,idTipo)
-  VALUES (s_documentoidentidad.nextval,701250458,1,4,1);
+  VALUES (s_documentoidentidad.nextval,701250458,2,4,1);
 INSERT  INTO DocumentoIdentidad(id,numeroIdentidad,idPersona,idRangoEdad,idTipo)
-  VALUES (s_documentoidentidad.nextval,201650784,5,4,3);
+  VALUES (s_documentoidentidad.nextval,201650784,6,4,3);
   
 INSERT  INTO Institucion(id,nombre,idDistrito) VALUES(s_Institucion.nextval,'Parque La Libertad',16);
   
@@ -73,7 +72,7 @@ INSERT  INTO TipoEvento(id,descripcion) VALUES(s_tipoevento.nextval,'Charla');
 INSERT  INTO Evento(id,descripcion,fechaHoraInicio,duracionHoras,duracionMinutos,cupoMaximo,idTipoEvento,idInstitucion)
   VALUES(s_evento.nextval,'Salud mental', '07-JUN-2016', 1,40,50,1,1);
   
-INSERT  INTO Eventoxpersona(id,idPersona,idEvento) VALUES(s_eventoxpersona.nextval,9,1);
+INSERT  INTO Visitaseventos(id,idPersona,idEvento) VALUES(s_VisitasEvento.nextval,9,1);
   
 INSERT  INTO TipoActividad(id, descripcion) VALUES(s_tipoactividad.nextval,'Actividad Fisica');
   

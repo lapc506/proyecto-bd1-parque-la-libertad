@@ -1,6 +1,6 @@
 CREATE TABLESPACE libertad_Data
-  DATAFILE 'C:\OracleApp\oradata\dbpqlibertad\libertad_Data01.dbf'
-  SIZE 50M
+  DATAFILE 'C:\Oracle\oradata\PARKGDB\libertad_Data01.dbf'
+  SIZE 100M
   REUSE
   AUTOEXTEND ON
   NEXT 512k
@@ -9,8 +9,8 @@ CREATE TABLESPACE libertad_Data
 -- PE: INDEX
 
 CREATE TABLESPACE libertad_Indexes
-  DATAFILE 'C:\OracleApp\oradata\dbpqlibertad\libertad_Indexes01.dbf'
-  SIZE 10M
+  DATAFILE 'C:\Oracle\oradata\PARKGDB\libertad_Indexes01.dbf'
+  SIZE 100M
   REUSE
   AUTOEXTEND ON
   NEXT 512k

@@ -66,10 +66,10 @@ CREATE OR REPLACE PROCEDURE get_Distritos_por_Canton
   END;
 
 SELECT id from CANTON where descripcion = 'Desamparados';
-SELECT id, descripcion FROM DISTRITO WHERE idCanton = (SELECT id from CANTON where descripcion = 'Desamparados');
+SELECT id, descripcion FROM DISTRITO WHERE idCanton IN (SELECT id from CANTON where descripcion = 'Desamparados');
 
 GRANT EXECUTE ON get_Paises TO libertadDemoUser;
-GRANT EXECUTE ON get_Pais_ID TO libertadDemoUser;
+-- GRANT EXECUTE ON get_Pais_ID TO libertadDemoUser;
 GRANT EXECUTE ON get_Provincias_por_Pais TO libertadDemoUser;
 GRANT EXECUTE ON get_Cantones_por_Provincia TO libertadDemoUser;
 GRANT EXECUTE ON get_Distritos_por_Canton TO libertadDemoUser;
@@ -83,7 +83,7 @@ GRANT EXECUTE ON get_Distrito_Nombre TO libertadDemoUser;
 GRANT CREATE SYNONYM TO libertadDemoUser;
 -- Ejecutar como libertadDemoUser:
 CREATE SYNONYM get_Paises FOR libertadAdmin.get_Paises;
-CREATE SYNONYM get_Pais_ID FOR libertadAdmin.get_Pais_ID;
+-- CREATE SYNONYM get_Pais_ID FOR libertadAdmin.get_Pais_ID;
 CREATE SYNONYM get_Provincias_por_Pais FOR libertadAdmin.get_Provincias_por_Pais;
 CREATE SYNONYM get_Cantones_por_Provincia FOR libertadAdmin.get_Cantones_por_Provincia;
 CREATE SYNONYM get_Distritos_por_Canton FOR libertadAdmin.get_Distritos_por_Canton;

@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 
 public class ConnectionFactory {
   public static final String portNumber     = "1521";            // tnsnames.ora
-  public static final String databaseSID    = "dbpqlibertad";    // tnsnames.ora
+  public static final String oracleServiceName    = "PARKGDB";       // tnsnames.ora
   public static final String schemaUsername = "libertadDemoUser";
   public static final String schemaPassword = "user123";
 
@@ -58,8 +58,9 @@ public class ConnectionFactory {
             + java.net.InetAddress.getLocalHost().getHostName() // tnsnames.ora
               + ":"
               + portNumber
-              + ":"
-              + databaseSID;
+              + "/" // see http://stackoverflow.com/questions/18192521/
+              		// ora-12505-tnslistener-does-not-currently-know-of-sid-given-in-connect-descript
+              + oracleServiceName;
       } catch (UnknownHostException e) {
         JOptionPane.showMessageDialog(null, e.getMessage(), "Critical Error",
             JOptionPane.ERROR_MESSAGE);

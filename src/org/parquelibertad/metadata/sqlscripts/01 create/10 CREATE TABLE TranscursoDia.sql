@@ -5,7 +5,7 @@ ALTER TABLE TranscursoDia
       USING INDEX TABLESPACE libertad_Indexes;
 
 -- ALTER TABLE TranscursoDia ADD CONSTRAINT HorasMinutos_UNQ UNIQUE(hora, minuto);
-
+-- SELECT * FROM Transcursodia;
 INSERT INTO TranscursoDia (id, hora, minuto) VALUES (1, 0, 0);
 INSERT INTO TranscursoDia (id, hora, minuto) VALUES (2, 0, 1);
 INSERT INTO TranscursoDia (id, hora, minuto) VALUES (3, 0, 2);
@@ -1446,3 +1446,5 @@ INSERT INTO TranscursoDia (id, hora, minuto) VALUES (1437, 23, 56);
 INSERT INTO TranscursoDia (id, hora, minuto) VALUES (1438, 23, 57);
 INSERT INTO TranscursoDia (id, hora, minuto) VALUES (1439, 23, 58);
 INSERT INTO TranscursoDia (id, hora, minuto) VALUES (1440, 23, 59);
+
+SELECT id FROM TRANSCURSODIA;

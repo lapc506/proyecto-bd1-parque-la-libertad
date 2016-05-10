@@ -1,3 +1,11 @@
+CREATE TABLE PERIODO(id NUMBER(20),
+    idFechaInicial DATE,
+    idFechaFinal DATE);
+    
+ALTER TABLE PERIODO
+  ADD CONSTRAINT pk_Periodo PRIMARY KEY (id)
+    USING INDEX TABLESPACE libertad_Indexes;
+
 CREATE TABLE Curso(id NUMBER(10), nombre VARCHAR2(50), costo NUMBER(6),
   idHorarioSemanal NUMBER(3), idHoraInicio NUMBER(5), idHoraFinal NUMBER(5),
   idMercadoMeta NUMBER(5), isActivo NUMBER(1)

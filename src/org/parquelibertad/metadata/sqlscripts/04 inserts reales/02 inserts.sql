@@ -59,7 +59,7 @@
   INSERT INTO  Evento(id,descripcion,fechaHoraInicio,duracionHoras,duracionMinutos,cupoMaximo,idTipoEvento,idInstitucion)
   VALUES(s_Evento.Nextval,'Concierto de Maroon 5',TO_DATE('17-JUL-16','DD-MON-YY'),3,0,1600,2,1);
 
-  INSERT INTO  Visitasactividades(id,idActividad,idPersona) VALUES(s_visitasactividades.nextval,0,8);
+  INSERT INTO  Visitasactividades(id,idActividad,idPersona) VALUES(s_visitasactividades.nextval,1,8);
 
   INSERT INTO  Empleado(id,idPersona) VALUES(s_Empleado.Nextval,1);
   INSERT INTO  Empleado(id,idPersona) VALUES(s_Empleado.Nextval,2);
@@ -72,8 +72,8 @@
   INSERT INTO  Alumno(id,idPersona,ANIOMATRICULA) VALUES(s_Alumno.Nextval,3,2016);
   INSERT INTO  Alumno(id,idPersona,ANIOMATRICULA) VALUES(s_Alumno.Nextval,4,2014);
   
-  INSERT INTO  EventoXPersona(id,idEvento,idPersona) VALUES(s_eventoxpersona.nextval,1,5);
-  INSERT INTO  EventoXPersona(id,idEvento,idPersona) VALUES(s_eventoxpersona.nextval,2,6);
+  INSERT INTO  Visitaseventos (id,idEvento,idPersona) VALUES (s_visitasevento.nextval,1,5);
+  INSERT INTO  Visitaseventos (id,idEvento,idPersona) VALUES (s_visitasevento.nextval,2,6);
 
   INSERT INTO  Periodo(id,IDFECHAINICIAL,IDFECHAFINAL) VALUES(s_Periodo.Nextval,TO_DATE('08-FEB-16','DD-MON-YY'),TO_DATE('23-JUN-16','DD-MON-YY'));
   INSERT INTO  Periodo(id,IDFECHAINICIAL,IDFECHAFINAL) VALUES(s_Periodo.Nextval,TO_DATE('26-JUL-16','DD-MON-YY'),TO_DATE('24-NOV-16','DD-MON-YY'));
