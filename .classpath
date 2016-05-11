@@ -4,5 +4,6 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="src/org/parquelibertad/ojdbc6.jar"/>
 	<classpathentry exported="true" kind="lib" path="src/org/parquelibertad/thumbnailator-0.4.7.jar"/>
+	<classpathentry kind="lib" path="src/org/parquelibertad/assertj-core-3.4.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -4,9 +4,13 @@ import java.awt.Color;
 import java.awt.Container;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import org.parquelibertad.controller.QueryController;
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.model.LibertadDatabaseConstraints;
+import org.parquelibertad.view.jmodels.DatabaseTableModel;
 import org.parquelibertad.view.jmodels.JDatabaseText;
 import org.parquelibertad.view.templates.DialogTemplate;
 
@@ -28,6 +32,12 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Vector;
+import java.awt.event.ActionEvent;
+import javax.swing.JTable;
 
 public class AgregarCurso extends DialogTemplate {
   private static final long serialVersionUID = 3721795951153442361L;
@@ -37,7 +47,7 @@ public class AgregarCurso extends DialogTemplate {
   private JLabel            lblNombreCurso;
   private JLabel            lblColones;
   private JTextField        txtNombre;
-  private JLabel            lblProfesor;
+  private JLabel            lblDocente;
   private JSpinner          spinHoraInicio;
   private JLabel            labeltime1;
   private JSpinner          spinMinutoInicio;
@@ -64,13 +74,13 @@ public class AgregarCurso extends DialogTemplate {
   private JLabel            lblRegistrarCurso;
   private JPanel            panel;
   private JPanel            panelProfesor;
-  private JTextField        txtProfesorSelected;
-  private JButton btnFiltrar;
-  private JLabel lblActivo;
-  private JCheckBox chkActivo;
+  private JCheckBox         chkActivo;
+  private JTable            tableDocentes;
+  private Vector<Integer>   idsRangosEdad;
+  private JScrollPane scrollDocentes;
 
   public AgregarCurso(JFrame parent, String windowName, int width, int height,
-      boolean isResizable) throws HeadlessException {
+      boolean isResizable) throws HeadlessException, SQLException {
     super(parent, windowName, width, height, isResizable);
     setResizable(true);
     panelContents = new JPanel();
@@ -97,23 +107,21 @@ public class AgregarCurso extends DialogTemplate {
     this.panelContents.add(this.txtNombre);
     this.txtNombre.setColumns(LibertadDatabaseConstraints.Curso_nombre_VARCHAR2);
 
-    lblProfesor = new JLabel("Profesor");
-    this.lblProfesor.setHorizontalAlignment(SwingConstants.CENTER);
-    this.panelContents.add(this.lblProfesor);
-    lblProfesor.setFont(FontController.getBoldLabelFont());
+    lblDocente = new JLabel("Docente");
+    this.lblDocente.setHorizontalAlignment(SwingConstants.CENTER);
+    this.panelContents.add(this.lblDocente);
+    lblDocente.setFont(FontController.getBoldLabelFont());
 
     this.panelProfesor = new JPanel();
     this.panelProfesor.setBackground(DesignController.getWindowBGColor());
     this.panelContents.add(this.panelProfesor);
+    panelProfesor.setLayout(new BorderLayout(0, 0));
 
-    this.txtProfesorSelected = new JTextField();
-    this.txtProfesorSelected.setEditable(false);
-    this.txtProfesorSelected.setColumns(LibertadDatabaseConstraints.Persona_nombre_VARCHAR2); // spaces
-    this.panelProfesor.add(this.txtProfesorSelected);
+    tableDocentes = new JTable();
+    //scrollDocentes = new JScrollPane(tableDocentes);
+    //panelProfesor.add(scrollDocentes);
+    panelProfesor.add(tableDocentes);
     
-    this.btnFiltrar = new JButton("Filtrar...");
-    this.panelProfesor.add(this.btnFiltrar);
-
     this.lblHorario = new JLabel("Horario");
     this.lblHorario.setHorizontalAlignment(SwingConstants.CENTER);
     this.panelContents.add(this.lblHorario);
@@ -299,8 +307,8 @@ public class AgregarCurso extends DialogTemplate {
     }));
     comboMercadoMeta.setFont(FontController.getRegularLabelFont());
     panelMercado.add(comboMercadoMeta);
-    
-    this.chkActivo = new JCheckBox("\u00BFEst\u00E1 Activo?");
+
+    this.chkActivo = new JCheckBox("Est\u00E1 Activo?");
     this.chkActivo.setBackground(DesignController.getWindowBGColor());
     this.chkActivo.setFont(FontController.getBoldLabelFont());
     this.panelMercado.add(this.chkActivo);
@@ -314,6 +322,20 @@ public class AgregarCurso extends DialogTemplate {
     btnConfirmar = new JButton("Confirmar");
     btnConfirmar.setFont(FontController.getRegularLabelFont());
     panelBottom.add(btnConfirmar);
+    loadConnections();
+  }
 
+  private void loadConnections() throws SQLException {
+    DatabaseTableModel temp = QueryController.getPersonasDocentes();
+    System.out.println(temp.getRowCount());
+    tableDocentes.setModel(temp);
+    idsRangosEdad = new Vector<Integer>();
+    HashMap<Integer, String> rangos = QueryController.getRangosEdad();
+    Vector<String> textRangos = new Vector<String>();
+    for (Integer x : rangos.keySet()) {
+      idsRangosEdad.addElement(x);
+      textRangos.addElement(rangos.get(x));
+    }
+    this.comboMercadoMeta.setModel(new DefaultComboBoxModel<String>(textRangos));
   }
 }

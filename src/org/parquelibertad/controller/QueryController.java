@@ -1,5 +1,7 @@
 package org.parquelibertad.controller;
 
+import oracle.jdbc.OracleTypes;
+import oracle.jdbc.OracleCallableStatement;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,18 +11,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.regex.Pattern;
-
 import javax.swing.JOptionPane;
-
-import org.jdatepicker.JDatePanel;
-import org.jdatepicker.JDatePicker;
+import static org.assertj.core.api.Assertions.*;
 import org.parquelibertad.view.jmodels.DatabaseTableModel;
-import oracle.jdbc.OracleTypes;
-import oracle.jdbc.OracleCallableStatement;
 
 public class QueryController {
-  private static Vector<String> columnasUltimaConsulta;
-  private static Connection     myConnection = null;
+  private static Connection myConnection = null;
 
   public static void startJDBC() throws SQLException {
     DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
@@ -66,15 +62,26 @@ public class QueryController {
    * ttps://oracle-base.com/articles/misc/using-ref-cursors-to-return-recordsets
    * #11g-updates
    */
+  public static String getDistritoNombre(Integer selectedDistritoID) throws SQLException {
+    String statement = "BEGIN ? := get_unq_Distrito_Nombre(?); END;";
+    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
+        .prepareCall(statement);
+    cstmt.registerOutParameter(1, OracleTypes.VARCHAR);
+    cstmt.setInt(2, selectedDistritoID);
+    cstmt.executeQuery();
+    String distritoNombre = cstmt.getString(1);
+    cstmt.close();
+    return distritoNombre;
+  }
 
   public static HashMap<Integer, String> getTiposDocumento() throws SQLException {
     String statement = "get_Tipos_Documento";
-    return getComboBoxContents(statement, null);
+    return ResultSetFactory.getComboBoxContents(statement, null);
   }
 
   public static HashMap<Integer, String> getNacionalidades() throws SQLException {
     String statement = "get_Nacionalidades";
-    return getComboBoxContents(statement, null);
+    return ResultSetFactory.getComboBoxContents(statement, null);
   }
 
   // Rangos de Edad debe usar una implementación nueva
@@ -100,20 +107,12 @@ public class QueryController {
 
   public static HashMap<Integer, String> getPaises() throws SQLException {
     String statement = "get_Paises";
-    return getComboBoxContents(statement, null);
+    return ResultSetFactory.getComboBoxContents(statement, null);
   }
 
-
-  public static String getDistritoNombre(Integer selectedDistritoID) throws SQLException {
-    String statement = "BEGIN ? := get_Distrito_Nombre(?); END;";
-    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
-        .prepareCall(statement);
-    cstmt.registerOutParameter(1, OracleTypes.VARCHAR);
-    cstmt.setInt(2, selectedDistritoID);
-    cstmt.executeQuery();
-    String distritoNombre = cstmt.getString(1);
-    cstmt.close();
-    return distritoNombre;
+  public static HashMap<Integer, String> getTiposActividad() throws SQLException {
+    String statement = "get_Tipos_Actividad";
+    return ResultSetFactory.getComboBoxContents(statement, null);
   }
 
   public static HashMap<Integer, String> getProvinciasPorPais(Integer pPaisID)
@@ -121,7 +120,7 @@ public class QueryController {
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pPaisID);
     String statement = "get_Provincias_por_Pais";
-    return getComboBoxContents(statement, parametros);
+    return ResultSetFactory.getComboBoxContents(statement, parametros);
   }
 
   public static HashMap<Integer, String> getCantonesPorProvincia(Integer pProvinciaID)
@@ -129,7 +128,7 @@ public class QueryController {
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pProvinciaID);
     String statement = "get_Cantones_por_Provincia";
-    return getComboBoxContents(statement, parametros);
+    return ResultSetFactory.getComboBoxContents(statement, parametros);
   }
 
   public static HashMap<Integer, String> getDistritosPorCanton(Integer pCantonID)
@@ -137,54 +136,43 @@ public class QueryController {
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pCantonID);
     String statement = "get_Distritos_por_Canton";
-    return getComboBoxContents(statement, parametros);
+    return ResultSetFactory.getComboBoxContents(statement, parametros);
   }
 
   public static void insertarPersona(String pNombre, String pPrimerApellido,
-      String pSegundoApellido, Integer pNumeroDocumento, Integer pIDTipoDoc,
-      Integer pRangoEdadID, Integer pIDNacionalidad, Integer pDistritoID, String pDireccion)
-      throws SQLException {
-    String statement = "insert_persona";
+      String pSegundoApellido, Integer pNumeroDocumento, Integer pIDTipoDocumento,
+      Integer pRangoEdadID, Integer pIDNacionalidad, Integer pDistritoID,
+      String pDireccion) throws SQLException {
+    String statement = "INSERT_PERSONA";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pNombre);
     parametros.addElement(pPrimerApellido);
     parametros.addElement(pSegundoApellido);
     parametros.addElement(pNumeroDocumento);
-    parametros.addElement(pIDTipoDoc);
+    parametros.addElement(pIDTipoDocumento);
     parametros.addElement(pRangoEdadID);
     parametros.addElement(pIDNacionalidad);
     parametros.addElement(pDistritoID);
     parametros.addElement(pDireccion);
-    // Debería retornar on ResultSet NULL porque no hay cursor de salida:
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
-    assert (result == null);
+    assertThat(result).isNotNull(); // No hay cursor de salida, basado en
+                                    // AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
         "Confirmada la inserción de la nueva persona en el sistema.");
   }
 
-  private static HashMap<Integer, String> getComboBoxContents(String statement,
-      Vector<Object> parametros) throws SQLException {
-    ResultSet result = ResultSetFactory.callStoredProc(statement,
-        (parametros == null ? new Vector<Object>() : parametros),
-        (parametros == null ? 1 : parametros.size() + 1));
-    boolean lastOperationResult;
-    lastOperationResult = result.next(); // System.out.println(lastOperationResult);
-    lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
-    HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
-    if (lastOperationResult) {
-      while (lastOperationResult) {
-        comboBoxContents.put(result.getInt(1), result.getString(2));
-        // Sabemos que el procedimiento tiene una columna de IDs y otra de
-        // descripcion.
-        lastOperationResult = result.next();
-      }
-    }
-    result.close();
-    return comboBoxContents;
-  }
-
-  public static Vector<String> getColumnasUltimaConsulta() {
-    return columnasUltimaConsulta;
+  public static void insertarActividad(String pDescripcion, Integer pIDTipo,
+      boolean pIsActiva) throws SQLException {
+    String statement = "INSERT_ACTIVIDAD";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pDescripcion);
+    parametros.addElement(pIDTipo);
+    parametros.addElement(pIsActiva);
+    // Debería retornar on ResultSet NULL porque no hay cursor de salida:
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
+    assert (result == null);
+    JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
+        "Confirmada la inserción de la nueva actividad en el sistema.");
   }
 
   public static DatabaseTableModel buscarPersonaTerritorios(Integer pTerritorioID,
@@ -207,18 +195,7 @@ public class QueryController {
     columnHeaders.addElement("Nombre");
     columnHeaders.addElement("Primer Apellido");
     columnHeaders.addElement("Segundo Apellido");
-
-    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 2);
-    @SuppressWarnings("unused")
-    boolean lastOperationResult;
-    lastOperationResult = result.next(); // System.out.println("IS SET FILLED
-                                         // IN? " + lastOperationResult);
-    lastOperationResult = result.isFirst(); // System.out.println("IS SET READY
-                                            // TO FETCH? " +
-                                            // lastOperationResult);
-    DatabaseTableModel tbmdl = new DatabaseTableModel(columnHeaders, result);
-    result.close();
-    return tbmdl;
+    return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
   }
 
   public static DatabaseTableModel getPersonasPorFechasRegistro(Calendar initialCal,
@@ -235,16 +212,16 @@ public class QueryController {
     columnHeaders.addElement("Primer Apellido");
     columnHeaders.addElement("Segundo Apellido");
 
-    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, 3);
-    boolean lastOperationResult;
-    lastOperationResult = result.next(); // System.out.println("IS SET FILLED
-                                         // IN? " + lastOperationResult);
-    lastOperationResult = result.isFirst(); // System.out.println("IS SET READY
-                                            // TO FETCH? " +
-                                            // lastOperationResult);
-    DatabaseTableModel tbmdl = new DatabaseTableModel(columnHeaders, result);
-    result.close();
-    return tbmdl;
+    return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
+  }
+
+  public static DatabaseTableModel getPersonasDocentes() throws SQLException {
+    String statement = "get_personas_DOCENTES";
+    Vector<String> columnHeaders = new Vector<String>();
+    columnHeaders.addElement("Nombre");
+    columnHeaders.addElement("Primer Apellido");
+    columnHeaders.addElement("Segundo Apellido");
+    return ResultSetFactory.getTableContents(statement, null, columnHeaders);
   }
 
   public static Integer selectPersona(String tipoIdentificacion,
@@ -274,8 +251,7 @@ public class QueryController {
     return Integer.parseInt(test);
   }
 
-  // Static nested class:
-  private static class ResultSetFactory {
+  private static class ResultSetFactory { // NESTED
     /**
      * Esta clase permitirá la generalización de las consultas en algo más
      * abstracto que no se relacione tan cercanamente al driver JDBC.
@@ -294,6 +270,54 @@ public class QueryController {
      * result.getFetchDirection() == ResultSet.FETCH_FORWARD
      * result.isBeforeFirst() == true
      */
+    static HashMap<Integer, String> getComboBoxContents(String statement,
+        Vector<Object> parametros) throws SQLException {
+      /**
+       * Copiar el statement a partir del procedimiento almacenado
+       * desde PL/SQL Developer, el segundo parámetro es una lista de
+       * más parámetros para el statement mismo, null significa cero.
+       */
+      ResultSet result = ResultSetFactory.callStoredProc(statement,
+          (parametros == null ? new Vector<Object>() : parametros),
+          (parametros == null ? 1 : parametros.size() + 1));
+      boolean lastOperationResult;
+      lastOperationResult = result.next(); // System.out.println(lastOperationResult);
+      lastOperationResult = result.isFirst(); // System.out.println(lastOperationResult);
+      HashMap<Integer, String> comboBoxContents = new HashMap<Integer, String>();
+      if (lastOperationResult) {
+        while (lastOperationResult) {
+          comboBoxContents.put(result.getInt(1), result.getString(2));
+          // Sabemos que el procedimiento tiene una columna de IDs y otra de
+          // descripcion.
+          lastOperationResult = result.next();
+        }
+      }
+      result.close();
+      return comboBoxContents;
+    }
+
+    static DatabaseTableModel getTableContents(String statement,
+        Vector<Object> parametros, Vector<String> columnasUltimaConsulta)
+        throws SQLException {
+      /**
+       * Copiar el statement a partir del procedimiento almacenado
+       * desde PL/SQL Developer, el segundo parámetro es una lista de
+       * más parámetros para el statement mismo, null significa cero.
+       */
+      ResultSet result = ResultSetFactory.callStoredProc(statement,
+          (parametros == null ? new Vector<Object>() : parametros),
+          (parametros == null ? 1 : parametros.size() + 1));
+      boolean lastOperationResult;
+      lastOperationResult = result.next();
+      // System.out.println("IS SET FILLED IN? " + lastOperationResult);
+      lastOperationResult = result.isFirst();
+      // System.out.println("IS SET READY TO FETCH? " + lastOperationResult);
+      DatabaseTableModel tableModel = new DatabaseTableModel(columnasUltimaConsulta,
+          result);
+      result.close();
+      return tableModel;
+    }
+
     static ResultSet callStoredProc(String originalSTMT, Vector<Object> variables,
         int cursorMarkPosition) throws SQLException {
       // Assume the procedure call is well-formed.
@@ -336,7 +360,9 @@ public class QueryController {
           } else if (variables.get(mark) instanceof String) {
             cstmt.setString(mark + 1, (String) variables.get(mark));
           } else if (variables.get(mark) instanceof Boolean) {
-            cstmt.setBoolean(mark + 1, (Boolean) variables.get(mark));
+            cstmt.setInt(mark + 1, ((boolean) variables.get(mark) ? 1 : 0));
+            // Representación interna de boolean dado que BOOLEAN no existe en
+            // Oracle.
           } else if (variables.get(mark) instanceof Calendar) {
             cstmt.setDate(mark + 1,
                 new java.sql.Date(((Calendar) variables.get(mark)).getTimeInMillis()));

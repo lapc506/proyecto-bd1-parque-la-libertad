@@ -31,6 +31,10 @@ ALTER TABLE CURSO ADD
   CONSTRAINT fk_Curso_MercadoMeta FOREIGN KEY (idMercadoMeta)
   REFERENCES RANGOEDAD(id);
 
+ALTER TABLE CURSO ADD
+  CONSTRAINT CURSO_isActivo
+  CHECK (isActivo BETWEEN 0 and 1);
+
 CREATE TABLE ProfesoresXCurso(idProfesor NUMBER(10), idCurso NUMBER(10));
 
 ALTER TABLE ProfesoresXCurso ADD

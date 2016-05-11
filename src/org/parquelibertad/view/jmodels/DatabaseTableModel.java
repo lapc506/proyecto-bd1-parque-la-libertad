@@ -3,7 +3,7 @@ package org.parquelibertad.view.jmodels;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
-
+import static org.assertj.core.api.Assertions.*;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
@@ -23,20 +23,21 @@ public class DatabaseTableModel extends AbstractTableModel {
     if (pColumnHeaders != null) {
       columnHeaders = pColumnHeaders;
     }
-    assert (columnHeaders.size() == contents.getMetaData().getColumnCount() - 1);
+    assertThat(columnHeaders.size())
+        .isEqualTo(contents.getMetaData().getColumnCount() - 1);
     dataVector = new Vector<Vector<Object>>();
-    try {      
+    try {
       while (contents.next()) {
         Vector<Object> newRow = new Vector<Object>();
         // Omit first column that contains the database IDs:
         for (int i = 0; i < contents.getMetaData().getColumnCount(); i++) {
           if (i == 0) {
-            rowIDs.addElement(contents.getInt(i+1));
+            rowIDs.addElement(contents.getInt(i + 1));
           } else {
-            newRow.addElement(contents.getString(i+1));
+            newRow.addElement(contents.getString(i + 1));
           }
-          // System.out.println(contents.getString(i+1));
         }
+        System.out.println(newRow);
         dataVector.addElement(newRow);
       }
     } catch (SQLException e) {
@@ -100,16 +101,15 @@ public class DatabaseTableModel extends AbstractTableModel {
 
   // Permite extraer el ID de la persona seleccionada
   // en el JTable desde la interfaz.
-  public Integer getDBIndex(int row){
+  public Integer getDBIndex(int row) {
     return rowIDs.get(row);
   }
-  
+
   /* !! Testing pending, possibly unreachable code
-  public Object getRecordAt(int row) {
-    if (dataVector != null) { return dataVector.get(row); }
-    return null;
-  }
-  */
+   * public Object getRecordAt(int row) {
+   * if (dataVector != null) { return dataVector.get(row); }
+   * return null;
+   * } */
 
   @Override
   public String getColumnName(int column) {
@@ -127,9 +127,9 @@ public class DatabaseTableModel extends AbstractTableModel {
 
   @Override
   public Class<?> getColumnClass(int columnIndex) {
-  // System.out.println("getColumnClass(int " + columnIndex + ")");
-    if (dataVector != null
-        && dataVector.size() > 0) { return dataVector.get(0).get(columnIndex).getClass(); }
+    // System.out.println("getColumnClass(int " + columnIndex + ")");
+    if (dataVector != null && dataVector.size() > 0) { return dataVector.get(0)
+        .get(columnIndex).getClass(); }
     return String.class;
   }
 

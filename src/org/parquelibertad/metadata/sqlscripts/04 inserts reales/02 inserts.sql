@@ -61,8 +61,13 @@
 
   INSERT INTO  Visitasactividades(id,idActividad,idPersona) VALUES(s_visitasactividades.nextval,1,8);
 
-  INSERT INTO  Empleado(id,idPersona) VALUES(s_Empleado.Nextval,1);
-  INSERT INTO  Empleado(id,idPersona) VALUES(s_Empleado.Nextval,2);
+  INSERT INTO TipoEmpleado (id, descripcion) VALUES (s_Tipoempleado.Nextval, 'Docente');
+  INSERT INTO TipoEmpleado (id, descripcion) VALUES (s_Tipoempleado.Nextval, 'Gerencia');
+  INSERT INTO TipoEmpleado (id, descripcion) VALUES (s_Tipoempleado.Nextval, 'Seguridad');
+  INSERT INTO TipoEmpleado (id, descripcion) VALUES (s_Tipoempleado.Nextval, 'Alimentos');
+
+  INSERT INTO  Empleado(id,idPersona, idtipo) VALUES(s_Empleado.Nextval,1, 1);
+  INSERT INTO  Empleado(id,idPersona, idtipo) VALUES(s_Empleado.Nextval,2, 2);
 
   INSERT INTO  CuentaUsuario(id,usuario,contraseña,idEmpleado) 
   VALUES(s_Cuentausuario.Nextval,'user1','user1',1);

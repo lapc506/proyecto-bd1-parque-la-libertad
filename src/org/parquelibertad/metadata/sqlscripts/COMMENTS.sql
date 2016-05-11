@@ -1,5 +1,5 @@
-SELECT usr.TABLE_NAME, usr.COMMENTS FROM user_tab_comments usr ORDER BY usr.TABLE_NAME;
-SELECT usr.TABLE_NAME FROM user_tab_comments usr ORDER BY usr.TABLE_NAME;
+-- SELECT usr.TABLE_NAME, usr.COMMENTS FROM user_tab_comments usr ORDER BY usr.TABLE_NAME;
+-- SELECT usr.TABLE_NAME FROM user_tab_comments usr ORDER BY usr.TABLE_NAME;
 
 COMMENT ON TABLE ACTIVIDAD IS 'Listado de actividades periódicas del Parque.';
 COMMENT ON TABLE ALUMNO IS 'Conjunto de personas promovidas a ser alumnas del Parque.';
@@ -25,4 +25,4 @@ COMMENT ON TABLE TIPOEMPLEADO IS 'Listado de tipos de empleado del Parque.';
 COMMENT ON TABLE TIPOEVENTO IS 'Listado de tipos de evento del Parque.';
 COMMENT ON TABLE TRANSCURSODIA IS 'Conjunto de las horas y minutos posibles en un día.';
 COMMENT ON TABLE VISITASACTIVIDADES IS 'Conjunto de intereses de los usuarios en un día en el Parque.';
-COMMENT ON TABLE EventoXPersona IS 'Listado de eventos a los que una persona ha asistido';
+COMMENT ON TABLE VISITASEVENTOS IS 'Listado de eventos a los que una persona ha asistido';

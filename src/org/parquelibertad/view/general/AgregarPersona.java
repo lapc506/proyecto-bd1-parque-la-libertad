@@ -222,11 +222,6 @@ public class AgregarPersona extends DialogTemplate {
     JButton btnRegistrar = new JButton("Registrar");
     btnRegistrar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-        /* CREATE OR REPLACE PROCEDURE insert_persona
-         * (p_nombre VARCHAR2, p_apellido1 VARCHAR2, p_apellido2 VARCHAR2,
-         * p_num_doc_identidad NUMBER, p_idTipoDocumento NUMBER,
-         * p_idRangosEdad NUMBER, p_idNacionalidad NUMBER,
-         * p_idDistrito NUMBER, p_direccion VARCHAR2) */
         try {
           QueryController.insertarPersona(txtNombre.getText(),
               txtPrimerApellido.getText(),

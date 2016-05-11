@@ -23,6 +23,7 @@ import org.parquelibertad.view.busquedas.FiltroPersona;
 import org.parquelibertad.view.busquedas.FiltroRangoFechaRegistro;
 import org.parquelibertad.view.busquedas.FiltroTerritorio;
 import org.parquelibertad.view.debugDialogs.FontSelectorForm;
+import org.parquelibertad.view.general.AgregarActividad;
 import org.parquelibertad.view.general.AgregarCurso;
 import org.parquelibertad.view.general.AgregarPersona;
 import org.parquelibertad.view.general.PromoverPersona;
@@ -140,7 +141,7 @@ public class MainController {
       AgregarPersona now = new AgregarPersona(mainScreen, "Parque La Libertad", 700, 600,
           false);
       now.setVisible(true);
-      QueryController.closeConnection();
+      
     } catch (HeadlessException | SQLException e) {
       JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
           "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
@@ -148,13 +149,33 @@ public class MainController {
   }
 
   public void showAgregarCurso() {
-    JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 400, 520, true);
-    now.setVisible(true);
+    try {
+      QueryController.openConnection();
+      JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 450, 600, true);
+      now.setVisible(true);
+      QueryController.closeConnection();
+    } catch (HeadlessException | SQLException e) {
+      JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
+          "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+
+  public void showAgregarActividad() {
+    try {
+      QueryController.openConnection();
+      AgregarActividad now = new AgregarActividad(mainScreen, "Agregar Actividad", 400,
+          250, false);
+      now.setVisible(true);
+      QueryController.closeConnection();
+    } catch (HeadlessException | SQLException e) {
+      JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
+          "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+    }
   }
 
   public Integer selectDistrito(String prompt) {
     try {
-      assert(QueryController.isConnected()); // Test-Driven practice
+      assert (QueryController.isConnected()); // Test-Driven practice
       // QueryController.openConnection();
       // No es cualquier JDialog:
       FiltroDistrito now = new FiltroDistrito(mainScreen, prompt, 725, 520, true);

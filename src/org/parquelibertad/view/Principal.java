@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import java.awt.FlowLayout;
 
@@ -34,21 +35,23 @@ import java.awt.FlowLayout;
  */
 public class Principal extends WindowTemplate {
   private static final long serialVersionUID = 2787942091814370720L;
-  private JMenuBar  menuBar;
-  private JMenu     menuAdministrador;
-  private JMenuItem mntmTerritorios;
-  private JMenu     menuAnadir;
-  private JMenuItem menuAgregarPersona;
-  private JMenuItem menuAgregarCurso;
-  private JMenu     menuEditar;
-  private JMenuItem menuPromoverPersona;
-  private JLabel    lblLogoSistema;
-  private JLabel    lblLogoParque;
-  private JLabel    lblBienvenidos;
-  private JPanel    panelPictures;
-  private JMenu mnBuscar;
-  private JMenuItem mntmPersonaPorTerritorio;
-  private JMenuItem mntmPersonaPorFechas;
+  private JMenuBar          menuBar;
+  private JMenu             menuAdministrador;
+  private JMenuItem         mntmTerritorios;
+  private JMenu             menuAnadir;
+  private JMenuItem         menuAgregarPersona;
+  private JMenuItem         menuAgregarCurso;
+  private JMenu             menuEditar;
+  private JMenuItem         menuPromoverPersona;
+  private JLabel            lblLogoSistema;
+  private JLabel            lblLogoParque;
+  private JLabel            lblBienvenidos;
+  private JPanel            panelPictures;
+  private JMenu             mnBuscar;
+  private JMenuItem         mntmPersonaPorTerritorio;
+  private JMenuItem         mntmPersonaPorFechas;
+  private AbstractButton menuAgregarActividad;
+
   /**
    * @param windowName
    *          Título de la ventana
@@ -80,11 +83,17 @@ public class Principal extends WindowTemplate {
         MainController.getInstance().showAgregarPersona();
       }
     });
-    // Al parecer esta manera de usar métodos lambda es incorrecta:
-    // mntmTerritorios.addActionListener(event ->
-    // MainController.getInstance().showAddPersona());
     menuAgregarPersona.setFont(FontController.getRegularLabelFont());
     menuAnadir.add(menuAgregarPersona);
+    
+    menuAgregarActividad = new JMenuItem("Agregar nueva Actividad...");
+    menuAgregarActividad.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        MainController.getInstance().showAgregarActividad();
+      }
+    });
+    menuAgregarActividad.setFont(FontController.getRegularLabelFont());
+    menuAnadir.add(menuAgregarActividad);
 
     this.menuAgregarCurso = new JMenuItem("Agregar nuevo Curso...");
     this.menuAgregarCurso.addActionListener(new ActionListener() {
@@ -107,7 +116,7 @@ public class Principal extends WindowTemplate {
     });
     this.menuPromoverPersona.setFont(FontController.getRegularLabelFont());
     this.menuEditar.add(this.menuPromoverPersona);
-    
+
     this.mnBuscar = new JMenu("Buscar");
     this.mnBuscar.setFont(FontController.getRegularLabelFont());
     this.menuBar.add(this.mnBuscar);
@@ -119,8 +128,9 @@ public class Principal extends WindowTemplate {
     this.mntmTerritorios = new JMenuItem("A\u00F1adir y Editar Territorios");
     this.mntmTerritorios
         .addActionListener(event -> MainController.getInstance().showEditTerritories());
-    
-    this.mntmPersonaPorTerritorio = new JMenuItem("Probar B\u00FAsqueda de Personas por Territorio de Origen...");
+
+    this.mntmPersonaPorTerritorio = new JMenuItem(
+        "Probar B\u00FAsqueda de Personas por Territorio de Origen...");
     this.mntmPersonaPorTerritorio.setFont(FontController.getRegularLabelFont());
     this.mntmPersonaPorTerritorio.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -128,8 +138,9 @@ public class Principal extends WindowTemplate {
       }
     });
     this.menuAdministrador.add(this.mntmPersonaPorTerritorio);
-    
-    this.mntmPersonaPorFechas = new JMenuItem("Probar B\u00FAsqueda de Personas por Fechas de Registro...");
+
+    this.mntmPersonaPorFechas = new JMenuItem(
+        "Probar B\u00FAsqueda de Personas por Fechas de Registro...");
     this.mntmPersonaPorFechas.setFont(FontController.getRegularLabelFont());
     this.mntmPersonaPorFechas.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -140,11 +151,11 @@ public class Principal extends WindowTemplate {
     this.mntmTerritorios.setFont(FontController.getRegularLabelFont());
     this.menuAdministrador.add(this.mntmTerritorios);
     getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-    
+
     lblBienvenidos = new JLabel("Bienvenidos a");
     lblBienvenidos.setFont(FontController.getTitleFont().deriveFont(50f));
     getContentPane().add(lblBienvenidos);
-    
+
     this.panelPictures = new JPanel();
     getContentPane().add(this.panelPictures);
 
@@ -154,7 +165,8 @@ public class Principal extends WindowTemplate {
     /////////////////////////////////////////////////////////////////////////
     try {
       BufferedImage logoSistema = ImageController.getLogoSistema();
-      lblLogoSistema.setIcon(new ImageIcon(ImageController.redimensionar(logoSistema, 450, 320)));
+      lblLogoSistema
+          .setIcon(new ImageIcon(ImageController.redimensionar(logoSistema, 450, 320)));
     } catch (PictureNotFound e1) {
       lblLogoSistema.setText("LibreParque");
     }
