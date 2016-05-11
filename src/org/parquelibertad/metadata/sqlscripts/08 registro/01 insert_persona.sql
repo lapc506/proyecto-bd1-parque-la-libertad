@@ -1,6 +1,7 @@
 GRANT EXECUTE ON INSERT_PERSONA TO libertadDemoUser;
 GRANT EXECUTE ON INSERT_CURSO TO libertadDemoUser;
 GRANT EXECUTE ON INSERT_ACTIVIDAD TO libertadDemoUser;
+GRANT EXECUTE ON INSERT_MATRICULA TO libertadDemoUser;
 GRANT EXECUTE ON get_unq_id_semana TO libertadDemoUser;
 GRANT EXECUTE ON get_unq_id_Horario TO libertadDemoUser;
 
@@ -8,6 +9,7 @@ GRANT EXECUTE ON get_unq_id_Horario TO libertadDemoUser;
 CREATE SYNONYM INSERT_PERSONA FOR libertadAdmin.INSERT_PERSONA;
 CREATE SYNONYM INSERT_CURSO FOR libertadAdmin.INSERT_CURSO;
 CREATE SYNONYM INSERT_ACTIVIDAD FOR libertadAdmin.INSERT_ACTIVIDAD;
+CREATE SYNONYM INSERT_MATRICULA FOR libertadAdmin.INSERT_MATRICULA;
 CREATE SYNONYM get_unq_id_semana FOR libertadAdmin.get_unq_id_semana;
 CREATE SYNONYM get_unq_id_Horario FOR libertadAdmin.get_unq_id_Horario;
 
@@ -37,8 +39,7 @@ CREATE OR REPLACE PROCEDURE INSERT_CURSO(
   pIDHoraInicio IN NUMBER,
   pIDHoraFinal IN NUMBER,
   pIDMercadoMeta IN NUMBER,
-  pActivoBoolean IN NUMBER,
-  pIDEmpleado IN NUMBER) -- Sin cursor de salida
+  pActivoBoolean IN NUMBER) -- Sin cursor de salida
 AS BEGIN
    INSERT INTO CURSO (id, nombre, costo, idHorarioSemanal, idHoraInicio, idHoraFinal, idMercadoMeta, isActivo) VALUES
    (s_curso.NEXTVAL, pNombreCURSO, pCosto, pIDHorario, pIDHoraInicio, pIDHoraFinal, pIDMercadoMeta, pActivoBoolean);
@@ -70,6 +71,19 @@ AS BEGIN
    (s_Actividad.Nextval, pDescripcion, pIsActiva, pIDTipoActividad);
    COMMIT;
 END;
+
+CREATE OR REPLACE PROCEDURE INSERT_MATRICULA(
+  pCURSOXPERIODO IN NUMBER,
+  pID_ALUMNO IN NUMBER) -- Sin cursor de salida
+AS BEGIN
+   INSERT INTO MATRICULA(ID, ID_CURSOXPERIODO, ID_ALUMNO) VALUES
+   (s_Matricula.Nextval, pCURSOXPERIODO, pID_ALUMNO);
+   COMMIT;
+END;
+
+SELECT * FROM MATRICULA;
+-- INSERT INTO MATRICULA (ID, ID_CURSOXPERIODO, ID_ALUMNO) VALUES (s_Matricula.Nextval, pID_CXP, pIDAlumno);
+-- INSERT INTO DESERCIONES (ID, ID_CURSOXPERIODO, ID_ALUMNO, MOTIVO) VALUES (s_Deserciones.Nextval, pID_CXP, pIDAlumno, pMotivo);
 
 CREATE OR REPLACE FUNCTION get_unq_id_semana(
   pLunesBoolean IN NUMBER,

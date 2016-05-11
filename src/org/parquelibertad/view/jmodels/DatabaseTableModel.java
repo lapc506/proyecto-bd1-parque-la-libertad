@@ -37,7 +37,7 @@ public class DatabaseTableModel extends AbstractTableModel {
             newRow.addElement(contents.getString(i + 1));
           }
         }
-        System.out.println(newRow);
+        // System.out.println(newRow);
         dataVector.addElement(newRow);
       }
     } catch (SQLException e) {

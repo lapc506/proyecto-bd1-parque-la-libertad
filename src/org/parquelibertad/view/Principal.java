@@ -51,6 +51,9 @@ public class Principal extends WindowTemplate {
   private JMenuItem         mntmPersonaPorTerritorio;
   private JMenuItem         mntmPersonaPorFechas;
   private AbstractButton menuAgregarActividad;
+  private JMenuItem mntmControlDeCursos;
+  private JMenuItem menuMatricula;
+  private JMenuItem menuAlumnos;
 
   /**
    * @param windowName
@@ -116,10 +119,37 @@ public class Principal extends WindowTemplate {
     });
     this.menuPromoverPersona.setFont(FontController.getRegularLabelFont());
     this.menuEditar.add(this.menuPromoverPersona);
+    
+    mntmControlDeCursos = new JMenuItem("Control de Cursos");
+    mntmControlDeCursos.setFont(FontController.getRegularLabelFont());
+    mntmControlDeCursos.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        MainController.getInstance().showControlCursos();
+      }
+    });
+    menuEditar.add(mntmControlDeCursos);
 
     this.mnBuscar = new JMenu("Buscar");
     this.mnBuscar.setFont(FontController.getRegularLabelFont());
     this.menuBar.add(this.mnBuscar);
+    
+    menuMatricula = new JMenuItem("Matr\u00EDcula de Estudiantes");
+    menuMatricula.setFont(FontController.getRegularLabelFont());
+    menuMatricula.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        MainController.getInstance().showMatricula();
+      }
+    });
+    mnBuscar.add(menuMatricula);
+    
+    menuAlumnos = new JMenuItem("Alumnos Registrados");
+    menuAlumnos.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        MainController.getInstance().showAlumnos();
+      }
+    });
+    menuAlumnos.setFont(FontController.getRegularLabelFont());
+    mnBuscar.add(menuAlumnos);
 
     this.menuAdministrador = new JMenu("Administrador");
     this.menuAdministrador.setFont(FontController.getRegularLabelFont());

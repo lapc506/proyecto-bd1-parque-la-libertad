@@ -118,7 +118,7 @@ public class FiltroRangoFechaRegistro extends DialogTemplate {
       public void mouseClicked(MouseEvent arg0) {
         try {
           // System.out.println(idsCantones.get(comboBoxCanton.getSelectedIndex()));
-          DatabaseTableModel personas = QueryController.getPersonasPorFechasRegistro(
+          DatabaseTableModel personas = QueryController.buscarPersonasFechaRegistro(
               ((Calendar) fechaInicio.getModel().getValue()),
               ((Calendar) fechaFinal.getModel().getValue()));
           tableContents.setModel(personas);

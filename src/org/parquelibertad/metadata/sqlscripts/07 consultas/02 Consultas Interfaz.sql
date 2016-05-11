@@ -84,17 +84,64 @@ BEGIN
           ON p.id = e.idpersona
         WHERE
           e.idtipo = idTipoEmpleadoDocente
-      ORDER BY p.Nombre;
+      ORDER BY p.ID;
 END;
-/*
-SELECT * FROM EMPLEADO;
-SELECT e.ID, p.NOMBRE, p.PRIMERAPELLIDO, p.SEGUNDOAPELLIDO
-      FROM PERSONA p
-        INNER JOIN EMPLEADO e
-          ON p.id = e.idpersona
+
+-- Cursos:
+CREATE OR REPLACE PROCEDURE get_CURSOS(p_recordset OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN p_recordset FOR
+    SELECT c.id, c.nombre, c.costo, c.isactivo, re.valormin, -- Edad
+    hs.lunes, hs.martes, hs.miercoles, hs.jueves, hs.viernes, hs.sabado, hs.domingo
+      FROM CURSO c, HORARIOSEMANAL hs, RANGOEDAD re
         WHERE
-          e.idtipo = 1;
-*/
+          c.idhorariosemanal = hs.id AND
+          c.idmercadometa = re.id
+      ORDER BY c.nombre;
+END;
+
+-- Seleccione todos los cursosxperiodo para la interfaz:
+CREATE OR REPLACE PROCEDURE get_CURSOSXPERIODO(p_recordset OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN p_recordset FOR
+    SELECT cxp.id, c.nombre, c.costo,
+    TO_CHAR(p.idfechainicial, 'DD/MM/YYYY'),
+    TO_CHAR(p.idfechafinal, 'DD/MM/YYYY'),
+    c. isactivo
+    FROM CURSOXPERIODO cxp INNER JOIN CURSO c ON cxp.id_curso = c.id
+    RIGHT JOIN PERIODO p ON cxp.id_periodo = p.id ORDER BY c.nombre, p.idfechainicial;
+END;
+
+-- Seleccione todos los posibles alumnos que no están matriculados ya
+-- en el cursoxperiodo seleccionado:
+CREATE OR REPLACE PROCEDURE get_Posibles_Alumnos
+    (pID_CXP IN NUMBER, p_recordset OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN p_recordset FOR
+    SELECT al.id, p.nombre, p.primerapellido, p.segundoapellido FROM ALUMNO al
+    INNER JOIN PERSONA p ON al.idpersona = p.id
+    WHERE al.id NOT IN
+      (SELECT m.id_alumno FROM MATRICULA m WHERE m.id_cursoxperiodo = pID_CXP);
+END;
+
+-- Seleccione todos los posibles alumnos ya matriculados en el cursoxperiodo seleccionado:
+CREATE OR REPLACE PROCEDURE get_Alumnos_Matriculados
+    (pID_CXP IN NUMBER, p_recordset OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN p_recordset FOR
+    SELECT al.id, p.nombre, p.primerapellido, p.segundoapellido FROM ALUMNO al
+    INNER JOIN PERSONA p ON al.idpersona = p.id
+    WHERE al.id IN
+      (SELECT m.id_alumno FROM MATRICULA m WHERE m.id_cursoxperiodo = pID_CXP);
+END;
+
+CREATE OR REPLACE PROCEDURE get_Alumnos (p_recordset OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN p_recordset FOR
+    SELECT al.id, p.nombre, p.primerapellido, p.segundoapellido FROM ALUMNO al
+    INNER JOIN PERSONA p ON al.idpersona = p.id;
+END;
+
 -- CAPA DE SEGURIDAD POR ESQUEMAS:
 
 GRANT EXECUTE ON get_Paises TO libertadDemoUser;
@@ -107,7 +154,10 @@ GRANT EXECUTE ON get_Nacionalidades TO libertadDemoUser;
 GRANT EXECUTE ON get_Rangos_Edad TO libertadDemoUser;
 GRANT EXECUTE ON get_unq_Distrito_Nombre TO libertadDemoUser;
 GRANT EXECUTE ON get_personas_DOCENTES TO libertadDemoUser;
-
+GRANT EXECUTE ON get_CURSOSXPERIODO TO libertadDemoUser;
+GRANT EXECUTE ON get_Posibles_Alumnos TO libertadDemoUser;
+GRANT EXECUTE ON get_Alumnos TO libertadDemoUser;
+GRANT EXECUTE ON get_Alumnos_Matriculados TO libertadDemoUser;
 -- Ejecutar como SYSTEM:
 -- GRANT CREATE SYNONYM TO libertadDemoUser;
 
@@ -122,3 +172,7 @@ CREATE SYNONYM get_Nacionalidades FOR libertadAdmin.get_Nacionalidades;
 CREATE SYNONYM get_Rangos_Edad FOR libertadAdmin.get_Rangos_Edad;
 CREATE SYNONYM get_unq_Distrito_Nombre FOR libertadAdmin.get_unq_Distrito_Nombre;
 CREATE SYNONYM get_personas_DOCENTES FOR libertadAdmin.get_personas_DOCENTES;
+CREATE SYNONYM get_CURSOSXPERIODO FOR libertadAdmin.get_CURSOSXPERIODO;
+CREATE SYNONYM get_Posibles_Alumnos FOR libertadAdmin.get_Posibles_Alumnos;
+CREATE SYNONYM get_Alumnos FOR libertadAdmin.get_Alumnos;
+CREATE SYNONYM get_Alumnos_Matriculados FOR libertadAdmin.get_Alumnos_Matriculados;

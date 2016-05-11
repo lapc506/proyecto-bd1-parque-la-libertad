@@ -1,26 +1,33 @@
 PL/SQL Developer Test script 3.0
-23
+30
 -- Created on 22/04/2016 by libertadAdmin 
 DECLARE 
-  pNombrePais VARCHAR2(30) := 'Costa Rica';
-  selectedIDPais NUMBER(4);
-  vID NUMBER(4);
-  vDescripcion VARCHAR2(30);
-  curProvincias SYS_REFCURSOR;
+  vID CURSO.ID%TYPE;
+  vNombre CURSO.NOMBRE%TYPE;
+  vCosto CURSO.COSTO%TYPE;
+  vActivo CURSO.ISACTIVO%TYPE;
+  vEdadMin RANGOEDAD.VALORMIN%TYPE;
+  vLunes HORARIOSEMANAL.LUNES%TYPE;
+  vMartes HORARIOSEMANAL.MARTES%TYPE;
+  vMiercoles HORARIOSEMANAL.MIERCOLES%TYPE;
+  vJueves HORARIOSEMANAL.JUEVES%TYPE;
+  vViernes HORARIOSEMANAL.VIERNES%TYPE;
+  vSabado HORARIOSEMANAL.SABADO%TYPE;
+  vDomingo HORARIOSEMANAL.DOMINGO%TYPE;
+  
+  curSOS SYS_REFCURSOR;
   
 BEGIN
-  selectedIDPais := get_Pais_ID(pNombrePais);
-  DBMS_OUTPUT.PUT_LINE('ID del Pais: ' || selectedIDPais);
-  get_Provincias_por_Pais(selectedIDPais, curProvincias);
+  get_CURSOS(curSOS);
   
   LOOP
-      FETCH curProvincias INTO vID, vDescripcion;
-    EXIT WHEN curProvincias%NOTFOUND;
-      DBMS_OUTPUT.PUT_LINE(vID || ' | ' || vDescripcion);
+      FETCH curSOS INTO vID, vNombre, vCosto, vActivo, vEdadMin, vLunes, vMartes, vMiercoles, vJueves, vViernes, vSabado, vDomingo;
+    EXIT WHEN curSOS%NOTFOUND;
+      DBMS_OUTPUT.PUT_LINE(vID||' | '||vNombre);
   END LOOP;
   
   -- Close cursor:
-  CLOSE curProvincias;
+  CLOSE curSOS;
   
 end;
 0

@@ -18,6 +18,7 @@ import org.parquelibertad.view.Principal;
 import org.parquelibertad.view.adminDialogs.AgregarPais;
 import org.parquelibertad.view.adminDialogs.EditarPais;
 import org.parquelibertad.view.adminDialogs.EditarTerritorio;
+import org.parquelibertad.view.busquedas.FiltroAlumnos;
 import org.parquelibertad.view.busquedas.FiltroDistrito;
 import org.parquelibertad.view.busquedas.FiltroPersona;
 import org.parquelibertad.view.busquedas.FiltroRangoFechaRegistro;
@@ -26,6 +27,8 @@ import org.parquelibertad.view.debugDialogs.FontSelectorForm;
 import org.parquelibertad.view.general.AgregarActividad;
 import org.parquelibertad.view.general.AgregarCurso;
 import org.parquelibertad.view.general.AgregarPersona;
+import org.parquelibertad.view.general.ControlCursos;
+import org.parquelibertad.view.general.Matricula;
 import org.parquelibertad.view.general.PromoverPersona;
 
 /**
@@ -151,7 +154,7 @@ public class MainController {
   public void showAgregarCurso() {
     try {
       QueryController.openConnection();
-      JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 450, 600, true);
+      JDialog now = new AgregarCurso(mainScreen, "Agregar Curso", 450, 600, false);
       now.setVisible(true);
       QueryController.closeConnection();
     } catch (HeadlessException | SQLException e) {
@@ -163,8 +166,33 @@ public class MainController {
   public void showAgregarActividad() {
     try {
       QueryController.openConnection();
-      AgregarActividad now = new AgregarActividad(mainScreen, "Agregar Actividad", 400,
+      JDialog now = new AgregarActividad(mainScreen, "Agregar Actividad", 400,
           250, false);
+      now.setVisible(true);
+      QueryController.closeConnection();
+    } catch (HeadlessException | SQLException e) {
+      JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
+          "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+  
+  public void showMatricula() {
+    try {
+      QueryController.openConnection();
+      JDialog now = new Matricula(mainScreen, "Matrícula de Estudiantes", 500,
+          500, false);
+      now.setVisible(true);
+      QueryController.closeConnection();
+    } catch (HeadlessException | SQLException e) {
+      JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
+          "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+    }
+  }
+  public void showAlumnos() {
+    try {
+      QueryController.openConnection();
+      JDialog now = new FiltroAlumnos(mainScreen, "Matrícula de Estudiantes", 500,
+          500, false);
       now.setVisible(true);
       QueryController.closeConnection();
     } catch (HeadlessException | SQLException e) {
@@ -196,6 +224,23 @@ public class MainController {
   public void showPromoverPersona() {
     JDialog now = new PromoverPersona(mainScreen, "Agregar Curso", 500, 520, true);
     now.setVisible(true);
+  }
+
+  public void showControlCursos() {
+    try {
+      assert (QueryController.isConnected()); // Test-Driven practice
+      // QueryController.openConnection();
+      // No es cualquier JDialog:
+      JDialog now = new ControlCursos(mainScreen, "Panel de Control de Cursos", 725, 520, true);
+      now.setVisible(true);
+      // A partir de aquí asume que la ventana seguirá en memoria después de ser
+      // desplegada y cerrada:
+      // JOptionPane.showMessageDialog(mainScreen, "ID Seleccionado: " + id);
+      // QueryController.closeConnection();
+    } catch (SQLException e) {
+      JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
+          "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+    }
   }
 
 }

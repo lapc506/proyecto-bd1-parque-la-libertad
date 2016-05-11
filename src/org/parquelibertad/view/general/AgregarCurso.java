@@ -4,17 +4,17 @@ import java.awt.Color;
 import java.awt.Container;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
+import org.parquelibertad.controller.MainController;
 import org.parquelibertad.controller.QueryController;
 import org.parquelibertad.controller.design.DesignController;
 import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.model.LibertadDatabaseConstraints;
-import org.parquelibertad.view.jmodels.DatabaseTableModel;
 import org.parquelibertad.view.jmodels.JDatabaseText;
 import org.parquelibertad.view.templates.DialogTemplate;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -37,7 +37,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
-import javax.swing.JTable;
 
 public class AgregarCurso extends DialogTemplate {
   private static final long serialVersionUID = 3721795951153442361L;
@@ -47,7 +46,7 @@ public class AgregarCurso extends DialogTemplate {
   private JLabel            lblNombreCurso;
   private JLabel            lblColones;
   private JTextField        txtNombre;
-  private JLabel            lblDocente;
+
   private JSpinner          spinHoraInicio;
   private JLabel            labeltime1;
   private JSpinner          spinMinutoInicio;
@@ -73,11 +72,9 @@ public class AgregarCurso extends DialogTemplate {
   private JCheckBox         chckbxSbado;
   private JLabel            lblRegistrarCurso;
   private JPanel            panel;
-  private JPanel            panelProfesor;
+
   private JCheckBox         chkActivo;
-  private JTable            tableDocentes;
   private Vector<Integer>   idsRangosEdad;
-  private JScrollPane scrollDocentes;
 
   public AgregarCurso(JFrame parent, String windowName, int width, int height,
       boolean isResizable) throws HeadlessException, SQLException {
@@ -107,21 +104,6 @@ public class AgregarCurso extends DialogTemplate {
     this.panelContents.add(this.txtNombre);
     this.txtNombre.setColumns(LibertadDatabaseConstraints.Curso_nombre_VARCHAR2);
 
-    lblDocente = new JLabel("Docente");
-    this.lblDocente.setHorizontalAlignment(SwingConstants.CENTER);
-    this.panelContents.add(this.lblDocente);
-    lblDocente.setFont(FontController.getBoldLabelFont());
-
-    this.panelProfesor = new JPanel();
-    this.panelProfesor.setBackground(DesignController.getWindowBGColor());
-    this.panelContents.add(this.panelProfesor);
-    panelProfesor.setLayout(new BorderLayout(0, 0));
-
-    tableDocentes = new JTable();
-    //scrollDocentes = new JScrollPane(tableDocentes);
-    //panelProfesor.add(scrollDocentes);
-    panelProfesor.add(tableDocentes);
-    
     this.lblHorario = new JLabel("Horario");
     this.lblHorario.setHorizontalAlignment(SwingConstants.CENTER);
     this.panelContents.add(this.lblHorario);
@@ -320,15 +302,46 @@ public class AgregarCurso extends DialogTemplate {
     getContentPane().add(panelBottom, BorderLayout.SOUTH);
 
     btnConfirmar = new JButton("Confirmar");
+    btnConfirmar.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        try {
+          Integer pIDHorario = QueryController.selectSemanaID(chckbxLunes.isSelected(),
+              chckbxMartes.isSelected(), chckbxMircoles.isSelected(),
+              chckbxJueves.isSelected(), chckbxViernes.isSelected(),
+              chckbxSbado.isSelected(), chckbxDomingo.isSelected());
+          Integer idHoraInicio = QueryController.selectHoraID(getHoraInicio(),
+              (Integer) spinMinutoInicio.getValue());
+          Integer idHoraFinal = QueryController.selectHoraID(getHoraFinal(),
+              (Integer) spinMinutoFinal.getValue());
+          // System.out.println(pIDHorario + " " + idHoraInicio + " " + idHoraFinal);
+          if (idHoraInicio >= idHoraFinal){
+            throw new SQLException("La hora de inicio debe anteceder a la final.");
+          }
+          System.out.println(txtNombre.getText());
+          System.out.println(Integer.parseInt(txtCosto.getText()));
+          System.out.println(pIDHorario);
+          System.out.println(idHoraInicio);
+          System.out.println(idHoraFinal);
+          System.out.println(comboMercadoMeta.getSelectedItem() + "  " + idsRangosEdad.elementAt(comboMercadoMeta.getSelectedIndex()));
+          System.out.println(chkActivo.isSelected());
+          /*
+          QueryController.insertarCurso(txtNombre.getText(),
+              Integer.parseInt(txtCosto.getText()), pIDHorario, idHoraInicio, idHoraFinal,
+              idsRangosEdad.elementAt(comboMercadoMeta.getSelectedIndex()),
+              chkActivo.isSelected());
+          */
+        } catch (SQLException e) {
+          JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
+              e.getMessage(), "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+        }
+      }
+    });
     btnConfirmar.setFont(FontController.getRegularLabelFont());
     panelBottom.add(btnConfirmar);
     loadConnections();
   }
 
   private void loadConnections() throws SQLException {
-    DatabaseTableModel temp = QueryController.getPersonasDocentes();
-    System.out.println(temp.getRowCount());
-    tableDocentes.setModel(temp);
     idsRangosEdad = new Vector<Integer>();
     HashMap<Integer, String> rangos = QueryController.getRangosEdad();
     Vector<String> textRangos = new Vector<String>();
@@ -337,5 +350,17 @@ public class AgregarCurso extends DialogTemplate {
       textRangos.addElement(rangos.get(x));
     }
     this.comboMercadoMeta.setModel(new DefaultComboBoxModel<String>(textRangos));
+  }
+
+  private Integer getHoraInicio() {
+    if (spinnerAMPMinicio.getValue().equals("PM")) {
+      return (Integer) spinHoraInicio.getValue() + 12; }
+    return (Integer) spinHoraInicio.getValue();
+  }
+
+  private Integer getHoraFinal() {
+    if (spinnerAMPMfinal.getValue().equals(
+        "PM")) { return (Integer) spinHoraFinal.getValue() + 12; }
+    return (Integer) spinHoraFinal.getValue();
   }
 }

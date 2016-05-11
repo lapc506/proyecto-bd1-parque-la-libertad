@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.table.TableModel;
+
 import static org.assertj.core.api.Assertions.*;
 import org.parquelibertad.view.jmodels.DatabaseTableModel;
 
@@ -72,6 +74,48 @@ public class QueryController {
     String distritoNombre = cstmt.getString(1);
     cstmt.close();
     return distritoNombre;
+  }
+
+  public static Integer selectSemanaID(boolean lunes, boolean martes, boolean miercoles,
+      boolean jueves, boolean viernes, boolean sabado, boolean domingo)
+      throws SQLException {
+    if (!(lunes
+        || martes
+          || miercoles
+          || jueves
+          || viernes
+          || sabado
+          || domingo)) { throw new SQLException(
+              "Al menos uno de los días debe ser seleccionado."); }
+    ;
+    String statement = "BEGIN ? := get_unq_id_semana(?,?,?,?,?,?,?); END;";
+    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
+        .prepareCall(statement);
+    cstmt.registerOutParameter(1, OracleTypes.INTEGER);
+    cstmt.setInt(2, (lunes ? 1 : 0));
+    cstmt.setInt(3, (martes ? 1 : 0));
+    cstmt.setInt(4, (miercoles ? 1 : 0));
+    cstmt.setInt(5, (jueves ? 1 : 0));
+    cstmt.setInt(6, (viernes ? 1 : 0));
+    cstmt.setInt(7, (sabado ? 1 : 0));
+    cstmt.setInt(8, (domingo ? 1 : 0));
+    cstmt.executeQuery();
+    Integer selectedSemanaID = cstmt.getInt(1);
+    cstmt.close();
+    return selectedSemanaID;
+  }
+
+  public static Integer selectHoraID(Integer hora, Integer minuto) throws SQLException {
+    String statement = "BEGIN ? := get_unq_id_Horario(?,?); END;";
+    OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
+        .prepareCall(statement);
+    cstmt.registerOutParameter(1, OracleTypes.INTEGER);
+    cstmt.setInt(2, hora);
+    cstmt.setInt(3, minuto);
+    cstmt.executeQuery();
+    Integer selectedHorarioID = cstmt.getInt(1);
+    cstmt.close();
+    return selectedHorarioID;
   }
 
   public static HashMap<Integer, String> getTiposDocumento() throws SQLException {
@@ -155,8 +199,7 @@ public class QueryController {
     parametros.addElement(pDistritoID);
     parametros.addElement(pDireccion);
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
-    assertThat(result).isNotNull(); // No hay cursor de salida, basado en
-                                    // AssertJ
+    assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
         "Confirmada la inserción de la nueva persona en el sistema.");
   }
@@ -168,11 +211,39 @@ public class QueryController {
     parametros.addElement(pDescripcion);
     parametros.addElement(pIDTipo);
     parametros.addElement(pIsActiva);
-    // Debería retornar on ResultSet NULL porque no hay cursor de salida:
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
-    assert (result == null);
+    assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
         "Confirmada la inserción de la nueva actividad en el sistema.");
+  }
+
+  public static void insertarCurso(String pNombre, Integer pCosto, Integer pIDHorario,
+      Integer pIDHoraInicio, Integer pIDHoraFinal, Integer pIDRangoEdadMercadoMeta,
+      boolean isActivo) throws SQLException {
+    String statement = "INSERT_CURSO";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pNombre);
+    parametros.addElement(pCosto);
+    parametros.addElement(pIDHorario);
+    parametros.addElement(pIDHoraInicio);
+    parametros.addElement(pIDHoraFinal);
+    parametros.addElement(pIDRangoEdadMercadoMeta);
+    parametros.addElement(isActivo);
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
+    assertThat(result).isNull(); // No hay cursor de salida, AssertJ
+    JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
+        "Confirmada la inserción de la nuevo curso en el sistema.");
+  }
+  
+  public static void insertarMatricula(Integer pCursoXPeriodoID, Integer pAlumnoID) throws SQLException {
+    String statement = "INSERT_MATRICULA";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pCursoXPeriodoID);
+    parametros.addElement(pAlumnoID);
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
+    assertThat(result).isNull(); // No hay cursor de salida, AssertJ
+    JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
+        "Confirmada la matrícula."); 
   }
 
   public static DatabaseTableModel buscarPersonaTerritorios(Integer pTerritorioID,
@@ -198,7 +269,7 @@ public class QueryController {
     return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
   }
 
-  public static DatabaseTableModel getPersonasPorFechasRegistro(Calendar initialCal,
+  public static DatabaseTableModel buscarPersonasFechaRegistro(Calendar initialCal,
       Calendar finalCal) throws SQLException {
     String statement = "personas_RANGO_FECHA_REG";
     if (initialCal.getTimeInMillis() > finalCal
@@ -211,9 +282,48 @@ public class QueryController {
     columnHeaders.addElement("Nombre");
     columnHeaders.addElement("Primer Apellido");
     columnHeaders.addElement("Segundo Apellido");
-
     return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
   }
+  public static DatabaseTableModel buscarPersona(String pTipoIdentidad,
+      Integer pTipoIdentidadID,
+      Integer pIntegerBusqueda,
+      String pStringBusqueda) throws SQLException {
+    String statement = "";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pTipoIdentidadID);
+    parametros.addElement(pIntegerBusqueda);
+    Vector<String> columnHeaders = new Vector<String>();
+    columnHeaders.addElement("Tipo de " + pTipoIdentidad);
+    columnHeaders.addElement("Nombre");
+    columnHeaders.addElement("Primer Apellido");
+    columnHeaders.addElement("Segundo Apellido");
+    return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
+  }
+
+  // .lastIndexOf((String) comboTipoIdentificacion.getSelectedItem());
+  
+  public static DatabaseTableModel getCursosPorPeriodos() throws SQLException {
+    String statement = "get_CURSOSXPERIODO";
+    Vector<String> columnHeaders = new Vector<String>();
+    columnHeaders.addElement("Nombre");
+    columnHeaders.addElement("Costo");
+    columnHeaders.addElement("Fecha Inicial");
+    columnHeaders.addElement("Fecha Final");
+    columnHeaders.addElement("Activo?");
+    //cxp.id, c.nombre, c.costo, p.idfechainicial, p.idfechafinal, c. isactivo
+    return ResultSetFactory.getTableContents(statement, null, columnHeaders);
+  }
+  public static DatabaseTableModel buscarAlumnosSinMatricular(Integer pCursoPeriodoID) throws SQLException {
+    String statement = "get_Posibles_Alumnos";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pCursoPeriodoID);
+    Vector<String> columnHeaders = new Vector<String>();
+    columnHeaders.addElement("Nombre");
+    columnHeaders.addElement("Primer Apellido");
+    columnHeaders.addElement("Segundo Apellido");
+    return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
+  }
+  
 
   public static DatabaseTableModel getPersonasDocentes() throws SQLException {
     String statement = "get_personas_DOCENTES";
@@ -223,19 +333,14 @@ public class QueryController {
     columnHeaders.addElement("Segundo Apellido");
     return ResultSetFactory.getTableContents(statement, null, columnHeaders);
   }
-
-  public static Integer selectPersona(String tipoIdentificacion,
-      String numeroIdentificacion) throws SQLException, IllegalArgumentException {
-    String proposedSQLStatement = "{? = call SELECTPersona (?, ?)}";
-    CallableStatement cstmt = myConnection.prepareCall(proposedSQLStatement);
-    // !! Test pending
-    cstmt.registerOutParameter(1, OracleTypes.INTEGER);
-    cstmt.setString(2, tipoIdentificacion);
-    cstmt.setInt(3, validarNumero(numeroIdentificacion));
-    ResultSet rset = cstmt.executeQuery();
-    Integer selectedPersonaID = rset.getInt(0);
-    rset.close();
-    return selectedPersonaID;
+  
+  public static DatabaseTableModel getAlumnos() throws SQLException {
+    String statement = "get_Alumnos";
+    Vector<String> columnHeaders = new Vector<String>();
+    columnHeaders.addElement("Nombre");
+    columnHeaders.addElement("Primer Apellido");
+    columnHeaders.addElement("Segundo Apellido");
+    return ResultSetFactory.getTableContents(statement, null, columnHeaders);
   }
 
   private static Integer validarNumero(String test) throws IllegalArgumentException {
@@ -307,10 +412,11 @@ public class QueryController {
       ResultSet result = ResultSetFactory.callStoredProc(statement,
           (parametros == null ? new Vector<Object>() : parametros),
           (parametros == null ? 1 : parametros.size() + 1));
-      boolean lastOperationResult;
-      lastOperationResult = result.next();
+      // Desaparece el bug donde se pierde siempre el primer registro: 
+      // boolean lastOperationResult = false;
+      // lastOperationResult = result.next();
       // System.out.println("IS SET FILLED IN? " + lastOperationResult);
-      lastOperationResult = result.isFirst();
+      // lastOperationResult = result.isFirst();
       // System.out.println("IS SET READY TO FETCH? " + lastOperationResult);
       DatabaseTableModel tableModel = new DatabaseTableModel(columnasUltimaConsulta,
           result);
@@ -395,5 +501,4 @@ public class QueryController {
       }
     }
   }
-
 }
