@@ -29,43 +29,59 @@ import javax.swing.ButtonGroup;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Vector;
+
 import javax.swing.JLabel;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
+import javax.swing.BorderFactory;
+import javax.swing.SwingConstants;
 
 public class FiltroPersona extends DialogTemplate {
-  private static final long serialVersionUID = 5606586311814273552L;
-  private JPanel            content;
-  private JButton           btnBuscar;
-  private JPanel            panelBusqueda;
-  private JLabel            lblIdentificacion;
-  private JComboBox<String> comboTipoIdentificacion;
-  private JLabel            lblNombre;
-  private JTextField        txtNombre;
-  private JComboBox<String> comboAtributos;
-  private JTextField        txtIdentificacion;
-  private JPanel            panelTop;
+  private static final long    serialVersionUID = 5606586311814273552L;
+  public static final String[] atributos        = {
+      "Nombre", "Primer Apellido", "Segundo Apellido"
+  };
+  private JPanel               content;
+  private JPanel               panelBusqueda;
+  private JCheckBox            checkIdentificacion;
+  private JComboBox<String>    comboTipoIdentificacion;
+  private JCheckBox            checkAtributo;
+  private JTextField           txtAtributo;
+  private JComboBox<String>    comboAtributos;
+  private JTextField           txtIdentificacion;
+  private JPanel               panelTop;
+  private JPanel               actions;
+  private Integer              selectedPersonaID;
+  private JButton              btnConfirmar;
+  private JScrollPane          scrollBusqueda;
+  private JTable               tablePersona;
+  private JButton              btnBusqueda;
 
-  private JPanel            actions;
-  private JButton           btnSeleccionar;
-  private Integer           selectedPersonaID;
-  private JButton           btnConfirmar;
-  private JScrollPane       scrollBusqueda;
-  private JTable            tablePersona;
+  private Vector<Integer>      idsTiposIdentidad;
+  private JLabel               lblAdvertencia;
+  private JLabel labelTitulo;
+  private JLabel label;
+  private JLabel label_1;
+  private JLabel label_2;
 
-  // Size 600 x 350 min
+  // Size 800 x 550 min
   public FiltroPersona(JFrame parent, String windowName, int width, int height,
-      boolean isResizable) throws HeadlessException {
+      boolean isResizable) throws HeadlessException, SQLException {
     super(parent, windowName, width, height, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
     content = new JPanel();
     content.setBackground(DesignController.getWindowBGColor());
     content.setBorder(new TitledBorder(null, "Seleccionar persona:", TitledBorder.LEADING,
-        TitledBorder.TOP, null, null));
+        TitledBorder.TOP, FontController.getSubtitleFont(), null));
     getContentPane().add(content, BorderLayout.CENTER);
     content.setLayout(new BorderLayout(0, 0));
 
@@ -74,16 +90,21 @@ public class FiltroPersona extends DialogTemplate {
     content.add(panelTop, BorderLayout.NORTH);
     panelTop.setLayout(new BoxLayout(panelTop, BoxLayout.Y_AXIS));
 
-    this.panelBusqueda = new JPanel();
+    panelBusqueda = new JPanel();
     panelTop.add(panelBusqueda);
-    this.panelBusqueda.setBackground(DesignController.getWindowBGColor());
+    panelBusqueda.setBackground(DesignController.getWindowBGColor());
     panelBusqueda.setLayout(new GridLayout(0, 3, 5, 0));
 
-    lblIdentificacion = new JLabel("Identidad de tipo...");
+    checkIdentificacion = new JCheckBox("Documento de Identidad:");
+    checkIdentificacion.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent arg0) {
+        checkAtributo.setEnabled(!checkIdentificacion.isSelected());
+      }
+    });
 
-    lblIdentificacion.setFont(FontController.getRegularLabelFont());
-    lblIdentificacion.setBackground(DesignController.getWindowBGColor());
-    panelBusqueda.add(lblIdentificacion);
+    checkIdentificacion.setFont(FontController.getRegularLabelFont());
+    checkIdentificacion.setBackground(DesignController.getWindowBGColor());
+    panelBusqueda.add(checkIdentificacion);
 
     comboTipoIdentificacion = new JComboBox<String>();
     comboTipoIdentificacion.setFont(FontController.getRegularLabelFont());
@@ -94,74 +115,109 @@ public class FiltroPersona extends DialogTemplate {
     txtIdentificacion.setColumns(10);
     panelBusqueda.add(txtIdentificacion);
 
-    lblNombre = new JLabel("Atributo por especificar:");
-    lblNombre.setFont(FontController.getRegularLabelFont());
-    lblNombre.setBackground(DesignController.getWindowBGColor());
-    panelBusqueda.add(lblNombre);
+    checkAtributo = new JCheckBox("Atributo por especificar:");
+    checkAtributo.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent arg0) {
+        checkIdentificacion.setEnabled(!checkAtributo.isSelected());
+      }
+    });
+    checkAtributo.setFont(FontController.getRegularLabelFont());
+    checkAtributo.setBackground(DesignController.getWindowBGColor());
+    panelBusqueda.add(checkAtributo);
 
     comboAtributos = new JComboBox<String>();
-    comboAtributos.setModel(new DefaultComboBoxModel(new String[] {"Nombre", "Primer Apellido", "Segundo Apellido"}));
+    comboAtributos.setModel(new DefaultComboBoxModel<String>(atributos));
     comboAtributos.setFont(FontController.getRegularLabelFont());
     panelBusqueda.add(comboAtributos);
 
-    txtNombre = new JDatabaseText(LibertadDatabaseConstraints.Persona_nombre_VARCHAR2);
-    panelBusqueda.add(txtNombre);
-    txtNombre.setColumns(10);
+    txtAtributo = new JDatabaseText(LibertadDatabaseConstraints.Persona_nombre_VARCHAR2);
+    panelBusqueda.add(txtAtributo);
+    txtAtributo.setColumns(10);
 
     scrollBusqueda = new JScrollPane();
     content.add(scrollBusqueda, BorderLayout.CENTER);
 
     tablePersona = new JTable();
+    tablePersona.getTableHeader().setFont(FontController.getRegularLabelFont());
     scrollBusqueda.setViewportView(tablePersona);
 
     // Final de construcción de la ventana:
     actions = new JPanel();
-    getContentPane().add(this.actions, BorderLayout.SOUTH);
+    getContentPane().add(actions, BorderLayout.SOUTH);
     FlowLayout fl_actions = (FlowLayout) actions.getLayout();
     fl_actions.setAlignment(FlowLayout.RIGHT);
     actions.setBackground(new Color(255, 143, 0));
 
-    this.btnConfirmar = new JButton("Confirmar Selecci\u00F3n");
-    this.btnConfirmar.setOpaque(false);
-    this.btnConfirmar.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent arg0) {
-        /**
-         * @author Andrés Peña Castillo
-         *         Este método asume que existe una columna que debe llamarse
-         *         "Tipo de " + <tipoIdentificacion>, busca la posición de esa
-         *         columna, obtiene el número de <tipoIdentificacion> de la
-         *         persona en la hilera seleccionada, y finalmente,
-         *         consulta a la base de datos cual es el ID interno de la base
-         *         para guardarlo dentro de la ventana.
-         * 
-         *         selectedPersonaID es retornado por getSelectedValue(),
-         *         quien es llamado desde
-         *         MainController.getInstance().selectPersona(...);
-         */
-
-        // .lastIndexOf("Tipo de " + (String) comboTipoIdentificacion.getSelectedItem());
-        /*
-        try {
-          
-        } catch (SQLException e) {
-          JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-              e.getMessage(), "Error de consulta en la base de datos",
-              JOptionPane.ERROR_MESSAGE);
+    lblAdvertencia = new JLabel("");
+    lblAdvertencia.setFont(FontController.getSubtitleFont());
+    actions.add(lblAdvertencia);
+    
+    btnBusqueda = new JButton("Realizar B\u00FAsqueda");
+    btnBusqueda.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        if (!(checkAtributo.isSelected() || checkIdentificacion.isSelected())){
+          JOptionPane.showMessageDialog(rootPane,
+              "Seleccione al menos un campo de búsqueda.",
+              "Advertencia", JOptionPane.ERROR_MESSAGE);
+        } else {
+          try {
+            tablePersona.setModel(QueryController.buscarPersonaGeneral(
+                (String) comboTipoIdentificacion.getSelectedItem(),
+                (Integer) idsTiposIdentidad
+                    .elementAt(comboTipoIdentificacion.getSelectedIndex()),
+                (txtIdentificacion.getText().equals("")
+                    ? 0
+                      : Integer.parseInt(txtIdentificacion.getText())),
+                (String) comboAtributos.getSelectedItem(), txtAtributo.getText(),
+                checkIdentificacion.isSelected(), checkAtributo.isSelected()));
+            if (tablePersona.getModel().getRowCount() == 0) {
+              lblAdvertencia.setText("Refine su búsqueda. Sin resultados.");
+            } else {
+              lblAdvertencia.setText("");
+            }
+          } catch (SQLException e) {
+            JOptionPane.showMessageDialog(rootPane, e.getMessage(),
+                "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+          }
         }
-        */
       }
     });
     
-        btnBuscar = new JButton("Buscar...");
-        actions.add(btnBuscar);
-        btnBuscar.setOpaque(false);
-        this.btnBuscar.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent arg0) {
-            
-          }
-        });
-    this.actions.add(this.btnConfirmar);
+    btnBusqueda.setOpaque(false);
+    btnBusqueda.setFont(FontController.getRegularLabelFont());
+    actions.add(btnBusqueda);
+
+    btnConfirmar = new JButton("Confirmar Selecci\u00F3n");
+    btnConfirmar.setOpaque(false);
+    btnConfirmar.setFont(FontController.getRegularLabelFont());
+    actions.add(btnConfirmar);
+    
+    label_2 = new JLabel("   ");
+    actions.add(label_2);
+    
+    labelTitulo = new JLabel("B\u00FAsqueda de Personas");
+    labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+    labelTitulo.setFont(FontController.getTitleFont());
+    //labelTitulo.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    getContentPane().add(labelTitulo, BorderLayout.NORTH);
+    
+    label = new JLabel("   ");
+    getContentPane().add(label, BorderLayout.WEST);
+    
+    label_1 = new JLabel("   ");
+    getContentPane().add(label_1, BorderLayout.EAST);
+    loadConnections();
+  }
+
+  private void loadConnections() throws SQLException {
+    idsTiposIdentidad = new Vector<Integer>();
+    HashMap<Integer, String> tiposDocID = QueryController.getTiposDocumento();
+    Vector<String> contents = new Vector<String>();
+    for (Integer x : tiposDocID.keySet()) {
+      idsTiposIdentidad.addElement(x);
+      contents.addElement(tiposDocID.get(x));
+    }
+    comboTipoIdentificacion.setModel(new DefaultComboBoxModel<String>(contents));
   }
 
   public Integer getSelectedValue() {

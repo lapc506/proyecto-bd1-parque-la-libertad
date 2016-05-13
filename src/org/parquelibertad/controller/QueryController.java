@@ -2,7 +2,6 @@ package org.parquelibertad.controller;
 
 import oracle.jdbc.OracleTypes;
 import oracle.jdbc.OracleCallableStatement;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -10,11 +9,10 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Vector;
-import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
-import javax.swing.table.TableModel;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.parquelibertad.view.busquedas.FiltroPersona;
 import org.parquelibertad.view.jmodels.DatabaseTableModel;
 
 public class QueryController {
@@ -234,8 +232,9 @@ public class QueryController {
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
         "Confirmada la inserción de la nuevo curso en el sistema.");
   }
-  
-  public static void insertarMatricula(Integer pCursoXPeriodoID, Integer pAlumnoID) throws SQLException {
+
+  public static void insertarMatricula(Integer pCursoXPeriodoID, Integer pAlumnoID)
+      throws SQLException {
     String statement = "INSERT_MATRICULA";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pCursoXPeriodoID);
@@ -243,7 +242,7 @@ public class QueryController {
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
     assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-        "Confirmada la matrícula."); 
+        "Confirmada la matrícula.");
   }
 
   public static DatabaseTableModel buscarPersonaTerritorios(Integer pTerritorioID,
@@ -284,24 +283,38 @@ public class QueryController {
     columnHeaders.addElement("Segundo Apellido");
     return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
   }
-  public static DatabaseTableModel buscarPersona(String pTipoIdentidad,
-      Integer pTipoIdentidadID,
-      Integer pIntegerBusqueda,
-      String pStringBusqueda) throws SQLException {
+
+  public static DatabaseTableModel buscarPersonaGeneral(String pTipoIdentidad,
+      Integer pTipoIdentidadID, Integer pIntegerBusqueda, String pAtributo,
+      String pStringBusqueda, boolean buscaPorID, boolean buscaPorAtributo)
+      throws SQLException {
     String statement = "";
     Vector<Object> parametros = new Vector<Object>();
-    parametros.addElement(pTipoIdentidadID);
-    parametros.addElement(pIntegerBusqueda);
+    if (buscaPorID) {
+      statement = "personas_IDENTIFICACION";
+      parametros.addElement(pIntegerBusqueda);
+      parametros.addElement(pTipoIdentidadID);
+    } else if (buscaPorAtributo) {
+      if (pAtributo.equals(FiltroPersona.atributos[0])){
+        statement = "personas_NOMBRE";
+      } else if (pAtributo.equals(FiltroPersona.atributos[1])){
+        statement = "personas_PRIMER_APELLIDO";
+      } else if (pAtributo.equals(FiltroPersona.atributos[2])){
+        statement = "personas_SEGUNDO_APELLIDO";
+      }
+      parametros.addElement(pStringBusqueda);
+      parametros.addElement(pTipoIdentidadID);
+    }
     Vector<String> columnHeaders = new Vector<String>();
-    columnHeaders.addElement("Tipo de " + pTipoIdentidad);
     columnHeaders.addElement("Nombre");
     columnHeaders.addElement("Primer Apellido");
     columnHeaders.addElement("Segundo Apellido");
+    columnHeaders.addElement("Tipo de " + pTipoIdentidad);
     return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
   }
 
   // .lastIndexOf((String) comboTipoIdentificacion.getSelectedItem());
-  
+
   public static DatabaseTableModel getCursosPorPeriodos() throws SQLException {
     String statement = "get_CURSOSXPERIODO";
     Vector<String> columnHeaders = new Vector<String>();
@@ -310,10 +323,12 @@ public class QueryController {
     columnHeaders.addElement("Fecha Inicial");
     columnHeaders.addElement("Fecha Final");
     columnHeaders.addElement("Activo?");
-    //cxp.id, c.nombre, c.costo, p.idfechainicial, p.idfechafinal, c. isactivo
+    // cxp.id, c.nombre, c.costo, p.idfechainicial, p.idfechafinal, c. isactivo
     return ResultSetFactory.getTableContents(statement, null, columnHeaders);
   }
-  public static DatabaseTableModel buscarAlumnosSinMatricular(Integer pCursoPeriodoID) throws SQLException {
+
+  public static DatabaseTableModel buscarAlumnosSinMatricular(Integer pCursoPeriodoID)
+      throws SQLException {
     String statement = "get_Posibles_Alumnos";
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pCursoPeriodoID);
@@ -323,7 +338,6 @@ public class QueryController {
     columnHeaders.addElement("Segundo Apellido");
     return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
   }
-  
 
   public static DatabaseTableModel getPersonasDocentes() throws SQLException {
     String statement = "get_personas_DOCENTES";
@@ -333,7 +347,7 @@ public class QueryController {
     columnHeaders.addElement("Segundo Apellido");
     return ResultSetFactory.getTableContents(statement, null, columnHeaders);
   }
-  
+
   public static DatabaseTableModel getAlumnos() throws SQLException {
     String statement = "get_Alumnos";
     Vector<String> columnHeaders = new Vector<String>();
@@ -342,18 +356,30 @@ public class QueryController {
     columnHeaders.addElement("Segundo Apellido");
     return ResultSetFactory.getTableContents(statement, null, columnHeaders);
   }
-
-  private static Integer validarNumero(String test) throws IllegalArgumentException {
-    // Lo más probable es que numeroIdentificacion tenga un error.
-    // Validar siempre en vez de esperar una excepción.
-    if (test.equals("")
-        || !Pattern.compile("/^[0-9]*$/").matcher(test)
-            .matches()) { throw new IllegalArgumentException(
-                "El valor ingresado como número de identifación "
-                    + "debe contener números solamente y no estar vacío."); }
-    // Basado en : http://stackoverflow.com/questions/1306827/
-    // which-is-better-more-efficient-check-for-bad-values-or-catch-exceptions-in-java
-    return Integer.parseInt(test);
+  
+  public static DatabaseTableModel getRankingVisitasActividades(Integer pTop) throws SQLException {
+    String statement = "topN_visitas_ACTIVIDADES";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pTop);
+    Vector<String> columnHeaders = new Vector<String>();
+    columnHeaders.addElement("Posición");
+    columnHeaders.addElement("Nombre");
+    columnHeaders.addElement("Primer Apellido");
+    columnHeaders.addElement("Segundo Apellido");
+    columnHeaders.addElement("Actividad más Frecuente");
+    return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
+  }
+  public static DatabaseTableModel getRankingVisitasEventos(Integer pTop) throws SQLException {
+    String statement = "topN_visitas_EVENTOS";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pTop);
+    Vector<String> columnHeaders = new Vector<String>();
+    columnHeaders.addElement("Posición");
+    columnHeaders.addElement("Nombre");
+    columnHeaders.addElement("Primer Apellido");
+    columnHeaders.addElement("Segundo Apellido");
+    columnHeaders.addElement("Evento más Frecuente");
+    return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);    
   }
 
   private static class ResultSetFactory { // NESTED
@@ -412,7 +438,7 @@ public class QueryController {
       ResultSet result = ResultSetFactory.callStoredProc(statement,
           (parametros == null ? new Vector<Object>() : parametros),
           (parametros == null ? 1 : parametros.size() + 1));
-      // Desaparece el bug donde se pierde siempre el primer registro: 
+      // Desaparece el bug donde se pierde siempre el primer registro:
       // boolean lastOperationResult = false;
       // lastOperationResult = result.next();
       // System.out.println("IS SET FILLED IN? " + lastOperationResult);
@@ -501,4 +527,5 @@ public class QueryController {
       }
     }
   }
+
 }

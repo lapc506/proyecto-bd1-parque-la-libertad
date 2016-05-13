@@ -69,12 +69,24 @@ GRANT EXECUTE ON personas_PROVINCIA TO libertadDemoUser;
 GRANT EXECUTE ON personas_CANTON TO libertadDemoUser;
 GRANT EXECUTE ON personas_DISTRITO TO libertadDemoUser;
 GRANT EXECUTE ON personas_RANGO_FECHA_REG TO libertadDemoUser;
+GRANT EXECUTE ON personas_NOMBRE TO libertadDemoUser;
+GRANT EXECUTE ON personas_PRIMER_APELLIDO TO libertadDemoUser;
+GRANT EXECUTE ON personas_SEGUNDO_APELLIDO TO libertadDemoUser;
+GRANT EXECUTE ON personas_IDENTIFICACION TO libertadDemoUser;
+GRANT EXECUTE ON topN_visitas_ACTIVIDADES TO libertadDemoUser;
+GRANT EXECUTE ON topN_visitas_EVENTOS TO libertadDemoUser;
 
 CREATE SYNONYM personas_PAIS FOR libertadAdmin.personas_PAIS;
 CREATE SYNONYM personas_PROVINCIA FOR libertadAdmin.personas_PROVINCIA;
 CREATE SYNONYM personas_CANTON FOR libertadAdmin.personas_CANTON;
 CREATE SYNONYM personas_DISTRITO FOR libertadAdmin.personas_DISTRITO;
 CREATE SYNONYM personas_RANGO_FECHA_REG FOR libertadAdmin.personas_RANGO_FECHA_REG;
+CREATE SYNONYM personas_NOMBRE FOR libertadAdmin.personas_NOMBRE;
+CREATE SYNONYM personas_PRIMER_APELLIDO FOR libertadAdmin.personas_PRIMER_APELLIDO;
+CREATE SYNONYM personas_SEGUNDO_APELLIDO FOR libertadAdmin.personas_SEGUNDO_APELLIDO;
+CREATE SYNONYM personas_IDENTIFICACION FOR libertadAdmin.personas_IDENTIFICACION;
+CREATE SYNONYM topN_visitas_ACTIVIDADES FOR libertadAdmin.topN_visitas_ACTIVIDADES;
+CREATE SYNONYM topN_visitas_EVENTOS FOR libertadAdmin.topN_visitas_EVENTOS;
 
 
 --6.Personas que desertan un curso
@@ -95,28 +107,50 @@ BEGIN
 END;
 --7.Busqueda de personas por nombre, apellido, cedula
 --Por Nombre:
-CREATE OR REPLACE PROCEDURE personas_nombre(nombre_buscar IN VarChar2, p_recordset OUT SYS_REFCURSOR) AS
+CREATE OR REPLACE PROCEDURE personas_NOMBRE
+(nombre_buscar IN VARCHAR2, tipo_documento IN NUMBER, p_recordset OUT SYS_REFCURSOR) AS
 BEGIN
   OPEN p_recordset FOR
-  SELECT ID, NOMBRE, PRIMERAPELLIDO, SEGUNDOAPELLIDO FROM PERSONA 
-  WHERE NOMBRE=nombre_buscar;
+    SELECT p.ID, p.NOMBRE, p.PRIMERAPELLIDO, p.SEGUNDOAPELLIDO, di.numeroidentidad
+      FROM PERSONA p INNER JOIN
+      DOCUMENTOIDENTIDAD di ON p.ID = di.IDPERSONA
+      WHERE p.NOMBRE LIKE 'Carlos'
+        AND di.idtipo = '1';
 END;
 --Por apellido:
-CREATE OR REPLACE PROCEDURE personas_apellido(apellido_buscar IN VarChar2, p_recordset OUT SYS_REFCURSOR) AS
+CREATE OR REPLACE PROCEDURE personas_PRIMER_APELLIDO
+(apellido_buscar IN VARCHAR2, tipo_documento IN NUMBER, p_recordset OUT SYS_REFCURSOR) AS
 BEGIN
   OPEN p_recordset FOR
-  SELECT ID, NOMBRE, PRIMERAPELLIDO, SEGUNDOAPELLIDO FROM PERSONA
-  WHERE PRIMERAPELLIDO=apellido_buscar;
+    SELECT p.ID, p.NOMBRE, p.PRIMERAPELLIDO, p.SEGUNDOAPELLIDO, di.numeroidentidad
+      FROM PERSONA p INNER JOIN
+      DOCUMENTOIDENTIDAD di ON p.ID = di.IDPERSONA
+      WHERE p.PRIMERAPELLIDO LIKE apellido_buscar
+        AND di.idtipo = tipo_documento;
 END;
---Por Cedula
-CREATE OR REPLACE PROCEDURE personas_cedula(numero_cedula IN NUMBER, p_recordset OUT SYS_REFCURSOR) AS
+CREATE OR REPLACE PROCEDURE personas_SEGUNDO_APELLIDO
+(apellido_buscar IN VARCHAR2, tipo_documento IN NUMBER, p_recordset OUT SYS_REFCURSOR) AS
 BEGIN
   OPEN p_recordset FOR
-  SELECT p.ID, p.NOMBRE, p.PRIMERAPELLIDO, p.SEGUNDOAPELLIDO
-  FROM PERSONA p, DOCUMENTOIDENTIDAD
-  WHERE DOCUMENTOIDENTIDAD.IDPERSONA = p.ID AND
-  DOCUMENTOIDENTIDAD.NUMEROIDENTIDAD = numero_cedula;
+  SELECT p.ID, p.NOMBRE, p.PRIMERAPELLIDO, p.SEGUNDOAPELLIDO, di.numeroidentidad
+      FROM PERSONA p INNER JOIN
+      DOCUMENTOIDENTIDAD di ON p.ID = di.IDPERSONA
+      WHERE p.SEGUNDOAPELLIDO LIKE apellido_buscar
+        AND di.idtipo = tipo_documento;
 END;
+--Por Cédula
+CREATE OR REPLACE PROCEDURE personas_IDENTIFICACION
+(numero_documento IN NUMBER, tipo_documento IN NUMBER,
+p_recordset OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN p_recordset FOR
+    SELECT p.ID, p.NOMBRE, p.PRIMERAPELLIDO, p.SEGUNDOAPELLIDO, di.numeroidentidad
+      FROM PERSONA p INNER JOIN
+      DOCUMENTOIDENTIDAD di ON di.IDPERSONA = p.ID
+        WHERE di.NUMEROIDENTIDAD = numero_documento
+        AND di.IDTIPO = tipo_documento;
+END;
+SELECT * FROM PERSONA;
 --8.Listado de cursos, eventos, actividades que se pueda filtrar por fecha
 --Cursos
 CREATE OR REPLACE PROCEDURE lista_cursos (p_recordset OUT SYS_REFCURSOR) AS
@@ -169,4 +203,26 @@ BEGIN
   FROM PERSONA p, EMPLEADO
   WHERE EMPLEADO.IDPERSONA = p.ID 
   ORDER BY p.PRIMERAPELLIDO;
+END;
+
+CREATE OR REPLACE PROCEDURE topN_visitas_ACTIVIDADES
+(pTop IN NUMBER, p_recordset OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN p_recordset FOR
+    SELECT p.id, RANK() OVER (PARTITION BY vst.idpersona ORDER BY vst.fechahora),
+      p.nombre, p.primerapellido, p.segundoapellido, a.descripcion
+    FROM VISITASACTIVIDADES vst INNER JOIN PERSONA p ON vst.idPersona = p.id
+      INNER JOIN ACTIVIDAD a ON vst.idactividad = a.id
+    WHERE ROWNUM <= pTop;
+END;
+
+CREATE OR REPLACE PROCEDURE topN_visitas_EVENTOS
+(pTop IN NUMBER, p_recordset OUT SYS_REFCURSOR) AS
+BEGIN
+  OPEN p_recordset FOR
+    SELECT p.id, RANK() OVER (PARTITION BY vst.idpersona ORDER BY e.fechahorainicio),
+      p.nombre, p.primerapellido, p.segundoapellido, e.descripcion
+    FROM VISITASEVENTOS vst INNER JOIN PERSONA p ON vst.idPersona = p.id
+      INNER JOIN EVENTO e ON vst.idevento = e.id
+    WHERE ROWNUM <= pTop;
 END;

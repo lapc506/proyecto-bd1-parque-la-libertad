@@ -29,7 +29,7 @@ import org.parquelibertad.metadata.Filepath;
  */
 public class App {
   public static void main(String[] args) {
-    // test();
+    // Permite ver los mensajes de error de Oracle en inglés:
     Locale.setDefault(new Locale("en", "US"));
     Filepath.loadAllProjectFolders();
     DesignController.startLookAndFeel();
@@ -54,7 +54,7 @@ public class App {
     }
   }
 
-  // Dummy method for filling SQL tables
+  /* Dummy method for filling SQL tables
   private static void test() {
     PrintWriter writer;
     try {
@@ -100,5 +100,7 @@ public class App {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
+    
   }
+  */
 }

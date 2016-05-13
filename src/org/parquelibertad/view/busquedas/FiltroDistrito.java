@@ -126,7 +126,8 @@ public class FiltroDistrito extends DialogTemplate {
             comboBoxProvincias.setModel(new DefaultComboBoxModel<String>(contents));
             checkProvincia.setEnabled(true);
           } catch (SQLException e) {
-            JOptionPane.showMessageDialog(rootPane, e.getMessage(), "SQL Error",
+            JOptionPane.showMessageDialog(rootPane, e.getMessage(),
+                "Error de conexión a Oracle",
                 JOptionPane.ERROR_MESSAGE);
           }
           ;

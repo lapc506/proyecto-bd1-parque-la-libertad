@@ -54,6 +54,8 @@ public class Principal extends WindowTemplate {
   private JMenuItem mntmControlDeCursos;
   private JMenuItem menuMatricula;
   private JMenuItem menuAlumnos;
+  private JMenuItem mntmBuscarPersonas;
+  private JMenuItem menuRankingVisitantes;
 
   /**
    * @param windowName
@@ -142,14 +144,23 @@ public class Principal extends WindowTemplate {
     });
     mnBuscar.add(menuMatricula);
     
-    menuAlumnos = new JMenuItem("Alumnos Registrados");
-    menuAlumnos.addActionListener(new ActionListener() {
+    mntmBuscarPersonas = new JMenuItem("Personas en General");
+    mntmBuscarPersonas.setFont(FontController.getRegularLabelFont());
+    mntmBuscarPersonas.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
-        MainController.getInstance().showAlumnos();
+        MainController.getInstance().showBuscarPersonas();
       }
     });
-    menuAlumnos.setFont(FontController.getRegularLabelFont());
-    mnBuscar.add(menuAlumnos);
+    mnBuscar.add(mntmBuscarPersonas);
+    
+    menuRankingVisitantes = new JMenuItem("Ranking de Visitantes");
+    menuRankingVisitantes.setFont(FontController.getRegularLabelFont());
+    menuRankingVisitantes.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        MainController.getInstance().showRankingVisitantes();
+      }
+    });
+    mnBuscar.add(menuRankingVisitantes);
 
     this.menuAdministrador = new JMenu("Administrador");
     this.menuAdministrador.setFont(FontController.getRegularLabelFont());
@@ -180,6 +191,15 @@ public class Principal extends WindowTemplate {
     this.menuAdministrador.add(this.mntmPersonaPorFechas);
     this.mntmTerritorios.setFont(FontController.getRegularLabelFont());
     this.menuAdministrador.add(this.mntmTerritorios);
+    
+    menuAlumnos = new JMenuItem("Alumnos Registrados");
+    menuAdministrador.add(menuAlumnos);
+    menuAlumnos.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent arg0) {
+        MainController.getInstance().showAlumnos();
+      }
+    });
+    menuAlumnos.setFont(FontController.getRegularLabelFont());
     getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
     lblBienvenidos = new JLabel("Bienvenidos a");
