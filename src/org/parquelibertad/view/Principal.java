@@ -130,19 +130,19 @@ public class Principal extends WindowTemplate {
       }
     });
     menuEditar.add(mntmControlDeCursos);
-
-    this.mnBuscar = new JMenu("Buscar");
-    this.mnBuscar.setFont(FontController.getRegularLabelFont());
-    this.menuBar.add(this.mnBuscar);
     
     menuMatricula = new JMenuItem("Matr\u00EDcula de Estudiantes");
+    menuEditar.add(menuMatricula);
     menuMatricula.setFont(FontController.getRegularLabelFont());
     menuMatricula.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         MainController.getInstance().showMatricula();
       }
     });
-    mnBuscar.add(menuMatricula);
+
+    this.mnBuscar = new JMenu("Buscar");
+    this.mnBuscar.setFont(FontController.getRegularLabelFont());
+    this.menuBar.add(this.mnBuscar);
     
     mntmBuscarPersonas = new JMenuItem("Personas en General");
     mntmBuscarPersonas.setFont(FontController.getRegularLabelFont());
@@ -160,6 +160,26 @@ public class Principal extends WindowTemplate {
         MainController.getInstance().showRankingVisitantes();
       }
     });
+    
+        this.mntmPersonaPorTerritorio = new JMenuItem(
+            "Personas por Territorio de Origen...");
+        mnBuscar.add(mntmPersonaPorTerritorio);
+        this.mntmPersonaPorTerritorio.setFont(FontController.getRegularLabelFont());
+        this.mntmPersonaPorTerritorio.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            MainController.getInstance().showBuscarPersonaTerritorio(false);
+          }
+        });
+    
+        this.mntmPersonaPorFechas = new JMenuItem(
+            "Personas por Fecha de Registro...");
+        mnBuscar.add(mntmPersonaPorFechas);
+        this.mntmPersonaPorFechas.setFont(FontController.getRegularLabelFont());
+        this.mntmPersonaPorFechas.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            MainController.getInstance().showBuscarPersonaRangosFechas();
+          }
+        });
     mnBuscar.add(menuRankingVisitantes);
 
     this.menuAdministrador = new JMenu("Administrador");
@@ -169,26 +189,6 @@ public class Principal extends WindowTemplate {
     this.mntmTerritorios = new JMenuItem("A\u00F1adir y Editar Territorios");
     this.mntmTerritorios
         .addActionListener(event -> MainController.getInstance().showEditTerritories());
-
-    this.mntmPersonaPorTerritorio = new JMenuItem(
-        "Probar B\u00FAsqueda de Personas por Territorio de Origen...");
-    this.mntmPersonaPorTerritorio.setFont(FontController.getRegularLabelFont());
-    this.mntmPersonaPorTerritorio.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        MainController.getInstance().testBuscarPersonaTerritorio();
-      }
-    });
-    this.menuAdministrador.add(this.mntmPersonaPorTerritorio);
-
-    this.mntmPersonaPorFechas = new JMenuItem(
-        "Probar B\u00FAsqueda de Personas por Fechas de Registro...");
-    this.mntmPersonaPorFechas.setFont(FontController.getRegularLabelFont());
-    this.mntmPersonaPorFechas.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        MainController.getInstance().testBuscarPersonaRangosFechas();
-      }
-    });
-    this.menuAdministrador.add(this.mntmPersonaPorFechas);
     this.mntmTerritorios.setFont(FontController.getRegularLabelFont());
     this.menuAdministrador.add(this.mntmTerritorios);
     

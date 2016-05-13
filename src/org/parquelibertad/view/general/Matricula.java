@@ -66,6 +66,7 @@ public class Matricula extends DialogTemplate {
               .getDBIndex(tableCXP.getSelectedRow()),
               ((DatabaseTableModel) tableAlumnos.getModel())
               .getDBIndex(tableAlumnos.getSelectedRow()));
+          tableAlumnos.setModel(null);
         } catch (SQLException e1) {
           JOptionPane.showMessageDialog(rootPane, e1.getMessage(),
               "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
@@ -101,6 +102,7 @@ public class Matricula extends DialogTemplate {
     panelCursosXPeriodo.setViewportView(tableCXP);
     // =====================================
     btnActualizarPosiblesEstudiantes = new JButton("Actualizar posibles estudiantes");
+    btnActualizarPosiblesEstudiantes.setFont(FontController.getSubtitleFont());
     btnActualizarPosiblesEstudiantes.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         try {

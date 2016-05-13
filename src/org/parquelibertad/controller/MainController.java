@@ -6,6 +6,8 @@ package org.parquelibertad.controller;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -101,28 +103,27 @@ public class MainController {
     }
   }
 
-  public Integer testBuscarPersonaTerritorio() {
+  public Vector<Object> showBuscarPersonaTerritorio(boolean keepConnectionAlive) {
     try {
-      QueryController.openConnection();
+      if (!keepConnectionAlive){QueryController.openConnection();}
       assertThat(QueryController.isConnected()).isTrue();
       FiltroTerritorio now = new FiltroTerritorio(mainScreen, "Buscar Personas", 600, 600,
           false);
       now.setVisible(true);
       // A partir de aquí asume que la ventana seguirá en memoria después de ser
       // desplegada y cerrada:
-      Integer id = now.getSelectedPersonaID();
-      JOptionPane.showMessageDialog(mainScreen,
-          "ID Seleccionado: " + now.getSelectedPersonaID());
-      QueryController.closeConnection();
-      return id;
+      Vector<Object> persona = now.getSelectedPersona();
+      //JOptionPane.showMessageDialog(mainScreen,"ID Seleccionado: " + now.getSelectedPersonaID());
+      if (!keepConnectionAlive){QueryController.closeConnection();}
+      return persona;
     } catch (SQLException e) {
       JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
           "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
-      return -1;
+      return null;
     }
   }
 
-  public Integer testBuscarPersonaRangosFechas() {
+  public Integer showBuscarPersonaRangosFechas() {
     try {
       QueryController.openConnection();
       assertThat(QueryController.isConnected()).isTrue();
@@ -132,8 +133,7 @@ public class MainController {
       // A partir de aquí asume que la ventana seguirá en memoria después de ser
       // desplegada y cerrada:
       Integer id = now.getSelectedPersonaID();
-      JOptionPane.showMessageDialog(mainScreen,
-          "ID Seleccionado: " + now.getSelectedPersonaID());
+      //JOptionPane.showMessageDialog(mainScreen,"ID Seleccionado: " + now.getSelectedPersonaID());
       QueryController.closeConnection();
       return id;
     } catch (SQLException e) {
@@ -231,8 +231,16 @@ public class MainController {
   }
 
   public void showPromoverPersona() {
-    JDialog now = new PromoverPersona(mainScreen, "Agregar Curso", 500, 520, true);
-    now.setVisible(true);
+    try {
+      QueryController.openConnection();
+      assertThat(QueryController.isConnected()).isTrue();
+      JDialog now = new PromoverPersona(mainScreen, "Promoción de Usuarios", 500, 450, true);
+      now.setVisible(true);
+      QueryController.closeConnection();
+    } catch (SQLException e) {
+      JOptionPane.showMessageDialog(mainScreen, e.getMessage(),
+          "Error de conexión a Oracle", JOptionPane.ERROR_MESSAGE);
+    }
   }
 
   public void showControlCursos() {

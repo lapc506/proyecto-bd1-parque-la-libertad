@@ -10,6 +10,7 @@ import java.util.Vector;
 import javax.swing.JFrame;
 
 import org.parquelibertad.controller.QueryController;
+import org.parquelibertad.controller.design.FontController;
 import org.parquelibertad.view.jmodels.DatabaseTableModel;
 import org.parquelibertad.view.templates.DialogTemplate;
 import java.awt.BorderLayout;
@@ -61,12 +62,15 @@ public class FiltroTerritorio extends DialogTemplate {
 
   private Vector<Integer>   idsDistritos;
 
+  protected String          selectedPersonaDetalle;
+
   public FiltroTerritorio(JFrame parent, String windowName, int width, int height,
       boolean isResizable) throws HeadlessException, SQLException {
     super(parent, windowName, width, height, isResizable);
     getContentPane().setLayout(new BorderLayout(0, 0));
 
     this.lblBsquedaPorTerritorio = new JLabel("B\u00FAsqueda por Territorio");
+    this.lblBsquedaPorTerritorio.setFont(FontController.getTitleFont());
     this.lblBsquedaPorTerritorio.setHorizontalAlignment(SwingConstants.CENTER);
     getContentPane().add(this.lblBsquedaPorTerritorio, BorderLayout.NORTH);
 
@@ -78,11 +82,18 @@ public class FiltroTerritorio extends DialogTemplate {
     getContentPane().add(this.panelActions, BorderLayout.SOUTH);
 
     btnSeleccionar = new JButton("Seleccionar");
+    btnSeleccionar.setFont(FontController.getRegularLabelFont());
     this.btnSeleccionar.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent arg0) {
         // Asume que el modelo es un modelo concreto de AbstractTableModel
-        selectedPersonaID = ((DatabaseTableModel) tableContents.getModel())
-            .getDBIndex(tableContents.getSelectedRow());
+        DatabaseTableModel data = (DatabaseTableModel) tableContents.getModel();
+        selectedPersonaID = data.getDBIndex(tableContents.getSelectedRow());
+        // Según: QueryController.buscarPersonaTerritorios
+        selectedPersonaDetalle = (String) data.getValueAt(tableContents.getSelectedRow(), 0)
+            + " "
+              + (String) data.getValueAt(tableContents.getSelectedRow(), 1)
+              + " "
+              + (String) data.getValueAt(tableContents.getSelectedRow(), 2);
         dispose();
       }
     });
@@ -98,14 +109,18 @@ public class FiltroTerritorio extends DialogTemplate {
     this.panel.add(panelContent);
 
     this.lblPais = new JLabel("Pa\u00EDs");
+    this.lblPais.setFont(FontController.getRegularLabelFont());
     this.lblPais.setHorizontalAlignment(SwingConstants.CENTER);
     this.panelContent.add(lblPais);
-    
-    this.comboBoxPaises = new JComboBox<String>();
+
     this.panelContent.setLayout(new GridLayout(0, 2, 0, 0));
+
+    this.comboBoxPaises = new JComboBox<String>();
+    this.comboBoxPaises.setFont(FontController.getRegularLabelFont());
     this.panelContent.add(this.comboBoxPaises);
-    
+
     this.checkProvincia = new JCheckBox("Provincia");
+    this.checkProvincia.setFont(FontController.getRegularLabelFont());
     this.checkProvincia.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent arg0) {
         if (checkProvincia.isSelected()) {
@@ -140,12 +155,13 @@ public class FiltroTerritorio extends DialogTemplate {
     panelContent.add(checkProvincia);
     // ----------------------------------
     comboBoxProvincias = new JComboBox<String>();
+    comboBoxProvincias.setFont(FontController.getRegularLabelFont());
     this.comboBoxProvincias.setEnabled(false);
-
     comboBoxProvincias.setModel(new DefaultComboBoxModel<>());
     panelContent.add(comboBoxProvincias);
     // ----------------------------------
     checkCanton = new JCheckBox("Cant\u00F3n");
+    checkCanton.setFont(FontController.getRegularLabelFont());
     this.checkCanton.setEnabled(false);
     checkCanton.setOpaque(false);
     checkCanton.addItemListener(new ItemListener() {
@@ -185,10 +201,12 @@ public class FiltroTerritorio extends DialogTemplate {
     panelContent.add(checkCanton);
     // ----------------------------------
     comboBoxCanton = new JComboBox<String>();
+    comboBoxCanton.setFont(FontController.getRegularLabelFont());
     this.comboBoxCanton.setEnabled(false);
     panelContent.add(comboBoxCanton);
     // ----------------------------------
     checkDistrito = new JCheckBox("Distrito");
+    checkDistrito.setFont(FontController.getRegularLabelFont());
     this.checkDistrito.setEnabled(false);
     checkDistrito.setOpaque(false);
     checkDistrito.addItemListener(new ItemListener() {
@@ -226,10 +244,12 @@ public class FiltroTerritorio extends DialogTemplate {
     panelContent.add(checkDistrito);
     // ----------------------------------
     comboBoxDistrito = new JComboBox<String>();
+    comboBoxDistrito.setFont(FontController.getRegularLabelFont());
     this.comboBoxDistrito.setEnabled(false);
     panelContent.add(comboBoxDistrito);
 
     this.btnBuscar = new JButton("Buscar...");
+    this.btnBuscar.setFont(FontController.getRegularLabelFont());
     this.btnBuscar.addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent arg0) {
@@ -253,10 +273,9 @@ public class FiltroTerritorio extends DialogTemplate {
             idTerritorio = idsDistritos.get(comboBoxDistrito.getSelectedIndex());
 
           }
-          DatabaseTableModel personas = QueryController.buscarPersonaTerritorios(
-              idTerritorio, comboBoxPaises.isEnabled(), comboBoxProvincias.isEnabled(),
-              comboBoxCanton.isEnabled(), comboBoxDistrito.isEnabled());
-          tableContents.setModel(personas);
+          tableContents.setModel(QueryController.buscarPersonaTerritorios(idTerritorio,
+              comboBoxPaises.isEnabled(), comboBoxProvincias.isEnabled(),
+              comboBoxCanton.isEnabled(), comboBoxDistrito.isEnabled()));
         } catch (SQLException e) {
           JOptionPane.showMessageDialog(rootPane, e.getMessage(), "SQL Error",
               JOptionPane.ERROR_MESSAGE);
@@ -267,6 +286,7 @@ public class FiltroTerritorio extends DialogTemplate {
     panel.add(btnBuscar);
     // ----------------------------------
     tableContents = new JTable();
+    tableContents.getTableHeader().setFont(FontController.getRegularLabelFont());
     getContentPane().add(tableContents, BorderLayout.CENTER);
 
     loadConnections();
@@ -287,8 +307,11 @@ public class FiltroTerritorio extends DialogTemplate {
     this.comboBoxPaises.setModel(new DefaultComboBoxModel<String>(contents));
   }
 
-  public Integer getSelectedPersonaID() {
-    return selectedPersonaID;
+  public Vector<Object> getSelectedPersona() {
+    Vector<Object> result = new Vector<Object>();
+    result.add(selectedPersonaID);
+    result.add(selectedPersonaDetalle);
+    return result;
   }
 
 }

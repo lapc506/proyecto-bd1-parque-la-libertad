@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Vector;
+
+import javax.swing.ComboBoxModel;
 import javax.swing.JOptionPane;
 import static org.assertj.core.api.Assertions.*;
 
@@ -157,6 +159,11 @@ public class QueryController {
     return ResultSetFactory.getComboBoxContents(statement, null);
   }
 
+  public static HashMap<Integer, String> getTiposEmpleado() throws SQLException {
+    String statement = "get_Tipos_Empleado";
+    return ResultSetFactory.getComboBoxContents(statement, null);
+  }
+
   public static HashMap<Integer, String> getProvinciasPorPais(Integer pPaisID)
       throws SQLException {
     Vector<Object> parametros = new Vector<Object>();
@@ -243,6 +250,32 @@ public class QueryController {
     assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
         "Confirmada la matrícula.");
+  }
+  
+  public static void insertarEmpleado(Integer pPersonaID, Integer pTipoID, String pNickname, String pContrasenia)
+      throws SQLException {
+    String statement = "INSERT_EMPLEADO";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pPersonaID);
+    parametros.addElement(pTipoID);
+    parametros.addElement(pNickname);
+    parametros.addElement(pContrasenia);
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
+    assertThat(result).isNull(); // No hay cursor de salida, AssertJ
+    JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
+        "Confirmada la promoción a empleado. Felicidades");
+  }
+  
+  public static void insertarAlumno(Integer pPersonaID, Integer pAnioMatricula)
+      throws SQLException {
+    String statement = "INSERT_ALUMNO";
+    Vector<Object> parametros = new Vector<Object>();
+    parametros.addElement(pPersonaID);
+    parametros.addElement(pAnioMatricula);
+    ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
+    assertThat(result).isNull(); // No hay cursor de salida, AssertJ
+    JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
+        "Confirmada la promoción a empleado. Felicidades");
   }
 
   public static DatabaseTableModel buscarPersonaTerritorios(Integer pTerritorioID,

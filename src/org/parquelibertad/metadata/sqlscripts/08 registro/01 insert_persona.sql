@@ -2,6 +2,8 @@ GRANT EXECUTE ON INSERT_PERSONA TO libertadDemoUser;
 GRANT EXECUTE ON INSERT_CURSO TO libertadDemoUser;
 GRANT EXECUTE ON INSERT_ACTIVIDAD TO libertadDemoUser;
 GRANT EXECUTE ON INSERT_MATRICULA TO libertadDemoUser;
+GRANT EXECUTE ON INSERT_EMPLEADO TO libertadDemoUser;
+GRANT EXECUTE ON INSERT_ALUMNO TO libertadDemoUser;
 GRANT EXECUTE ON get_unq_id_semana TO libertadDemoUser;
 GRANT EXECUTE ON get_unq_id_Horario TO libertadDemoUser;
 
@@ -10,6 +12,8 @@ CREATE SYNONYM INSERT_PERSONA FOR libertadAdmin.INSERT_PERSONA;
 CREATE SYNONYM INSERT_CURSO FOR libertadAdmin.INSERT_CURSO;
 CREATE SYNONYM INSERT_ACTIVIDAD FOR libertadAdmin.INSERT_ACTIVIDAD;
 CREATE SYNONYM INSERT_MATRICULA FOR libertadAdmin.INSERT_MATRICULA;
+CREATE SYNONYM INSERT_EMPLEADO FOR libertadAdmin.INSERT_EMPLEADO;
+CREATE SYNONYM INSERT_ALUMNO FOR libertadAdmin.INSERT_ALUMNO;
 CREATE SYNONYM get_unq_id_semana FOR libertadAdmin.get_unq_id_semana;
 CREATE SYNONYM get_unq_id_Horario FOR libertadAdmin.get_unq_id_Horario;
 
@@ -30,6 +34,27 @@ AS BEGIN
    INSERT INTO Documentoidentidad (Id,Numeroidentidad,Idpersona,Idrangoedad,Idtipo) VALUES
    (s_documentoidentidad.nextval,pNumeroDocumento,s_Persona.Currval,pRangoEdadID,pIDTipoDocumento);
    COMMIT;
+END;
+
+CREATE OR REPLACE PROCEDURE INSERT_EMPLEADO(
+  pPersonaID IN NUMBER,
+  pEmpleadoTipoID IN NUMBER,
+  pUsuarioNickname IN VARCHAR2,
+  pContraseña IN VARCHAR2)
+AS BEGIN
+  INSERT INTO EMPLEADO (ID, IDPERSONA, IDTIPO) VALUES (s_empleado.nextval, pPersonaID, pEmpleadoTipoID);
+  INSERT INTO CUENTAUSUARIO (ID, USUARIO, CONTRASEÑA, IDEMPLEADO) VALUES
+  (s_Cuentausuario.Nextval, pUsuarioNickname, pContraseña, s_empleado.currval);
+  COMMIT;
+END;
+
+CREATE OR REPLACE PROCEDURE INSERT_ALUMNO(
+  pPersonaID IN NUMBER,
+  pAnioMatricula IN NUMBER)
+AS BEGIN
+  INSERT INTO ALUMNO (ID, IDPERSONA, ANIOMATRICULA) VALUES
+  (s_Alumno.Nextval, pPersonaID, pAnioMatricula);
+  COMMIT;
 END;
 
 CREATE OR REPLACE PROCEDURE INSERT_CURSO(
