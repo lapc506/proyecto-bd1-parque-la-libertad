@@ -86,7 +86,7 @@ public class QueryController {
           || viernes
           || sabado
           || domingo)) { throw new SQLException(
-              "Al menos uno de los dÌas debe ser seleccionado."); }
+              "Al menos uno de los d√≠as debe ser seleccionado."); }
     ;
     String statement = "BEGIN ? := get_unq_id_semana(?,?,?,?,?,?,?); END;";
     OracleCallableStatement cstmt = (OracleCallableStatement) myConnection
@@ -128,7 +128,7 @@ public class QueryController {
     return ResultSetFactory.getComboBoxContents(statement, null);
   }
 
-  // Rangos de Edad debe usar una implementaciÛn nueva
+  // Rangos de Edad debe usar una implementaci√≥n nueva
   public static HashMap<Integer, String> getRangosEdad() throws SQLException {
     String statement = "get_Rangos_Edad";
     ResultSet result = ResultSetFactory.callStoredProc(statement, new Vector<Object>(),
@@ -141,7 +141,7 @@ public class QueryController {
       while (lastOperationResult) {
         // Este ComboBox debe construirse diferente:
         comboBoxContents.put(result.getInt(1),
-            "De " + (result.getInt(2)) + " a " + (result.getInt(3)) + " AÒos");
+            "De " + (result.getInt(2)) + " a " + (result.getInt(3)) + " A√±os");
         lastOperationResult = result.next();
       }
     }
@@ -206,7 +206,7 @@ public class QueryController {
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
     assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-        "Confirmada la inserciÛn de la nueva persona en el sistema.");
+        "Confirmada la inserci√≥n de la nueva persona en el sistema.");
   }
 
   public static void insertarActividad(String pDescripcion, Integer pIDTipo,
@@ -219,7 +219,7 @@ public class QueryController {
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
     assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-        "Confirmada la inserciÛn de la nueva actividad en el sistema.");
+        "Confirmada la inserci√≥n de la nueva actividad en el sistema.");
   }
 
   public static void insertarCurso(String pNombre, Integer pCosto, Integer pIDHorario,
@@ -237,7 +237,7 @@ public class QueryController {
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
     assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-        "Confirmada la inserciÛn de la nuevo curso en el sistema.");
+        "Confirmada la inserci√≥n de la nuevo curso en el sistema.");
   }
 
   public static void insertarMatricula(Integer pCursoXPeriodoID, Integer pAlumnoID)
@@ -249,7 +249,7 @@ public class QueryController {
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
     assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-        "Confirmada la matrÌcula.");
+        "Confirmada la matr√≠cula.");
   }
   
   public static void insertarEmpleado(Integer pPersonaID, Integer pTipoID, String pNickname, String pContrasenia)
@@ -263,7 +263,7 @@ public class QueryController {
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
     assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-        "Confirmada la promociÛn a empleado. Felicidades");
+        "Confirmada la promoci√≥n a empleado. Felicidades");
   }
   
   public static void insertarAlumno(Integer pPersonaID, Integer pAnioMatricula)
@@ -275,7 +275,7 @@ public class QueryController {
     ResultSet result = ResultSetFactory.callStoredProc(statement, parametros, -1);
     assertThat(result).isNull(); // No hay cursor de salida, AssertJ
     JOptionPane.showMessageDialog(MainController.getInstance().getMainScreen(),
-        "Confirmada la promociÛn a empleado. Felicidades");
+        "Confirmada la promoci√≥n a empleado. Felicidades");
   }
 
   public static DatabaseTableModel buscarPersonaTerritorios(Integer pTerritorioID,
@@ -395,11 +395,11 @@ public class QueryController {
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pTop);
     Vector<String> columnHeaders = new Vector<String>();
-    columnHeaders.addElement("PosiciÛn");
+    columnHeaders.addElement("Posici√≥n");
     columnHeaders.addElement("Nombre");
     columnHeaders.addElement("Primer Apellido");
     columnHeaders.addElement("Segundo Apellido");
-    columnHeaders.addElement("Actividad m·s Frecuente");
+    columnHeaders.addElement("Actividad m√°s Frecuente");
     return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);
   }
   public static DatabaseTableModel getRankingVisitasEventos(Integer pTop) throws SQLException {
@@ -407,29 +407,29 @@ public class QueryController {
     Vector<Object> parametros = new Vector<Object>();
     parametros.addElement(pTop);
     Vector<String> columnHeaders = new Vector<String>();
-    columnHeaders.addElement("PosiciÛn");
+    columnHeaders.addElement("Posici√≥n");
     columnHeaders.addElement("Nombre");
     columnHeaders.addElement("Primer Apellido");
     columnHeaders.addElement("Segundo Apellido");
-    columnHeaders.addElement("Evento m·s Frecuente");
+    columnHeaders.addElement("Evento m√°s Frecuente");
     return ResultSetFactory.getTableContents(statement, parametros, columnHeaders);    
   }
 
   private static class ResultSetFactory { // NESTED
     /**
-     * Esta clase permitir· la generalizaciÛn de las consultas en algo m·s
+     * Esta clase permitir√° la generalizaci√≥n de las consultas en algo m√°s
      * abstracto que no se relacione tan cercanamente al driver JDBC.
-     * Requiere ˙nicamente que las sentencias invoquen directamente
+     * Requiere √∫nicamente que las sentencias invoquen directamente
      * al procedimiento almacenado de la base de datos de Oracle, en formato:
      * 
      * nobmre_procedimiento_almacenado(?{, ?, ...,}, ?)
      * 
-     * usando N par·metros de entrada y asumiendo que existe un par·metro
-     * que siempre estar· ubicado en el ˙ltimo ? y ser· @type
+     * usando N par√°metros de entrada y asumiendo que existe un par√°metro
+     * que siempre estar√° ubicado en el √∫ltimo ? y ser√° @type
      * OracleTypes.CURSOR.
      * 
      * Retorna un conjunto de datos resultado de ejecutar una sentencia PL/SQL
-     * aleatoria. Estado inicial del ResultSet siempre ser·:
+     * aleatoria. Estado inicial del ResultSet siempre ser√°:
      * result.getType() == ResultSet.TYPE_FORWARD_ONLY
      * result.getFetchDirection() == ResultSet.FETCH_FORWARD
      * result.isBeforeFirst() == true
@@ -438,8 +438,8 @@ public class QueryController {
         Vector<Object> parametros) throws SQLException {
       /**
        * Copiar el statement a partir del procedimiento almacenado
-       * desde PL/SQL Developer, el segundo par·metro es una lista de
-       * m·s par·metros para el statement mismo, null significa cero.
+       * desde PL/SQL Developer, el segundo par√°metro es una lista de
+       * m√°s par√°metros para el statement mismo, null significa cero.
        */
       ResultSet result = ResultSetFactory.callStoredProc(statement,
           (parametros == null ? new Vector<Object>() : parametros),
@@ -465,8 +465,8 @@ public class QueryController {
         throws SQLException {
       /**
        * Copiar el statement a partir del procedimiento almacenado
-       * desde PL/SQL Developer, el segundo par·metro es una lista de
-       * m·s par·metros para el statement mismo, null significa cero.
+       * desde PL/SQL Developer, el segundo par√°metro es una lista de
+       * m√°s par√°metros para el statement mismo, null significa cero.
        */
       ResultSet result = ResultSetFactory.callStoredProc(statement,
           (parametros == null ? new Vector<Object>() : parametros),
@@ -526,7 +526,7 @@ public class QueryController {
             cstmt.setString(mark + 1, (String) variables.get(mark));
           } else if (variables.get(mark) instanceof Boolean) {
             cstmt.setInt(mark + 1, ((boolean) variables.get(mark) ? 1 : 0));
-            // RepresentaciÛn interna de boolean dado que BOOLEAN no existe en
+            // Representaci√≥n interna de boolean dado que BOOLEAN no existe en
             // Oracle.
           } else if (variables.get(mark) instanceof Calendar) {
             cstmt.setDate(mark + 1,
@@ -544,13 +544,16 @@ public class QueryController {
         // Assume the last ? mark is always a CURSOR:
         cstmt.registerOutParameter(cursorMarkPosition, OracleTypes.CURSOR);
       }
-      // Why use .execute() instead of .executeQuery(): sety
-      // http://stackoverflow.com/questions/19443213/
-      // cannot-perform-fetch-on-a-plsql-statement-next
       boolean executeQueryResult = cstmt.execute();
-      // This line will always return FALSE, as there is no RETURN on the stored
-      // procedures, instead there is a OUT SYS_REFCURSOR parameter at the end.
-      // https://docs.oracle.com/javase/8/docs/api/java/sql/PreparedStatement.html#execute--
+      /* 
+         
+         This line above will always return FALSE, as the first object that the query returns is NOT a ResultSet object:
+         https://docs.oracle.com/javase/tutorial/jdbc/basics/processingsqlstatements.html#executing_queries
+         and actually there is no RETURN on the stored procedures, instead there is a OUT SYS_REFCURSOR parameter at the end:
+         https://docs.oracle.com/javase/8/docs/api/java/sql/PreparedStatement.html#execute--
+         Why use .execute() instead of .executeQuery(): by database architecture, stored procedures never return cursors:
+         http://stackoverflow.com/questions/19443213/cannot-perform-fetch-on-a-plsql-statement-next
+      */
       // System.out.println("WAS CALL SUCCESSFULL? " + executeQueryResult);
       if (cursorMarkPosition != -1) {
         ResultSet result = cstmt.getCursor(cursorMarkPosition);
